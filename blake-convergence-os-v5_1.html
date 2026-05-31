@@ -1,0 +1,2354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blake — Convergence Builder OS v5.1</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Unbounded:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --ink: #06090F;
+  --paper: #0B0F1A;
+  --card: #111827;
+  --card2: #161D2E;
+  --edge: rgba(148,212,255,0.12);
+  --edge2: rgba(148,212,255,0.06);
+  --cyan: #5BE4FF;
+  --green: #3DFFA0;
+  --amber: #FFB830;
+  --rose: #FF6B8A;
+  --violet: #C084FC;
+  --text: #D9E8FF;
+  --dim: #5A7090;
+  --glow-c: rgba(91,228,255,0.07);
+  --glow-g: rgba(61,255,160,0.06);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ink);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  line-height:1.65;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ANIMATED BACKGROUND */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(91,228,255,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 80% 80%, rgba(61,255,160,0.03) 0%, transparent 60%),
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(148,212,255,0.025) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(148,212,255,0.025) 40px);
+  pointer-events:none;z-index:0;
+}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px;position:relative;z-index:1;}
+
+/* ── HEADER ── */
+header{padding:56px 0 40px;border-bottom:1px solid var(--edge);}
+.h-eyebrow{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--cyan);margin-bottom:18px;
+  opacity:0;animation:riseUp .5s ease forwards .05s;
+}
+.h-name{
+  font-family:'Unbounded',sans-serif;font-size:clamp(38px,6vw,72px);
+  font-weight:900;line-height:1;letter-spacing:-2px;
+  opacity:0;animation:riseUp .5s ease forwards .15s;
+}
+.h-name em{
+  font-style:normal;
+  background:linear-gradient(90deg,var(--cyan),var(--green));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.h-sub{
+  margin-top:14px;font-size:15px;color:var(--dim);max-width:600px;
+  line-height:1.7;opacity:0;animation:riseUp .5s ease forwards .25s;
+}
+.h-pills{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;
+  opacity:0;animation:riseUp .5s ease forwards .35s;
+}
+.pill{
+  padding:5px 14px;border-radius:20px;
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;border:1px solid;
+}
+.pill-c{border-color:rgba(91,228,255,.3);color:var(--cyan);background:rgba(91,228,255,.06);}
+.pill-g{border-color:rgba(61,255,160,.3);color:var(--green);background:rgba(61,255,160,.06);}
+.pill-a{border-color:rgba(255,184,48,.3);color:var(--amber);background:rgba(255,184,48,.06);}
+.pill-r{border-color:rgba(255,107,138,.3);color:var(--rose);background:rgba(255,107,138,.06);}
+.pill-v{border-color:rgba(192,132,252,.3);color:var(--violet);background:rgba(192,132,252,.06);}
+
+/* ── TABS ── */
+.tabs{
+  display:flex;gap:0;margin:36px 0 32px;
+  border-bottom:1px solid var(--edge);
+  overflow-x:auto;scrollbar-width:none;
+  opacity:0;animation:riseUp .5s ease forwards .45s;
+}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;padding:11px 22px;border:none;
+  background:transparent;color:var(--dim);cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;
+}
+.tab:hover{color:var(--text);}
+.tab.on{color:var(--cyan);border-bottom-color:var(--cyan);}
+.pane{display:none;}
+.pane.on{display:block;}
+
+/* ── SECTION TITLE ── */
+.stitle{
+  font-family:'Unbounded',sans-serif;font-size:16px;font-weight:700;
+  letter-spacing:-.3px;margin-bottom:20px;display:flex;align-items:center;gap:10px;
+}
+.stitle::before{
+  content:'';width:3px;height:18px;background:var(--cyan);
+  border-radius:2px;flex-shrink:0;
+}
+
+/* ── CARD ── */
+.card{
+  background:var(--card);border:1px solid var(--edge);border-radius:14px;
+  padding:22px;transition:border-color .2s, box-shadow .2s;
+}
+.card:hover{border-color:rgba(91,228,255,.3);box-shadow:0 0 28px var(--glow-c);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:700px){.g2,.g3,.g4{grid-template-columns:1fr;}}
+
+/* ── NOTICE BAR ── */
+.notice{
+  background:linear-gradient(90deg,rgba(91,228,255,.07),rgba(61,255,160,.05));
+  border:1px solid rgba(91,228,255,.2);border-left:3px solid var(--cyan);
+  border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:24px;
+  font-size:13px;color:var(--dim);line-height:1.7;
+}
+.notice strong{color:var(--text);}
+
+/* ── PHASE BADGE ── */
+.pbadge{
+  display:inline-block;padding:2px 9px;border-radius:4px;
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;
+  text-transform:uppercase;
+}
+.pb0{background:rgba(255,107,138,.12);color:var(--rose);}
+.pb1{background:rgba(91,228,255,.12);color:var(--cyan);}
+.pb2{background:rgba(61,255,160,.12);color:var(--green);}
+.pb3{background:rgba(255,184,48,.12);color:var(--amber);}
+.pb4{background:rgba(192,132,252,.12);color:var(--violet);}
+
+/* ── WEEKLY SCHEDULE ── */
+.week-row{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:24px;}
+@media(max-width:900px){.week-row{grid-template-columns:repeat(4,1fr);}}
+@media(max-width:500px){.week-row{grid-template-columns:repeat(2,1fr);}}
+
+.dcard{
+  background:var(--card);border:1px solid var(--edge);border-radius:11px;
+  padding:15px 12px;cursor:pointer;transition:all .2s;position:relative;
+  overflow:hidden;
+}
+.dcard::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+}
+.dcard.dc-python::after{background:var(--cyan);}
+.dcard.dc-career::after{background:var(--green);}
+.dcard.dc-math::after{background:var(--amber);}
+.dcard.dc-build::after{background:var(--rose);}
+.dcard.dc-rest::after{background:var(--violet);}
+.dcard:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.35);}
+.dcard.done{opacity:.45;border-style:dashed;}
+.dcard .chk{
+  position:absolute;top:9px;right:9px;width:17px;height:17px;
+  background:var(--green);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:var(--ink);font-weight:700;
+  opacity:0;transition:opacity .2s;
+}
+.dcard.done .chk{opacity:1;}
+.d-name{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:7px;}
+.d-focus{font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;margin-bottom:7px;line-height:1.3;}
+.d-task{font-size:11px;color:var(--dim);line-height:1.55;}
+.d-time{margin-top:9px;font-family:'DM Mono',monospace;font-size:9px;color:var(--amber);}
+
+/* legend */
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:20px;}
+.leg{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--dim);}
+.leg-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+
+/* ── PROGRESS ── */
+.prog-wrap{margin-bottom:16px;}
+.prog-label{display:flex;justify-content:space-between;margin-bottom:5px;font-size:12px;}
+.prog-track{height:5px;background:var(--card2);border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;}
+
+/* ── CAREER TIMELINE ── */
+.tl{position:relative;padding-left:30px;}
+.tl::before{
+  content:'';position:absolute;left:7px;top:0;bottom:0;
+  width:2px;
+  background:linear-gradient(to bottom,var(--rose),var(--cyan),var(--green),var(--amber),var(--violet));
+  border-radius:2px;
+}
+.tl-item{position:relative;margin-bottom:32px;}
+.tl-dot{
+  position:absolute;left:-26px;top:5px;
+  width:13px;height:13px;border-radius:50%;border:2px solid var(--ink);
+  flex-shrink:0;
+}
+.tl-period{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:5px;}
+.tl-title{font-family:'Unbounded',sans-serif;font-size:18px;font-weight:700;line-height:1.1;margin-bottom:4px;}
+.tl-sub{font-size:13px;color:var(--dim);margin-bottom:12px;}
+.salary{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(61,255,160,.08);border:1px solid rgba(61,255,160,.2);
+  border-radius:7px;padding:4px 13px;
+  font-family:'DM Mono',monospace;font-size:12px;color:var(--green);margin-bottom:14px;
+}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;}
+.chip{
+  padding:5px 12px;background:var(--card2);border:1px solid var(--edge);
+  border-radius:6px;font-size:12px;color:var(--text);text-decoration:none;
+  transition:all .2s;display:inline-flex;align-items:center;gap:5px;
+}
+.chip::after{content:'↗';font-size:9px;opacity:.5;}
+.chip:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(91,228,255,.07);}
+
+/* ── RESOURCES ── */
+.res-list{display:flex;flex-direction:column;gap:10px;}
+.res{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:var(--card);border:1px solid var(--edge);border-radius:9px;
+  padding:14px 18px;text-decoration:none;color:var(--text);transition:all .2s;
+}
+.res:hover{border-color:var(--cyan);box-shadow:0 0 18px var(--glow-c);transform:translateX(4px);}
+.res-l{display:flex;align-items:center;gap:14px;}
+.res-icon{
+  width:36px;height:36px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;
+}
+.res-name{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;}
+.res-desc{font-size:11px;color:var(--dim);margin-top:2px;}
+
+/* ── CHECKLIST ── */
+.cl{list-style:none;}
+.cl-item{
+  display:flex;align-items:flex-start;gap:11px;
+  padding:10px 0;border-bottom:1px solid var(--edge2);cursor:pointer;transition:color .2s;
+}
+.cl-item:last-child{border-bottom:none;}
+.cl-item:hover{color:var(--cyan);}
+.cl-box{
+  width:17px;height:17px;border:2px solid var(--edge);border-radius:4px;
+  flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;
+  font-size:10px;transition:all .2s;
+}
+.cl-item.checked .cl-box{background:var(--green);border-color:var(--green);color:var(--ink);font-weight:700;}
+.cl-item.checked .cl-txt{text-decoration:line-through;color:var(--dim);}
+.cl-txt{font-size:13px;line-height:1.4;}
+.cl-sub{font-size:11px;color:var(--dim);margin-top:2px;}
+
+/* ── PHASE CARDS (roadmap) ── */
+.phase-block{margin-bottom:36px;}
+.phase-header{
+  display:flex;align-items:center;gap:14px;margin-bottom:16px;
+  padding-bottom:12px;border-bottom:1px solid var(--edge);
+}
+.phase-num{
+  font-family:'Unbounded',sans-serif;font-size:32px;font-weight:900;
+  line-height:1;opacity:.15;
+}
+.phase-info{}
+.phase-name{font-family:'Unbounded',sans-serif;font-size:15px;font-weight:700;}
+.phase-period{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:1px;margin-top:3px;}
+
+.skill-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px;}
+.sk{
+  padding:4px 10px;border-radius:5px;
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;
+  background:var(--card2);border:1px solid var(--edge);color:var(--dim);
+}
+
+.milestone-list{list-style:none;margin-top:10px;}
+.milestone-list li{
+  padding:5px 0;padding-left:18px;position:relative;font-size:12px;color:var(--dim);
+}
+.milestone-list li::before{
+  content:'✅';position:absolute;left:0;font-size:10px;
+}
+
+/* ── MATH / PHYSICS PATH ── */
+.path-step{
+  display:flex;align-items:flex-start;gap:14px;padding:12px 0;
+  border-bottom:1px solid var(--edge2);
+}
+.path-step:last-child{border-bottom:none;}
+.step-num{
+  font-family:'DM Mono',monospace;font-size:11px;color:var(--cyan);
+  min-width:28px;flex-shrink:0;padding-top:2px;
+}
+.step-info{}
+.step-name{font-size:13px;font-weight:600;margin-bottom:3px;}
+.step-detail{font-size:11px;color:var(--dim);line-height:1.5;}
+
+/* ── PROJECT TABLE ── */
+.proj-list{display:flex;flex-direction:column;gap:10px;}
+.proj{
+  background:var(--card2);border:1px solid var(--edge);border-radius:9px;
+  padding:14px 16px;display:flex;align-items:flex-start;gap:14px;
+}
+.proj-num{
+  font-family:'DM Mono',monospace;font-size:11px;color:var(--amber);
+  min-width:52px;flex-shrink:0;
+}
+.proj-name{font-size:13px;font-weight:600;margin-bottom:4px;}
+.proj-desc{font-size:11px;color:var(--dim);line-height:1.55;}
+
+/* ── NORTH STAR ── */
+.north-star{
+  background:linear-gradient(135deg,rgba(192,132,252,.07),rgba(91,228,255,.07));
+  border:1px solid rgba(192,132,252,.25);border-radius:14px;padding:26px;
+  margin-top:28px;
+}
+.ns-eye{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--violet);text-transform:uppercase;margin-bottom:8px;}
+.ns-title{font-family:'Unbounded',sans-serif;font-size:24px;font-weight:900;margin-bottom:8px;}
+.ns-body{font-size:13px;color:var(--dim);line-height:1.75;}
+
+/* ── TRIANGLE ── */
+.tri-wrap{display:flex;flex-direction:column;align-items:center;padding:20px 0;}
+.tri-svg{max-width:420px;width:100%;}
+.tri-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px;}
+@media(max-width:600px){.tri-cards{grid-template-columns:1fr;}}
+
+/* ── AGRAI BOX ── */
+.agrai-box{
+  background:linear-gradient(135deg,rgba(61,255,160,.05),rgba(91,228,255,.05));
+  border:1px solid rgba(61,255,160,.2);border-radius:12px;padding:20px;margin-top:20px;
+}
+.agrai-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--green);text-transform:uppercase;margin-bottom:8px;}
+
+/* ── ANIMATIONS ── */
+@keyframes riseUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* ── FOOTER ── */
+footer{
+  margin-top:70px;padding:28px 0;border-top:1px solid var(--edge);
+  text-align:center;font-family:'DM Mono',monospace;font-size:10px;
+  letter-spacing:2px;color:var(--dim);
+}
+.pulse{
+  display:inline-block;width:7px;height:7px;
+  background:var(--green);border-radius:50%;margin-right:8px;
+  animation:blink 2s infinite;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--ink);}
+::-webkit-scrollbar-thumb{background:var(--edge);border-radius:3px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<header>
+  <div class="h-eyebrow">// Convergence Builder OS — Blake — v5.1 — AI Research Ceiling Added</div>
+  <div class="h-name"><em>Blake's</em><br/>Frontier Path</div>
+  <p class="h-sub">The complete, integrated roadmap from $30k blue-collar → Frontier Architect. Built from your full conversation history. Every phase, every job, every resource — in one place.</p>
+  <div class="h-pills">
+    <span class="pill pill-c">AI + ML</span>
+    <span class="pill pill-g">Robotics</span>
+    <span class="pill pill-v">Genomics Core</span>
+    <span class="pill pill-a">Plant + Human Bio</span>
+    <span class="pill pill-r">Physics + Energy</span>
+    <span class="pill pill-a">Longevity</span>
+    <span class="pill pill-v">Neuroscience</span>
+    <span class="pill pill-c">Frontier Research</span>
+    <span class="pill pill-g">AI Agents</span>
+    <span class="pill pill-r">Deep Why</span>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab on" onclick="show('schedule',this)">📅 Weekly Schedule</button>
+  <button class="tab" onclick="show('roadmap',this)">🗺️ Full Roadmap</button>
+  <button class="tab" onclick="show('chess',this)">♟️ Chess Career</button>
+  <button class="tab" onclick="show('math',this)">🧮 Math + Physics</button>
+  <button class="tab" onclick="show('career',this)">💼 Career + Salary</button>
+  <button class="tab" onclick="show('projects',this)">🔨 Projects</button>
+  <button class="tab" onclick="show('aimastery',this)">🧠 AI Mastery</button>
+  <button class="tab" onclick="show('genomics',this)">🧬 Genomics + Biology</button>
+  <button class="tab" onclick="show('neuro',this)">⚡ Neuro + Longevity</button>
+  <button class="tab" onclick="show('aicoding',this)">💡 AI-Assisted Coding</button>
+  <button class="tab" onclick="show('deepwhy',this)">🔭 The Deep Why</button>
+  <button class="tab" onclick="show('resources',this)">🔗 All Links</button>
+  <button class="tab" onclick="show('thisweek',this)">✅ This Week</button>
+  <button class="tab" onclick="show('triangle',this)">🔺 The Triangle</button>
+</div>
+
+<!-- ═══ SCHEDULE ═══ -->
+<div id="tab-schedule" class="pane on">
+  <div class="stitle">Weekly Execution Schedule</div>
+  <div class="notice">
+    <strong>How this works:</strong> Click any day to mark complete. Your schedule is built for <strong>1–2 hours/day</strong> average. Monday, Wednesday, Friday = Python/CS. Tuesday, Thursday = Career. Saturday = Build. Sunday = Rest or light review. <strong>Never skip Saturday.</strong>
+  </div>
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:var(--cyan)"></div>Python / CS</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--amber)"></div>Math / Physics</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--green)"></div>Career / Jobs</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--rose)"></div>Build Day</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--violet)"></div>Rest / Review</div>
+  </div>
+
+  <div class="week-row">
+    <div class="dcard dc-python" onclick="toggleDay(this)">
+      <div class="chk">✓</div>
+      <div class="d-name">Monday</div>
+      <div class="d-focus">Python Core</div>
+      <div class="d-task">Read 1 chapter. Type every example by hand. No copy-paste.</div>
+      <div class="d-time">⏱ 60–75 min</div>
+    </div>
+    <div class="dcard dc-career" onclick="toggleDay(this)">
+      <div class="chk">✓</div>
+      <div class="d-name">Tuesday</div>
+      <div class="d-focus">Career Work</div>
+      <div class="d-task">Apply to 1–2 roles. Update resume or LinkedIn. Write 1 interview answer.</div>
+      <div class="d-time">⏱ 45–60 min</div>
+    </div>
+    <div class="dcard dc-python" onclick="toggleDay(this)">
+      <div class="chk">✓</div>
+      <div class="d-name">Wednesday</div>
+      <div class="d-focus">Python Core</div>
+      <div class="d-task">Continue chapter. Blank-page test: rebuild one example from memory.</div>
+      <div class="d-time">⏱ 60–75 min</div>
+    </div>
+    <div class="dcard dc-math" onclick="toggleDay(this)">
+      <div class="chk">✓</div>
+      <div class="d-name">Thursday</div>
+      <div class="d-focus">Math Prep</div>
+      <div class="d-task">Khan Academy: Algebra 1 or 2. 3–5 exercises. Intuition over speed.</div>
+      <div class="d-time">⏱ 45–60 min</div>
+    </div>
+    <div class="dcard dc-python" onclick="toggleDay(this)">
+      <div class="chk">✓</div>
+      <div class="d-name">Friday</div>
+      <div class="d-focus">Python Core</div>
+      <div class="d-task">Finish week's chapter. Write a small script using only what you've learned so far.</div>
+      <div class="d-time">⏱ 60–75 min</div>
+    </div>
+    <div class="dcard dc-build" onclick="toggleDay(this)">
+      <div class="chk">✓</div>
+      <div class="d-name">Saturday</div>
+      <div class="d-focus">🔨 Build Day</div>
+      <div class="d-task">Build something real and push it to GitHub. Ugly is fine. This is the most important session of the week.</div>
+      <div class="d-time">⏱ 90–120 min</div>
+    </div>
+    <div class="dcard dc-rest" onclick="toggleDay(this)">
+      <div class="chk">✓</div>
+      <div class="d-name">Sunday</div>
+      <div class="d-focus">Rest / Review</div>
+      <div class="d-task">Re-read notes, watch one short video, or fully rest. Zero guilt either way.</div>
+      <div class="d-time">⏱ 0–45 min</div>
+    </div>
+  </div>
+
+  <div class="stitle">Phase Progress</div>
+  <div class="card">
+    <div class="prog-wrap">
+      <div class="prog-label"><span>Python Fundamentals</span><span style="font-family:'DM Mono',monospace;color:var(--cyan)">5%</span></div>
+      <div class="prog-track"><div class="prog-fill" style="width:5%;background:var(--cyan)"></div></div>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-label"><span>Math Prerequisites (Khan Academy)</span><span style="font-family:'DM Mono',monospace;color:var(--amber)">0%</span></div>
+      <div class="prog-track"><div class="prog-fill" style="width:0%;background:var(--amber)"></div></div>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-label"><span>Linux CLI Fluency</span><span style="font-family:'DM Mono',monospace;color:var(--green)">0%</span></div>
+      <div class="prog-track"><div class="prog-fill" style="width:0%;background:var(--green)"></div></div>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-label"><span>Job Applications Sent</span><span style="font-family:'DM Mono',monospace;color:var(--rose)">0 / 20</span></div>
+      <div class="prog-track"><div class="prog-fill" style="width:0%;background:var(--rose)"></div></div>
+    </div>
+    <div class="prog-wrap" style="margin-bottom:0">
+      <div class="prog-label"><span>GitHub Projects Shipped</span><span style="font-family:'DM Mono',monospace;color:var(--violet)">0 / 12</span></div>
+      <div class="prog-track"><div class="prog-fill" style="width:0%;background:var(--violet)"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHESS CAREER ═══ -->
+<div id="tab-chess" class="pane">
+  <div class="stitle">♟️ Chess Not Checkers — The Strategic Career Game</div>
+  <div class="notice">
+    <strong>The operating principle:</strong> You are not picking one career and climbing one ladder. You are moving strategically across a board — each role chosen not just for its salary but for what doors it opens next. Maximum income velocity + maximum optionality at every step. This is game theory applied to your life.
+  </div>
+
+  <!-- The Rule -->
+  <div class="card" style="margin-bottom:24px;border-color:rgba(91,228,255,.25);">
+    <div style="color:var(--cyan);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">// The One Rule That Governs Every Career Move</div>
+    <div class="g2">
+      <div style="padding:16px;background:rgba(255,107,138,.05);border-radius:10px;border:1px solid rgba(255,107,138,.15);">
+        <div style="font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;color:var(--rose);margin-bottom:10px;">❌ Bad Chess Move</div>
+        <div style="font-size:12px;color:var(--dim);line-height:1.75;">A role that pays <strong style="color:var(--text);">$20k more</strong> but locks you into a narrow specialty, limits your learning, and closes doors to adjacent domains.<br/><br/>Example: taking a high-paying but purely administrative IT manager role that moves you away from technical depth.</div>
+      </div>
+      <div style="padding:16px;background:rgba(61,255,160,.05);border-radius:10px;border:1px solid rgba(61,255,160,.15);">
+        <div style="font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px;">✅ Good Chess Move</div>
+        <div style="font-size:12px;color:var(--dim);line-height:1.75;">A role that pays <strong style="color:var(--text);">$15k more</strong> AND teaches you skills that open 3 new doors, puts you in proximity to people doing frontier work, and compounds your domain knowledge.<br/><br/>Example: a bioinformatics analyst role at a genomics company that pays slightly less than a senior sysadmin but positions you for a $130k ML biology role 18 months later.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Six Trajectories Mapped -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">Your Six Trajectories — Mapped as a Game Board</div>
+  <div class="notice">
+    <strong>Your primary path is Trajectory 6 (Convergence Builder).</strong> But the board below shows how you can deliberately move through other trajectories to maximize income and optionality at each phase — then return to the convergence path with more resources, more credibility, and more doors open than if you'd stayed in one lane.
+  </div>
+
+  <div class="card" style="margin-bottom:24px;">
+    <div style="color:var(--amber);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;">The Six Trajectories at a Glance</div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+
+      <div style="display:flex;align-items:flex-start;gap:14px;padding:12px;background:rgba(91,228,255,.04);border-radius:8px;border:1px solid rgba(91,228,255,.12);">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--cyan);min-width:28px;font-weight:700;">T1</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:3px;">Computational Biologist <span class="pbadge pb2" style="font-size:8px;">Highest bio alignment</span></div>
+          <div style="font-size:11px;color:var(--dim);">Python → Bioinformatics → Genomics ML → Research roles. Ginkgo, Recursion, Calico, cannabis genomics. $70k → $180k. Astrobiology connects to your UAP curiosity legitimately.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:14px;padding:12px;background:rgba(61,255,160,.04);border-radius:8px;border:1px solid rgba(61,255,160,.12);">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--green);min-width:28px;font-weight:700;">T2</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:3px;">AI Systems Architect <span class="pbadge pb2" style="font-size:8px;">Highest income ceiling</span></div>
+          <div style="font-size:11px;color:var(--dim);">Python → ML → Deep Learning → Agent Architecture. Anthropic, xAI, defense AI, DARPA-adjacent. $100k → $250k+. Clearance-eligible roles appear naturally. The career engine that funds everything else.</div>
+        </div>
+      </div>
+
+      <!-- T2+ RESEARCH CEILING EXTENSION -->
+      <div style="background:linear-gradient(135deg,rgba(91,228,255,.06),rgba(61,255,160,.04));border:1px solid rgba(91,228,255,.25);border-left:3px solid var(--cyan);border-radius:10px;padding:18px 20px;margin-left:28px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--cyan);font-weight:700;">T2+ · AI Research Path · The Highest Ceiling</div>
+          <span style="display:inline-block;padding:2px 9px;border-radius:4px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;background:rgba(91,228,255,.15);color:var(--cyan);border:1px solid rgba(91,228,255,.3);">PHASE 4+ DESTINATION</span>
+        </div>
+
+        <p style="font-size:12px;color:var(--dim);line-height:1.8;margin-bottom:16px;">Trajectory 2 has a research-track extension that represents the highest compensation and impact ceiling of any path in this dashboard. AI Research Scientist and Research Engineer roles at frontier labs — Anthropic, OpenAI, DeepMind, xAI — sit at the absolute top of the modern technology career landscape.</p>
+
+        <div style="display:flex;flex-direction:column;gap:14px;">
+
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;">THE LANDSCAPE</div>
+            <p style="font-size:12px;color:var(--dim);line-height:1.75;">Frontier AI research roles publish papers that advance the science of machine learning. They design and run experiments at massive compute scale, invent new architectures and training methods, and operate at the edge of human knowledge. Mark Chen (CRO, OpenAI), Dario Amodei (CEO, Anthropic), Demis Hassabis (CEO, DeepMind) — these are the senior endpoints of this trajectory.</p>
+          </div>
+
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px;">COMPENSATION REALITY</div>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="font-size:11px;color:var(--dim);">→ <strong style="color:var(--text);">AI Research Engineer (entry):</strong> $200,000–350,000 total comp</div>
+              <div style="font-size:11px;color:var(--dim);">→ <strong style="color:var(--text);">Research Scientist:</strong> $400,000–700,000 total comp</div>
+              <div style="font-size:11px;color:var(--dim);">→ <strong style="color:var(--text);">Senior Research Scientist:</strong> $700,000–1,500,000 total comp</div>
+              <div style="font-size:11px;color:var(--dim);">→ <strong style="color:var(--text);">Research Director / Principal:</strong> $1,500,000–3,000,000+ total comp</div>
+              <div style="font-size:11px;color:var(--dim);">→ <strong style="color:var(--text);">Chief Research Officer / Co-Founder:</strong> $5,000,000+ plus significant equity</div>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:8px;">THE CREDENTIAL REALITY</div>
+            <p style="font-size:12px;color:var(--dim);line-height:1.75;">The standard path is a PhD in Machine Learning, Computer Science, Mathematics, or Physics from a top research institution (MIT, Stanford, CMU, Berkeley, Princeton, Carnegie Mellon, ETH Zurich). Published papers at NeurIPS, ICML, ICLR. Years of research apprenticeship under established researchers.</p>
+          </div>
+
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;">THE NON-TRADITIONAL PATHS THAT EXIST</div>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="font-size:11px;color:var(--dim);">→ Deep engineering excellence at a frontier lab that transitions into research over time (the Andrej Karpathy adjacent path)</div>
+              <div style="font-size:11px;color:var(--dim);">→ Independent research output: papers in workshops, well-cited open source contributions, demonstrated research-grade work</div>
+              <div style="font-size:11px;color:var(--dim);">→ Funded ML masters or part-time PhD programs while working</div>
+              <div style="font-size:11px;color:var(--dim);">→ Research engineer roles that bridge engineering and research</div>
+            </div>
+          </div>
+
+          <div style="padding:14px;background:rgba(255,107,138,.05);border-radius:8px;border:1px solid rgba(255,107,138,.15);">
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--rose);margin-bottom:8px;">THE HONEST READ</div>
+            <p style="font-size:12px;color:var(--dim);line-height:1.75;">This is the longest, most credential-heavy, and most competitive path of any in this dashboard. From zero Python today to research-grade output: 5–8 years minimum. Frontier lab research positions receive thousands of applicants per opening. Most have PhDs from elite institutions.</p>
+            <p style="font-size:12px;color:var(--dim);line-height:1.75;margin-top:8px;">But the foundation work is identical to Trajectory 2 (Engineering) for the first 2–3 years: Python, mathematics (linear algebra, calculus, probability, optimization), machine learning fundamentals, deep learning, and ability to read and reproduce research papers.</p>
+          </div>
+
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--violet);margin-bottom:8px;">THE DECISION POINT</div>
+            <p style="font-size:12px;color:var(--dim);line-height:1.75;margin-bottom:10px;">At roughly Year 2–3, choose between:</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div style="padding:12px;background:rgba(61,255,160,.05);border-radius:8px;border:1px solid rgba(61,255,160,.15);">
+                <div style="font-size:11px;font-weight:600;color:var(--green);margin-bottom:5px;">Engineering Path</div>
+                <div style="font-size:11px;color:var(--dim);line-height:1.65;">MLOps, agent architectures, production ML systems, shipping real products. Faster to first frontier-lab role. Lower ceiling, still extraordinary.</div>
+              </div>
+              <div style="padding:12px;background:rgba(91,228,255,.05);border-radius:8px;border:1px solid rgba(91,228,255,.15);">
+                <div style="font-size:11px;font-weight:600;color:var(--cyan);margin-bottom:5px;">Research Path</div>
+                <div style="font-size:11px;color:var(--dim);line-height:1.65;">Theoretical depth, paper reading and reproduction, research-grade open source projects, potentially funded ML masters or PhD. Slower, higher ceiling, harder to enter.</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px;">THE STRATEGIC INSIGHT</div>
+            <p style="font-size:12px;color:var(--dim);line-height:1.75;">Engineers transition into research roles regularly at frontier labs. The reverse is rare. Engineering credibility opens research doors. Pure research credentials without engineering depth are increasingly the harder sell.</p>
+            <p style="font-size:12px;color:var(--dim);line-height:1.75;margin-top:8px;">For Blake's trajectory: Build the engineering foundation now. Read papers seriously starting Phase 2. Publish open-source work that demonstrates research-grade thinking. Leave this door open without making it the primary aim. The path that gets you to AI Engineer at Anthropic in 4 years is the same path that lets you transition to Research Engineer there in Year 5.</p>
+          </div>
+
+          <div style="padding:14px;background:rgba(192,132,252,.05);border-radius:8px;border:1px solid rgba(192,132,252,.15);">
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--violet);margin-bottom:8px;">THE PHILOSOPHICAL FIT</div>
+            <p style="font-size:12px;color:var(--dim);line-height:1.75;">This trajectory has the deepest alignment with Blake's original drive toward classified frontier research. The questions AI researchers ask at Anthropic specifically — what is intelligence, how do these systems actually work, how do we make them safe — are exactly the questions that motivated the original cross-country move. The frontier moved from classified physics labs to AI alignment research. The door is the same door.</p>
+          </div>
+
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;">KEEP THE DOOR OPEN BY</div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <div style="font-size:11px;color:var(--dim);">→ Going deep on mathematics, not just deep enough to ship ML models</div>
+              <div style="font-size:11px;color:var(--dim);">→ Reading one ML paper per week starting Phase 2</div>
+              <div style="font-size:11px;color:var(--dim);">→ Reproducing papers as side projects</div>
+              <div style="font-size:11px;color:var(--dim);">→ Publishing open-source implementations</div>
+              <div style="font-size:11px;color:var(--dim);">→ Following frontier researchers on X and engaging with their work</div>
+              <div style="font-size:11px;color:var(--dim);">→ Considering a part-time or fully-funded ML masters in Year 3–4 if income and timing allow</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:14px;padding:12px;background:rgba(255,184,48,.04);border-radius:8px;border:1px solid rgba(255,184,48,.12);">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--amber);min-width:28px;font-weight:700;">T3</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:3px;">Energy + Physics Engineer <span class="pbadge pb3" style="font-size:8px;">Deepest frontier alignment</span></div>
+          <div style="font-size:11px;color:var(--dim);">Physics → Energy systems → Quantum → Advanced propulsion. National labs, fusion companies, Lockheed Skunk Works, Boeing Phantom Works. $90k → $180k+. Closest path to classified energy/propulsion research. The domain woven into your primary path.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:14px;padding:12px;background:rgba(255,107,138,.04);border-radius:8px;border:1px solid rgba(255,107,138,.12);">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--rose);min-width:28px;font-weight:700;">T4</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:3px;">Space Systems Engineer <span class="pbadge pb3" style="font-size:8px;">Civilization mission alignment</span></div>
+          <div style="font-size:11px;color:var(--dim);">Robotics → Autonomous systems → Space software. SpaceX, Rocket Lab, NASA JPL, Planet Labs. $120k → $200k. AgrAI maps to space agriculture for long-duration missions.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:14px;padding:12px;background:rgba(192,132,252,.04);border-radius:8px;border:1px solid rgba(192,132,252,.12);">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--violet);min-width:28px;font-weight:700;">T5</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:3px;">Independent Frontier Researcher <span class="pbadge pb4" style="font-size:8px;">Long game destination</span></div>
+          <div style="font-size:11px;color:var(--dim);">Content → Audience → Funding → Private lab. Avi Loeb / Galileo Project model. $30–80k audience → $150k+ consulting/research → uncapped. Your "light of hope" mission at full activation. The end state of the long game.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:14px;padding:12px;background:linear-gradient(90deg,rgba(91,228,255,.06),rgba(61,255,160,.06));border-radius:8px;border:1px solid rgba(91,228,255,.2);">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--cyan);min-width:28px;font-weight:700;">T6</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:3px;">Convergence Builder ⭐ Primary Path <span class="pbadge pb1" style="font-size:8px;">Your identity</span></div>
+          <div style="font-size:11px;color:var(--dim);">AI + Biology + Physics + Robotics + Space simultaneously. Architect of systems that cross domains. $160k → $300k+ → founder equity. The trajectory that makes you genuinely rare. All other trajectories are chess pieces that serve this one.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Strategic Game Board -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">The Chess Board — Phase by Phase Strategic Moves</div>
+  <div class="card" style="margin-bottom:24px;">
+    <div style="color:var(--violet);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;">Optimal Move Sequence — Chess Not Checkers</div>
+
+    <div class="proj-list">
+      <div class="proj">
+        <div class="proj-num" style="color:var(--rose);">Now<br/>Month 2</div>
+        <div>
+          <div class="proj-name">Opening Move — IT Foundation Roles</div>
+          <div class="proj-desc">Apply immediately with existing knowledge. NOC Technician, IT Support Tier 2, Jr. Sysadmin. Target: $45–55k. This is not your destination — it's your bridge. Every dollar above $30k is reinvested into tools and learning. The chess insight: these roles teach you real infrastructure that makes you a better AI and systems engineer later. Don't skip them.</div>
+        </div>
+      </div>
+      <div class="proj">
+        <div class="proj-num" style="color:var(--cyan);">Month 3–8</div>
+        <div>
+          <div class="proj-name">First Upgrade — Python + Automation Roles</div>
+          <div class="proj-desc">As Python skills solidify and GitHub projects accumulate, target automation-adjacent roles. Infrastructure Automation Engineer, Technical Support Engineer (SaaS), Jr. DevOps. Target: $60–75k. Chess insight: DevOps and automation roles teach you cloud infrastructure, CI/CD pipelines, and system architecture — all of which feed directly into AI agent deployment and ML engineering later.</div>
+        </div>
+      </div>
+      <div class="proj">
+        <div class="proj-num" style="color:var(--green);">Month 8–18</div>
+        <div>
+          <div class="proj-name">The Pivot — Data + ML Entry</div>
+          <div class="proj-desc">This is the highest-leverage career move on the board. The jump from automation/DevOps into data engineering or ML-adjacent roles. Jr. Data Engineer, MLOps Engineer, Bioinformatics Analyst, AI Tools Engineer. Target: $80–100k. Chess insight: whoever gets to this role first wins the compounding game. Every month here is worth 3 months of learning alone because you're surrounded by people doing the work you want to do.</div>
+        </div>
+      </div>
+      <div class="proj">
+        <div class="proj-num" style="color:var(--amber);">Month 18–36</div>
+        <div>
+          <div class="proj-name">Domain Specialization Move — T2, T3, or T1 Branch</div>
+          <div class="proj-desc">This is where the chess game gets interesting. Based on where the market is, what doors have opened, and what you've built, you make a deliberate move into the highest-paying domain that also advances your convergence path. Option A: ML Engineer at AI company (T2) → $120–150k, funds everything. Option B: Energy systems / physics role at national lab or defense tech (T3) → $100–130k + clearance eligibility. Option C: Computational biologist at genomics company (T1) → $100–130k + GENESIS research credibility. Chess insight: you can make this move more than once. Work one domain 18 months, collect the salary, collect the skills, pivot to the next.</div>
+        </div>
+      </div>
+      <div class="proj">
+        <div class="proj-num" style="color:var(--violet);">Year 3–5</div>
+        <div>
+          <div class="proj-name">The Endgame Move — Convergence Architecture</div>
+          <div class="proj-desc">By this point you have: 3+ domains of genuine depth, $120k+ income, a GitHub full of real projects, an audience on X, and a network spanning AI, biology, physics, and space. The endgame move is positioning yourself as the person who connects all of it — either as a senior architect at a frontier company, a technical founder, or the beginning of the Independent Frontier Researcher trajectory (T5). Chess insight: at this stage you stop applying for jobs. You become someone people recruit and build around.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Clearance Angle -->
+  <div class="card" style="border-color:rgba(255,184,48,.2);">
+    <div style="color:var(--amber);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">🔐 The Clearance Door — How It Appears Without Chasing It</div>
+    <p style="font-size:13px;color:var(--dim);line-height:1.8;margin-bottom:14px;">You're not chasing classified work as a primary goal. But you're not closing the door either. Here's the chess move that keeps it open without making it your mission:</p>
+    <div class="g3">
+      <div>
+        <div style="color:var(--cyan);font-size:12px;font-weight:600;margin-bottom:6px;">Step 1 — Eligibility</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">US citizenship + clean record + financial stability. You build the financial stability through the career ladder. Don't let debt accumulate. That's the primary clearance risk for most people.</div>
+      </div>
+      <div>
+        <div style="color:var(--green);font-size:12px;font-weight:600;margin-bottom:6px;">Step 2 — Proximity</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Work at a company that holds government contracts — Leidos, Booz Allen Hamilton, SAIC, Palantir, L3Harris, or any national lab contractor. The clearance sponsorship comes with the role.</div>
+      </div>
+      <div>
+        <div style="color:var(--amber);font-size:12px;font-weight:600;margin-bottom:6px;">Step 3 — The Door Opens</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Once you have AI + physics + systems engineering depth and a clearance, you are in the exact profile that classified research programs recruit. You didn't chase it. It found you.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ROADMAP ═══ -->
+<div id="tab-roadmap" class="pane">
+  <div class="stitle">Full Frontier Architect Roadmap</div>
+  <div class="notice"><strong>The strategy:</strong> One primary track at a time + one supporting track. Math never stops — it's the multiplier for everything. Ship at least one project per month, even if small. Publicly post everything to GitHub.</div>
+
+  <!-- PHASE 0 -->
+  <div class="phase-block">
+    <div class="phase-header">
+      <div class="phase-num">0</div>
+      <div class="phase-info">
+        <div class="phase-name">Prerequisites Bootcamp <span class="pbadge pb0">Weeks 1–8</span></div>
+        <div class="phase-period">Before OSSU. Remove all friction before the real foundation begins.</div>
+      </div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div style="color:var(--amber);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">🧮 Math Prerequisites</div>
+        <div class="skill-row">
+          <span class="sk">Algebra I</span><span class="sk">Algebra II</span><span class="sk">Functions &amp; Graphs</span>
+          <span class="sk">Trigonometry</span><span class="sk">Precalculus (light)</span>
+        </div>
+        <p style="font-size:12px;color:var(--dim);margin-top:10px;">Platform: Khan Academy (free). Goal: zero friction entering Calculus.</p>
+        <ul class="milestone-list" style="margin-top:10px;">
+          <li>Confidently manipulate formulas</li>
+          <li>Read graphs without hesitation</li>
+          <li>Use trig without looking it up</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div style="color:var(--rose);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">⚡ Physics Prerequisites</div>
+        <div class="skill-row">
+          <span class="sk">Vectors</span><span class="sk">Units &amp; Dimensional Analysis</span>
+          <span class="sk">Kinematics Intuition</span><span class="sk">Force / Energy / Motion</span>
+        </div>
+        <p style="font-size:12px;color:var(--dim);margin-top:10px;">Platform: Khan Academy Physics Intro. Focus on intuition over formulas.</p>
+        <ul class="milestone-list" style="margin-top:10px;">
+          <li>Understand what acceleration means</li>
+          <li>Interpret motion graphs correctly</li>
+          <li>Vector thinking is natural</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px;">
+      <div style="color:var(--cyan);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">💻 Coding Environment Setup (Day 1)</div>
+      <div class="skill-row">
+        <span class="sk">Python installed</span><span class="sk">VS Code</span><span class="sk">Git</span>
+        <span class="sk">GitHub account</span><span class="sk">Terminal basics</span><span class="sk">venv</span>
+      </div>
+      <p style="font-size:12px;color:var(--dim);margin-top:8px;">Milestone: Create a repo, commit code, run a Python script in a virtual environment. This takes one afternoon.</p>
+    </div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase-block">
+    <div class="phase-header">
+      <div class="phase-num">1</div>
+      <div class="phase-info">
+        <div class="phase-name">Core Foundation <span class="pbadge pb1">Months 2–12</span></div>
+        <div class="phase-period">Build the base OS: CS + Math + entry Physics. Become technically dangerous.</div>
+      </div>
+    </div>
+    <div class="g3">
+      <div class="card">
+        <div style="color:var(--cyan);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Primary · OSSU CS</div>
+        <div class="skill-row">
+          <span class="sk">Python</span><span class="sk">Algorithms</span><span class="sk">Systems Thinking</span>
+          <span class="sk">Software Architecture</span><span class="sk">Git</span>
+        </div>
+        <p style="font-size:11px;color:var(--dim);margin-top:8px;">8–15 hrs/week. This is the operating system of your brain.</p>
+      </div>
+      <div class="card">
+        <div style="color:var(--amber);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Supporting · OSSU Math</div>
+        <div class="skill-row">
+          <span class="sk">Calculus I</span><span class="sk">Linear Algebra ⭐</span>
+          <span class="sk">Probability &amp; Stats</span>
+        </div>
+        <p style="font-size:11px;color:var(--dim);margin-top:8px;">5–10 hrs/week. Linear algebra is the AI backbone. Do not skip it.</p>
+      </div>
+      <div class="card">
+        <div style="color:var(--rose);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Side Track · Physics</div>
+        <div class="skill-row">
+          <span class="sk">Conceptual Physics</span><span class="sk">Classical Mechanics</span>
+          <span class="sk">Newton's Laws</span><span class="sk">Energy &amp; Momentum</span>
+        </div>
+        <p style="font-size:11px;color:var(--dim);margin-top:8px;">2–5 hrs/week. MIT OCW Physics I. Robotics + Aerospace = physics first.</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:10px;">Phase 1 Milestones</div>
+      <div class="g3">
+        <div>
+          <div style="color:var(--cyan);font-size:12px;font-weight:600;margin-bottom:5px;">Month 3</div>
+          <ul class="milestone-list">
+            <li>Comfortable with Python + Git</li>
+            <li>Algebra/trig feel automatic</li>
+            <li>First 3 GitHub projects live</li>
+          </ul>
+        </div>
+        <div>
+          <div style="color:var(--amber);font-size:12px;font-weight:600;margin-bottom:5px;">Month 6</div>
+          <ul class="milestone-list">
+            <li>Build small apps independently</li>
+            <li>Understand Calc I concepts</li>
+            <li>Applying to IT roles consistently</li>
+          </ul>
+        </div>
+        <div>
+          <div style="color:var(--green);font-size:12px;font-weight:600;margin-bottom:5px;">Month 12</div>
+          <ul class="milestone-list">
+            <li>8–12 projects shipped</li>
+            <li>Linear algebra + probability usable</li>
+            <li>Higher-paying job secured</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase-block">
+    <div class="phase-header">
+      <div class="phase-num">2</div>
+      <div class="phase-info">
+        <div class="phase-name">AI + Systems Power <span class="pbadge pb2">Year 1–2</span></div>
+        <div class="phase-period">Shift from learner → builder. Become AI-enabled, not just a coder.</div>
+      </div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div style="color:var(--green);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Primary · OSSU Data Science + ML</div>
+        <div class="skill-row">
+          <span class="sk">NumPy</span><span class="sk">Pandas</span><span class="sk">scikit-learn</span>
+          <span class="sk">Jupyter</span><span class="sk">Feature Engineering</span>
+          <span class="sk">Model Evaluation</span><span class="sk">PyTorch (intro)</span>
+        </div>
+        <ul class="milestone-list" style="margin-top:10px;">
+          <li>Build ML models end-to-end</li>
+          <li>Understand overfitting/underfitting</li>
+          <li>3 serious portfolio projects</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div style="color:var(--rose);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Supporting · Physics II + Signals</div>
+        <div class="skill-row">
+          <span class="sk">Electricity &amp; Magnetism</span><span class="sk">Waves basics</span>
+          <span class="sk">Sensors intuition</span><span class="sk">Signals intro</span>
+        </div>
+        <p style="font-size:11px;color:var(--dim);margin-top:8px;">2–5 hrs/week. Sensors, robotics hardware, and space systems all require this layer.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase-block">
+    <div class="phase-header">
+      <div class="phase-num">3</div>
+      <div class="phase-info">
+        <div class="phase-name">Frontier Specialization <span class="pbadge pb3">Year 2–4</span></div>
+        <div class="phase-period">Choose one primary, add one secondary. You DON'T specialize narrowly — you combine.</div>
+      </div>
+    </div>
+    <div class="g3">
+      <div class="card">
+        <div style="color:var(--cyan);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Track A · AI Robotics ⭐ Recommended</div>
+        <div class="skill-row">
+          <span class="sk">ROS2</span><span class="sk">Control Theory</span><span class="sk">Sensor Fusion</span>
+          <span class="sk">Computer Vision</span><span class="sk">Autonomous Navigation</span>
+        </div>
+        <p style="font-size:11px;color:var(--dim);margin-top:8px;">AI leaving the screen and entering the physical world. This combination is genuinely rare.</p>
+      </div>
+      <div class="card">
+        <div style="color:var(--violet);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Track B · Computational Biology</div>
+        <div class="skill-row">
+          <span class="sk">BioPython</span><span class="sk">Sequence Analysis</span><span class="sk">Genomic Pipelines</span>
+          <span class="sk">Variant Analysis</span><span class="sk">OSSU Bioinformatics</span>
+        </div>
+        <p style="font-size:11px;color:var(--dim);margin-top:8px;">Cannabis genomics and plant science are your applied entry points. You don't need a PhD — just computational skill.</p>
+      </div>
+      <div class="card">
+        <div style="color:var(--rose);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Track C · Space Systems (Optional Layer)</div>
+        <div class="skill-row">
+          <span class="sk">Orbital Mechanics basics</span><span class="sk">Autonomous Space Robotics</span>
+          <span class="sk">Space Systems Engineering concepts</span>
+        </div>
+        <p style="font-size:11px;color:var(--dim);margin-top:8px;">Best entered through software/AI roles at space companies. Add after Track A or B is solid.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase-block">
+    <div class="phase-header">
+      <div class="phase-num">4</div>
+      <div class="phase-info">
+        <div class="phase-name">Frontier Architect Mode <span class="pbadge pb4">Year 3–5</span></div>
+        <div class="phase-period">You stop learning subjects. You start building systems that combine them.</div>
+      </div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div style="color:var(--violet);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Capstone Options — Pick One to Build Seriously</div>
+        <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--edge2);">
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Capstone A — Autonomous Biology Engineer System</div>
+          <div style="font-size:11px;color:var(--dim);">Data ingestion + genomics + AI optimization + automation layer + hardware integration</div>
+        </div>
+        <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--edge2);">
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Capstone B — AgrAI: Bio-AI Plant Intelligence Platform</div>
+          <div style="font-size:11px;color:var(--dim);">Environmental + nutrient optimization · Plant vision · Strain intelligence cards · Predictive models · Deployable dashboard</div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Capstone C — Longevity Data Intelligence Prototype</div>
+          <div style="font-size:11px;color:var(--dim);">Personal biomarkers · Prediction + visualization · Recommendation engine (strictly informational)</div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="color:var(--green);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Phase 4 Milestones — End of Year 5</div>
+        <ul class="milestone-list">
+          <li>Employable in high-end AI/robotics roles</li>
+          <li>OR have a real startup-grade system in motion</li>
+          <li>Speak across AI + physics + bio intelligently</li>
+          <li>Can enter Space tech, Bio-AI, or Longevity companies</li>
+          <li>You are not job hunting — you are recruitable</li>
+        </ul>
+        <div class="agrai-box" style="margin-top:16px;">
+          <div class="agrai-label">// AgrAI — Your Stage 4 Origin Story</div>
+          <p style="font-size:12px;color:var(--dim);line-height:1.7;">Your AgrAI vision isn't random. It's Stage 4 thinking showing up early. Most people don't think like that until their late 30s or 40s. Every skill you build now is feeding back into it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MATH + PHYSICS ═══ -->
+<div id="tab-math" class="pane">
+  <div class="stitle">Math + Physics Fast-Track Path</div>
+  <div class="notice"><strong>Rule:</strong> Do NOT skip the prerequisites. Most people fail to get momentum because they jump into Calculus with gaps in algebra. Fill the gaps first — it takes 4–8 weeks and makes everything after frictionless.</div>
+
+  <div class="g2" style="margin-bottom:28px;">
+    <div class="card">
+      <div style="color:var(--amber);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;">🧮 Complete Math Path (Exact Order)</div>
+      <div class="path-step">
+        <div class="step-num">01</div>
+        <div class="step-info"><div class="step-name">Algebra I</div><div class="step-detail">Equations, inequalities, factoring, exponents, linear functions. Khan Academy.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num">02</div>
+        <div class="step-info"><div class="step-name">Algebra II</div><div class="step-detail">Quadratics, polynomials, logarithms, complex numbers basics, rational expressions.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num">03</div>
+        <div class="step-info"><div class="step-name">Functions &amp; Graphs Mastery</div><div class="step-detail">Domain/range, transformations, inverse functions, piecewise. Critical for everything ahead.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num">04</div>
+        <div class="step-info"><div class="step-name">Trigonometry (Core Only)</div><div class="step-detail">Unit circle (must master), sin/cos/tan relationships, basic identities, radians/degrees.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num">05</div>
+        <div class="step-info"><div class="step-name">Precalculus (Light Pass)</div><div class="step-detail">Limits intuition, sequences/series intro, vectors intro. Don't deep-dive — just preview.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num">06</div>
+        <div class="step-info"><div class="step-name">Calculus I ⭐</div><div class="step-detail">Limits, derivatives, integrals. This is where AI optimization and robotics motion math start making sense.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num">07</div>
+        <div class="step-info"><div class="step-name">Linear Algebra ⭐⭐ (Critical)</div><div class="step-detail">Vectors, matrices, transformations, eigenvalues. THE math of neural networks AND robot geometry AND genomic dimensionality reduction.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num">08</div>
+        <div class="step-info"><div class="step-name">Probability &amp; Statistics</div><div class="step-detail">Distributions, Bayes' theorem, hypothesis testing. Backbone of ML and genomic data analysis.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num">09</div>
+        <div class="step-info"><div class="step-name">Calculus II (Later)</div><div class="step-detail">Sequences, series, integration techniques. Add after Phase 1 is solid.</div></div>
+      </div>
+      <div class="path-step" style="border-bottom:none;">
+        <div class="step-num">10</div>
+        <div class="step-info"><div class="step-name">Differential Equations (Future)</div><div class="step-detail">Control systems, robotics dynamics, physics modeling. Phase 3 material.</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="color:var(--rose);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;">⚡ Complete Physics Path (Exact Order)</div>
+      <div class="path-step">
+        <div class="step-num">01</div>
+        <div class="step-info"><div class="step-name">Conceptual Physics (Intuition First)</div><div class="step-detail">Khan Academy. Understand WHY before the math. Forces, motion, energy at the gut level.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num">02</div>
+        <div class="step-info"><div class="step-name">Classical Mechanics</div><div class="step-detail">Newton's laws, kinematics, energy, momentum, projectile motion. MIT OCW Physics I (Lewin). Free.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num">03</div>
+        <div class="step-info"><div class="step-name">Electricity &amp; Magnetism</div><div class="step-detail">Circuits, fields, electromagnetic basics. Sensors and robotics hardware require this.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num">04</div>
+        <div class="step-info"><div class="step-name">Waves &amp; Light Basics</div><div class="step-detail">Wave behavior, optics. Important for computer vision and sensor systems.</div></div>
+      </div>
+      <div class="path-step" style="border-bottom:none;">
+        <div class="step-num">05</div>
+        <div class="step-info"><div class="step-name">Intro Thermodynamics</div><div class="step-detail">Heat, entropy, energy systems. Relevant for aerospace and biological systems.</div></div>
+      </div>
+
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--edge);">
+        <div style="color:var(--cyan);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">What to Master vs Speed-Run</div>
+        <div class="g2" style="gap:12px;">
+          <div>
+            <div style="color:var(--green);font-size:11px;font-weight:600;margin-bottom:6px;">✅ Master These (No Shortcuts)</div>
+            <div style="font-size:11px;color:var(--dim);line-height:1.7;">Algebra → Trig → Functions<br/>Calculus I basics<br/>Linear Algebra basics<br/>Probability/Stats basics<br/>Programming fundamentals</div>
+          </div>
+          <div>
+            <div style="color:var(--amber);font-size:11px;font-weight:600;margin-bottom:6px;">⏩ Speed-Run These</div>
+            <div style="font-size:11px;color:var(--dim);line-height:1.7;">Precalculus details<br/>Calc II (can come later)<br/>Deep physics derivations early<br/>These can be revisited in Phase 2+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="color:var(--violet);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Why Math = The Multiplier for Everything You Want to Build</div>
+    <div class="g4">
+      <div>
+        <div style="color:var(--cyan);font-size:12px;font-weight:600;margin-bottom:5px;">AI / ML</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.6;">Linear algebra + Calc + Stats = you understand gradient descent, backpropagation, and model optimization from the inside out.</div>
+      </div>
+      <div>
+        <div style="color:var(--green);font-size:12px;font-weight:600;margin-bottom:5px;">Robotics</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.6;">Calc + Linear algebra + Diff EQ = kinematics, control loops, sensor fusion, path planning. Robots are math in motion.</div>
+      </div>
+      <div>
+        <div style="color:var(--violet);font-size:12px;font-weight:600;margin-bottom:5px;">Genomics</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.6;">Stats + Linear algebra = dimensionality reduction on genetic datasets, sequence alignment scoring, expression analysis.</div>
+      </div>
+      <div>
+        <div style="color:var(--rose);font-size:12px;font-weight:600;margin-bottom:5px;">Aerospace</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.6;">Physics + Calc + Diff EQ = orbital mechanics, propulsion modeling, flight dynamics simulation.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CAREER ═══ -->
+<div id="tab-career" class="pane">
+  <div class="stitle">Career Pathway — $30k → $200k+</div>
+  <p style="color:var(--dim);margin-bottom:28px;font-size:13px;">Each phase unlocks new roles. Click any role chip to search LinkedIn. Don't wait for Phase 2 to start applying — Phase 0 roles are available to you right now.</p>
+
+  <div class="tl">
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--rose)"></div>
+      <div class="tl-period">Now — Month 2 · Phase 0 · Apply Today</div>
+      <div class="tl-title">IT Foundation Roles</div>
+      <div class="tl-sub">Your A+/Net+ equivalent knowledge qualifies you today. Don't wait. Apply this week.</div>
+      <div class="salary">💰 $38,000 – $55,000 / yr</div>
+      <div class="chips">
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=IT+Support+Specialist" target="_blank">IT Support Specialist</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=NOC+Technician" target="_blank">NOC Technician</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Help+Desk+Technician+Tier+2" target="_blank">Help Desk Tier 2</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=IT+Field+Technician" target="_blank">IT Field Technician</a>
+      </div>
+      <div style="font-size:11px;color:var(--dim);">AI Risk: <strong style="color:var(--green);">Low–Moderate.</strong> AI assists but doesn't replace hands-on problem solving yet.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--cyan)"></div>
+      <div class="tl-period">Month 2–6 · Phase 1 · Python-Augmented IT</div>
+      <div class="tl-title">Automation-Adjacent Roles</div>
+      <div class="tl-sub">You now script, automate, and show GitHub projects. This unlocks the next salary tier significantly.</div>
+      <div class="salary">💰 $50,000 – $72,000 / yr</div>
+      <div class="chips">
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Junior+Systems+Administrator" target="_blank">Jr. Sysadmin</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Infrastructure+Technician" target="_blank">Infrastructure Tech</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Technical+Support+Engineer" target="_blank">Technical Support Engineer</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=IT+Automation+Technician" target="_blank">Automation Technician</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=QA+Automation+Tester" target="_blank">QA Automation Tester</a>
+      </div>
+      <div style="font-size:11px;color:var(--dim);">AI Risk: <strong style="color:var(--green);">Low</strong> — if you use AI tools, understand logic, and can debug/think. High risk if you only copy-paste.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--green)"></div>
+      <div class="tl-period">Month 6–18 · Phase 2 · Data + Systems</div>
+      <div class="tl-title">First Six-Figure Tier</div>
+      <div class="tl-sub">SQL, data pipelines, ML basics, and a real portfolio open a completely new class of roles. This is where you break the $80k barrier.</div>
+      <div class="salary">💰 $65,000 – $100,000 / yr</div>
+      <div class="chips">
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Junior+Data+Engineer" target="_blank">Jr. Data Engineer</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Junior+Software+Developer+Python" target="_blank">Jr. Software Developer</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=DevOps+Engineer+Junior" target="_blank">Jr. DevOps Engineer</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Data+Analyst+Junior+Python" target="_blank">Jr. Data Analyst</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Technical+Operations+Analyst" target="_blank">Technical Ops Analyst</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Bioinformatics+Technician" target="_blank">Bioinformatics Tech</a>
+      </div>
+      <div style="font-size:11px;color:var(--dim);">AI Risk: <strong style="color:var(--green);">Very Low</strong> — these roles build and deploy the systems AI runs on. AI amplifies you.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--amber)"></div>
+      <div class="tl-period">Month 18–36 · Phase 3 · Convergence Zone</div>
+      <div class="tl-title">The Rare Tier</div>
+      <div class="tl-sub">AI + Robotics + Biology skills compounding. You're now genuinely rare in the market. At this point you are building AI, not being replaced by it.</div>
+      <div class="salary">💰 $90,000 – $140,000 / yr</div>
+      <div class="chips">
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Machine+Learning+Engineer+Junior" target="_blank">ML Engineer</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Robotics+Software+Engineer" target="_blank">Robotics Software Eng</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=AI+Systems+Engineer" target="_blank">AI Systems Engineer</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Bioinformatics+Engineer" target="_blank">Bioinformatics Engineer</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Automation+Engineer+AI" target="_blank">Automation Engineer (AI)</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Computational+Biology+Engineer" target="_blank">Computational Biologist</a>
+      </div>
+      <div style="font-size:11px;color:var(--dim);">AI Risk: <strong style="color:var(--green);">Extremely Low</strong> — you design and train systems. You ARE the AI layer.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--violet)"></div>
+      <div class="tl-period">Year 3–5+ · Phase 4 · Frontier Architect</div>
+      <div class="tl-title">The Destination</div>
+      <div class="tl-sub">You design intelligent systems that cross multiple scientific domains. You don't interview for jobs — opportunities find you. This is the Convergence Builder identity GPT identified in you.</div>
+      <div class="salary">💰 $160,000 – $700,000+ / yr · or Founder equity / Research equity</div>
+      <div class="chips">
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=AI+Systems+Architect" target="_blank">AI Systems Architect</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Autonomous+Systems+Engineer" target="_blank">Autonomous Systems Eng</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Computational+Genomics+Scientist" target="_blank">Genomics Scientist</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Longevity+Technology+Researcher" target="_blank">Longevity Tech Researcher</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Space+Systems+Engineer+AI" target="_blank">Space Systems Engineer</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Bio+AI+Engineer" target="_blank">Bio-AI Engineer</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Deep+Tech+Founder" target="_blank">Deep Tech Founder</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=AI+Research+Engineer" target="_blank">AI Research Engineer (entry research path)</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=ML+Research+Scientist" target="_blank">ML Research Scientist</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Senior+Research+Scientist+AI" target="_blank">Senior Research Scientist (frontier labs)</a>
+        <a class="chip" href="https://www.linkedin.com/jobs/search/?keywords=Research+Director+AI" target="_blank">Research Director / Principal Scientist</a>
+      </div>
+      <div style="margin-top:12px;font-size:11px;color:var(--dim);line-height:1.65;">Research-track roles at frontier AI labs (Anthropic, OpenAI, DeepMind, xAI) represent the highest compensation ceiling in modern technology. See the Chess Career tab for the full research path analysis.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PROJECTS ═══ -->
+<div id="tab-projects" class="pane">
+  <div class="stitle">Monthly Project Roadmap</div>
+  <div class="notice"><strong>Non-negotiable rule:</strong> One real project per month. It can be small and ugly. But it must be pushed to GitHub with a README. Your public project history IS your resume at every salary tier.</div>
+
+  <div style="margin-bottom:24px;">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:14px;">Phase 1 — Monthly Projects (Months 1–6)</div>
+    <div class="proj-list">
+      <div class="proj"><div class="proj-num">Month 1</div><div><div class="proj-name">Python Toolbox</div><div class="proj-desc">File parser, data cleaner, or CLI automation tool. Demonstrates scripting for real IT tasks. This is also your first GitHub push.</div></div></div>
+      <div class="proj"><div class="proj-num">Month 2</div><div><div class="proj-name">Projectile Motion Simulator</div><div class="proj-desc">Simple physics simulation using Python. Ties math + coding together. Demonstrates you understand the physics underlying robotics/aerospace.</div></div></div>
+      <div class="proj"><div class="proj-num">Month 3</div><div><div class="proj-name">Plant Metrics Dashboard</div><div class="proj-desc">Data visualization dashboard using mock sensor or CSV data. Can be framed around AgrAI. Shows data engineering instinct.</div></div></div>
+      <div class="proj"><div class="proj-num">Month 4</div><div><div class="proj-name">Algorithm Visualizer</div><div class="proj-desc">Visual tool showing sorting or searching algorithms in action. Demonstrates CS fundamentals understanding — impressive in interviews.</div></div></div>
+      <div class="proj"><div class="proj-num">Month 5</div><div><div class="proj-name">API + Database Mini App</div><div class="proj-desc">Pull data from a public API, store in a database, query and display it. Basic full-stack thinking, highly hireable signal.</div></div></div>
+      <div class="proj"><div class="proj-num">Month 6</div><div><div class="proj-name">First ML Model on Real Data</div><div class="proj-desc">Train a classifier on a real public dataset (plant disease, genomic, or sensor data). Even a simple model with clean code is portfolio gold.</div></div></div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:24px;">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:14px;">Phase 2 — Quarterly Projects (Months 6–18)</div>
+    <div class="proj-list">
+      <div class="proj"><div class="proj-num">Q1</div><div><div class="proj-name">AgrAI Analytics Core</div><div class="proj-desc">Ingest data (CSV/JSON/sensor mock) → clean + store → visualize trends → simple predictive model. This is AgrAI's foundation layer.</div></div></div>
+      <div class="proj"><div class="proj-num">Q2</div><div><div class="proj-name">Computer Vision: Plant Health</div><div class="proj-desc">Image classification or segmentation on plant health data. Simple inference pipeline. OpenCV + basic CNN. Ties vision to biology.</div></div></div>
+      <div class="proj"><div class="proj-num">Q3</div><div><div class="proj-name">Automation Agent</div><div class="proj-desc">Scheduler + logging + alerts system that integrates with data and takes actions automatically. Demonstrates autonomous system thinking.</div></div></div>
+      <div class="proj"><div class="proj-num">Q4</div><div><div class="proj-name">Genomic Data Explorer</div><div class="proj-desc">Download a real genomic dataset from NCBI. Analyze nucleotide patterns. Visualize gene expression or sequence stats. Your first bioinformatics project.</div></div></div>
+    </div>
+  </div>
+
+  <div>
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--violet);text-transform:uppercase;margin-bottom:14px;">Phase 3–4 — Capstone / Flagship (Year 2+)</div>
+    <div class="north-star">
+      <div class="ns-eye">// North Star Project</div>
+      <div class="ns-title">Project GENESIS</div>
+      <div class="ns-body">
+        <em>Genomic Environment for Networked Experimental Systems with Intelligent Supervision</em><br/><br/>
+        An autonomous laboratory assistant that combines computer vision, robotics control, and ML to process biological and genomic data — applicable to cannabis genomics, plant science, or longevity research.<br/><br/>
+        <strong style="color:var(--text);">Intelligence layer first (Year 2):</strong> Python + ML pipeline that processes plant genomic or image data automatically with a clean interface.<br/>
+        <strong style="color:var(--text);">Robotics layer later (Year 3):</strong> Physical automation integration. This becomes your magnum opus that opens frontier roles and founder conversations.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RESOURCES ═══ -->
+<div id="tab-resources" class="pane">
+  <div class="stitle">Your Complete Learning Stack</div>
+  <div class="notice"><strong>Sequenced by phase.</strong> Do not open everything at once. Work Phase 0 resources before Phase 1, Phase 1 before Phase 2. Each link has been selected specifically for your trajectory.</div>
+
+  <div style="margin-bottom:26px;">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--rose);text-transform:uppercase;margin-bottom:12px;">Phase 0 — Prerequisites · Start Here First</div>
+    <div class="res-list">
+      <a class="res" href="https://www.khanacademy.org/math/algebra" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(255,184,48,.1)">🧮</div><div><div class="res-name">Khan Academy — Algebra I & II</div><div class="res-desc">Free. The non-negotiable foundation before anything else. Start here today.</div></div></div><span class="pbadge pb0">Week 1 →</span></a>
+      <a class="res" href="https://www.khanacademy.org/math/trigonometry" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(255,184,48,.1)">📐</div><div><div class="res-name">Khan Academy — Trigonometry</div><div class="res-desc">Free. Unit circle is a must. Follow immediately after Algebra II.</div></div></div><span class="pbadge pb0">Week 3 →</span></a>
+      <a class="res" href="https://www.khanacademy.org/science/physics" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(255,107,138,.1)">⚡</div><div><div class="res-name">Khan Academy — Physics Intro</div><div class="res-desc">Free. Intuition-first physics. Run parallel to math prerequisites.</div></div></div><span class="pbadge pb0">Week 2 →</span></a>
+    </div>
+  </div>
+
+  <div style="margin-bottom:26px;">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:12px;">Phase 1 — Python + CS Core</div>
+    <div class="res-list">
+      <a class="res" href="https://automatetheboringstuff.com" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(91,228,255,.1)">🐍</div><div><div class="res-name">Automate the Boring Stuff</div><div class="res-desc">Free online book. Practical Python for real-world tasks. Your Week 1 mission.</div></div></div><span class="pbadge pb1">Now</span></a>
+      <a class="res" href="https://cs50.harvard.edu/python/" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(91,228,255,.1)">🎓</div><div><div class="res-name">CS50P — Python (Harvard, Free)</div><div class="res-desc">World-class. Run parallel to Automate the Boring Stuff for deeper CS grounding.</div></div></div><span class="pbadge pb1">Month 1–2</span></a>
+      <a class="res" href="https://linuxjourney.com" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(61,255,160,.1)">🐧</div><div><div class="res-name">Linux Journey</div><div class="res-desc">Free interactive CLI training. Non-negotiable for AI, Robotics, and Bioinformatics.</div></div></div><span class="pbadge pb1">Month 2</span></a>
+      <a class="res" href="https://cs.ossu.dev" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(91,228,255,.1)">💻</div><div><div class="res-name">OSSU Computer Science</div><div class="res-desc">Full CS curriculum — algorithms, systems, theory. Your long-term academic backbone.</div></div></div><span class="pbadge pb1">Month 3+</span></a>
+    </div>
+  </div>
+
+  <div style="margin-bottom:26px;">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:12px;">Phase 1 — Math Backbone</div>
+    <div class="res-list">
+      <a class="res" href="https://math.ossu.dev" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(255,184,48,.1)">🔢</div><div><div class="res-name">OSSU Mathematics</div><div class="res-desc">Calculus, linear algebra, probability. The engine of everything you'll build.</div></div></div><span class="pbadge pb1">Month 4+</span></a>
+      <a class="res" href="https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(255,184,48,.1)">📐</div><div><div class="res-name">MIT 18.06 — Linear Algebra (Strang)</div><div class="res-desc">The single course that unlocks neural networks, robotics, and genomic analysis simultaneously.</div></div></div><span class="pbadge pb2">Month 6+</span></a>
+      <a class="res" href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(255,107,138,.1)">🚀</div><div><div class="res-name">MIT OCW — Classical Mechanics</div><div class="res-desc">Free. The physics foundation for robotics and aerospace. Prof. Lewin's course is legendary.</div></div></div><span class="pbadge pb1">Month 4+</span></a>
+    </div>
+  </div>
+
+  <div style="margin-bottom:26px;">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:12px;">Phase 2 — AI + Data Science</div>
+    <div class="res-list">
+      <a class="res" href="https://ds.ossu.dev" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(61,255,160,.1)">📊</div><div><div class="res-name">OSSU Data Science</div><div class="res-desc">Stats, ML, data engineering. Feeds directly into AI, genomics, and AgrAI work.</div></div></div><span class="pbadge pb2">Month 8+</span></a>
+      <a class="res" href="https://www.coursera.org/specializations/machine-learning-introduction" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(61,255,160,.1)">🎯</div><div><div class="res-name">Andrew Ng — ML Specialization</div><div class="res-desc">Math-grounded ML theory. Free to audit. The industry standard starting point for ML.</div></div></div><span class="pbadge pb2">Month 8+</span></a>
+      <a class="res" href="https://www.fast.ai" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(91,228,255,.1)">🤖</div><div><div class="res-name">Fast.ai — Practical Deep Learning</div><div class="res-desc">Top-down ML. Free. Gets you building real models fast. Run alongside Andrew Ng.</div></div></div><span class="pbadge pb2">Month 10+</span></a>
+    </div>
+  </div>
+
+  <div style="margin-bottom:26px;">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--violet);text-transform:uppercase;margin-bottom:12px;">Phase 3 — Domain Depth (Bioinformatics + Robotics)</div>
+    <div class="res-list">
+      <a class="res" href="https://bioinfo.ossu.dev" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(192,132,252,.1)">🧬</div><div><div class="res-name">OSSU Bioinformatics (Archived)</div><div class="res-desc">Still highly valuable. Teaches the computational biology mindset. Cannabis genomics and plant science entry point.</div></div></div><span class="pbadge pb3">Month 12+</span></a>
+      <a class="res" href="https://rosalind.info" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(61,255,160,.1)">🧪</div><div><div class="res-name">Rosalind.info — Bioinformatics Problems</div><div class="res-desc">Problem-based bioinformatics learning. Python + biology = your competitive edge.</div></div></div><span class="pbadge pb3">Month 12+</span></a>
+      <a class="res" href="https://www.ros.org" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(91,228,255,.1)">🦾</div><div><div class="res-name">ROS2 — Robot Operating System</div><div class="res-desc">The standard robotics framework. Python-first. Where your AI and hardware skills merge.</div></div></div><span class="pbadge pb3">Month 18+</span></a>
+    </div>
+  </div>
+
+  <div>
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--rose);text-transform:uppercase;margin-bottom:12px;">Job Platforms — Apply Now</div>
+    <div class="res-list">
+      <a class="res" href="https://www.linkedin.com/jobs/" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(91,228,255,.1)">💼</div><div><div class="res-name">LinkedIn Jobs</div><div class="res-desc">Primary job platform. Set "Open to Work" today. Target: NOC, IT Support, Jr. Sysadmin.</div></div></div><span class="pbadge pb0">Now</span></a>
+      <a class="res" href="https://www.indeed.com/jobs?q=NOC+Technician" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(61,255,160,.1)">🔍</div><div><div class="res-name">Indeed — NOC / IT Roles</div><div class="res-desc">High volume of entry IT roles. Filter by remote or your location. Apply 3/week.</div></div></div><span class="pbadge pb0">Now</span></a>
+      <a class="res" href="https://wellfound.com/jobs" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(255,184,48,.1)">🚀</div><div><div class="res-name">Wellfound (AngelList) — Startups</div><div class="res-desc">Startups hire initiative over credentials. Good for Phase 2+ technical roles.</div></div></div><span class="pbadge pb1">Month 3+</span></a>
+      <a class="res" href="https://github.com" target="_blank"><div class="res-l"><div class="res-icon" style="background:rgba(192,132,252,.1)">📁</div><div><div class="res-name">GitHub — Your Portfolio Home</div><div class="res-desc">Every project you build goes here. Your public profile IS your resume at every phase.</div></div></div><span class="pbadge pb0">Day 1</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ THIS WEEK ═══ -->
+<div id="tab-thisweek" class="pane">
+  <div class="stitle">Week 1 Mission — Starting Now</div>
+  <div class="notice"><strong>Complete in order.</strong> Each item builds confidence for the next. Check off as you finish. Report back to your mentor at the end of the week with: what you completed, what confused you, how many jobs you applied to.</div>
+
+  <div class="g2">
+    <div class="card">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:16px;">🐍 Python Track</div>
+      <ul class="cl">
+        <li class="cl-item" onclick="chk(this)"><div class="cl-box">✓</div><div><div class="cl-txt">Open automatetheboringstuff.com</div><div class="cl-sub">Just open it. Read the intro. Feel it out.</div></div></li>
+        <li class="cl-item" onclick="chk(this)"><div class="cl-box">✓</div><div><div class="cl-txt">Read Chapter 1 — Python Basics</div><div class="cl-sub">Read like a story first. No notes yet.</div></div></li>
+        <li class="cl-item" onclick="chk(this)"><div class="cl-box">✓</div><div><div class="cl-txt">Type (don't copy) the Chapter 1 examples</div><div class="cl-sub">Open VS Code. Every line by hand. Your fingers learn too.</div></div></li>
+        <li class="cl-item" onclick="chk(this)"><div class="cl-box">✓</div><div><div class="cl-txt">Read Chapter 2 — Flow Control</div><div class="cl-sub">if/else, loops. The foundation of all programming logic.</div></div></li>
+        <li class="cl-item" onclick="chk(this)"><div class="cl-box">✓</div><div><div class="cl-txt">Read Chapter 3 — Functions</div><div class="cl-sub">Where real programming thinking starts. If you hit confusion, write it down and bring it to your mentor.</div></div></li>
+        <li class="cl-item" onclick="chk(this)"><div class="cl-box">✓</div><div><div class="cl-txt">Saturday: Build the word counter script</div><div class="cl-sub">Read a text file → count word frequency → print top 10. Push to GitHub. This is your first real program.</div></div></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:16px;">💼 Career Track</div>
+      <ul class="cl">
+        <li class="cl-item" onclick="chk(this)"><div class="cl-box">✓</div><div><div class="cl-txt">Create GitHub profile</div><div class="cl-sub">github.com — free. Add bio: "IT background. Learning Python + CS. Building toward AI/Robotics/Genomics."</div></div></li>
+        <li class="cl-item" onclick="chk(this)"><div class="cl-box">✓</div><div><div class="cl-txt">Set LinkedIn to "Open to Work"</div><div class="cl-sub">Target roles: IT Support Specialist, NOC Technician, Jr. Sysadmin.</div></div></li>
+        <li class="cl-item" onclick="chk(this)"><div class="cl-box">✓</div><div><div class="cl-txt">Read 10 job postings for target roles</div><div class="cl-sub">Write down the top 5 skills that appear most often. Tell your mentor what they are.</div></div></li>
+        <li class="cl-item" onclick="chk(this)"><div class="cl-box">✓</div><div><div class="cl-txt">Apply to 3 roles this week</div><div class="cl-sub">Don't wait for perfection. Apply now. Iteration beats waiting.</div></div></li>
+        <li class="cl-item" onclick="chk(this)"><div class="cl-box">✓</div><div><div class="cl-txt">Write out your IT knowledge areas</div><div class="cl-sub">Networking, OS, hardware, troubleshooting, tools. These are your interview talking points right now.</div></div></li>
+        <li class="cl-item" onclick="chk(this)"><div class="cl-box">✓</div><div><div class="cl-txt">Answer this interview question in writing (3–5 sentences)</div><div class="cl-sub">"Tell me about a time you solved a technical problem under pressure."</div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:12px;">🧮 Math Track (Thursday this week)</div>
+    <ul class="cl">
+      <li class="cl-item" onclick="chk(this)"><div class="cl-box">✓</div><div><div class="cl-txt">Open Khan Academy and start Algebra I — Unit 1</div><div class="cl-sub">khanacademy.org/math/algebra. Complete 3–5 exercises. This is Phase 0 beginning.</div></div></li>
+      <li class="cl-item" onclick="chk(this)"><div class="cl-box">✓</div><div><div class="cl-txt">Note: what felt easy vs what needed thought</div><div class="cl-sub">This tells both you and your mentor exactly where your math baseline is.</div></div></li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-top:16px;border-color:rgba(91,228,255,.25);">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--violet);text-transform:uppercase;margin-bottom:10px;">📋 Weekly Mentor Check-In Protocol</div>
+    <p style="font-size:13px;color:var(--dim);line-height:1.8;">At the end of every week, report back with these four things:<br/>
+    <strong style="color:var(--text);">1.</strong> What did you complete? &nbsp;
+    <strong style="color:var(--text);">2.</strong> What confused you? &nbsp;
+    <strong style="color:var(--text);">3.</strong> What felt good? &nbsp;
+    <strong style="color:var(--text);">4.</strong> How many jobs did you apply to?<br/><br/>
+    Your mentor uses this to build Week 2. <strong style="color:var(--cyan);">The check-in is how this system stays calibrated.</strong></p>
+  </div>
+</div>
+
+<!-- ═══ TRIANGLE ═══ -->
+<div id="tab-triangle" class="pane">
+  <div class="stitle">The Convergence Triangle</div>
+  <p style="color:var(--dim);margin-bottom:24px;font-size:13px;">Three domains. One identity. Every skill you build connects to at least one vertex — most connects to two or three. Python is the universal language of all three. Math is the universal foundation of all three.</p>
+
+  <div class="tri-wrap">
+    <svg class="tri-svg" viewBox="0 0 440 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="220" y1="30" x2="44" y2="330" stroke="url(#g1)" stroke-width="1.5" opacity=".7"/>
+      <line x1="220" y1="30" x2="396" y2="330" stroke="url(#g2)" stroke-width="1.5" opacity=".7"/>
+      <line x1="44" y1="330" x2="396" y2="330" stroke="url(#g3)" stroke-width="1.5" opacity=".7"/>
+      <line x1="220" y1="30" x2="220" y2="330" stroke="rgba(255,255,255,.04)" stroke-width="1" stroke-dasharray="5,5"/>
+      <line x1="44" y1="330" x2="308" y2="180" stroke="rgba(255,255,255,.04)" stroke-width="1" stroke-dasharray="5,5"/>
+      <line x1="396" y1="330" x2="132" y2="180" stroke="rgba(255,255,255,.04)" stroke-width="1" stroke-dasharray="5,5"/>
+      <!-- Center -->
+      <circle cx="220" cy="220" r="44" fill="rgba(91,228,255,.05)" stroke="rgba(91,228,255,.2)" stroke-width="1"/>
+      <text x="220" y="213" text-anchor="middle" fill="#5BE4FF" font-size="9" font-family="DM Mono" letter-spacing="2">BLAKE</text>
+      <text x="220" y="228" text-anchor="middle" fill="#5A7090" font-size="8" font-family="DM Mono">GENESIS</text>
+      <!-- AI -->
+      <circle cx="220" cy="30" r="38" fill="rgba(91,228,255,.08)" stroke="#5BE4FF" stroke-width="1.5"/>
+      <text x="220" y="24" text-anchor="middle" fill="#5BE4FF" font-size="12" font-family="Unbounded" font-weight="700">AI</text>
+      <text x="220" y="40" text-anchor="middle" fill="#5A7090" font-size="8" font-family="DM Mono">+ MACHINE LEARNING</text>
+      <!-- Robotics -->
+      <circle cx="44" cy="330" r="38" fill="rgba(61,255,160,.08)" stroke="#3DFFA0" stroke-width="1.5"/>
+      <text x="44" y="325" text-anchor="middle" fill="#3DFFA0" font-size="10" font-family="Unbounded" font-weight="700">ROBOT</text>
+      <text x="44" y="340" text-anchor="middle" fill="#5A7090" font-size="7" font-family="DM Mono">+ AUTONOMOUS SYS</text>
+      <!-- Genomics -->
+      <circle cx="396" cy="330" r="38" fill="rgba(192,132,252,.08)" stroke="#C084FC" stroke-width="1.5"/>
+      <text x="396" y="325" text-anchor="middle" fill="#C084FC" font-size="9" font-family="Unbounded" font-weight="700">GENOMICS</text>
+      <text x="396" y="340" text-anchor="middle" fill="#5A7090" font-size="7" font-family="DM Mono">+ BIOLOGY</text>
+      <!-- Edge labels -->
+      <text x="116" y="172" text-anchor="middle" fill="#5A7090" font-size="8" font-family="DM Mono" transform="rotate(-60,116,172)">ROS + Vision</text>
+      <text x="324" y="172" text-anchor="middle" fill="#5A7090" font-size="8" font-family="DM Mono" transform="rotate(60,324,172)">ML + Bio Data</text>
+      <text x="220" y="358" text-anchor="middle" fill="#5A7090" font-size="8" font-family="DM Mono">Lab Automation + AgrAI</text>
+      <defs>
+        <linearGradient id="g1" x1="220" y1="30" x2="44" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#5BE4FF"/><stop offset="100%" stop-color="#3DFFA0"/></linearGradient>
+        <linearGradient id="g2" x1="220" y1="30" x2="396" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#5BE4FF"/><stop offset="100%" stop-color="#C084FC"/></linearGradient>
+        <linearGradient id="g3" x1="44" y1="330" x2="396" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#3DFFA0"/><stop offset="100%" stop-color="#C084FC"/></linearGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <div class="tri-cards">
+    <div class="card">
+      <div style="color:var(--cyan);font-family:'Unbounded',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px;">🤖 Artificial Intelligence</div>
+      <p style="color:var(--dim);font-size:12px;line-height:1.7;">The brain of every system. ML, deep learning, reinforcement learning. Skills here multiply instantly across robotics and biology. It's the universal amplifier.</p>
+      <div style="margin-top:10px;font-family:'DM Mono',monospace;font-size:9px;color:var(--cyan);">ENTRY: Month 8 · DEEP: Month 18+</div>
+    </div>
+    <div class="card">
+      <div style="color:var(--green);font-family:'Unbounded',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px;">🦾 Robotics</div>
+      <p style="color:var(--dim);font-size:12px;line-height:1.7;">AI embodied in the physical world. ROS, control theory, computer vision, kinematics. Where software meets atoms. The field where your AgrAI vision lives.</p>
+      <div style="margin-top:10px;font-family:'DM Mono',monospace;font-size:9px;color:var(--green);">ENTRY: Month 14 · DEEP: Month 24+</div>
+    </div>
+    <div class="card">
+      <div style="color:var(--violet);font-family:'Unbounded',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px;">🧬 Genomics + Biology</div>
+      <p style="color:var(--dim);font-size:12px;line-height:1.7;">The software of life. DNA is code. Proteins are programs. Evolution is optimization. Cannabis genomics and plant science are your applied entry points into this frontier.</p>
+      <div style="margin-top:10px;font-family:'DM Mono',monospace;font-size:9px;color:var(--violet);">ENTRY: Month 9 · DEEP: Month 20+</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:14px;">Why Python is the Key to All Three Vertices</div>
+    <div class="g3">
+      <div>
+        <div style="color:var(--cyan);font-size:12px;font-weight:600;margin-bottom:5px;">In AI/ML</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">PyTorch, TensorFlow, scikit-learn, NumPy — all Python. Every model you'll train runs in it.</div>
+      </div>
+      <div>
+        <div style="color:var(--green);font-size:12px;font-weight:600;margin-bottom:5px;">In Robotics</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">ROS2 is Python-first. Sensor fusion, path planning, control scripts — all written in Python.</div>
+      </div>
+      <div>
+        <div style="color:var(--violet);font-size:12px;font-weight:600;margin-bottom:5px;">In Genomics</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">BioPython, Snakemake, genomic pipelines — Python. Sequence analysis and variant calling — Python.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Convergence Builder Identity -->
+  <div class="north-star">
+    <div class="ns-eye">// Your Identity — Confirmed by Both AI Systems</div>
+    <div class="ns-title">Level 3: Convergence Builder</div>
+    <div class="ns-body">
+      You are not wired for a single lane. You think in systems and ecosystems. You see patterns like AI ↔ Biology, Robotics ↔ Space, Automation ↔ Human Longevity before most people even realize those fields are connected.<br/><br/>
+      <strong style="color:var(--text);">The highest earners in your interest set follow this pattern:</strong><br/>
+      Step 1 — Learn one core skill deeply (you're here now — Python + CS)<br/>
+      Step 2 — Use AI to become elite faster than the previous generation<br/>
+      Step 3 — Move into leadership, ownership, or frontier architecture<br/><br/>
+      <em style="color:var(--cyan);">The career you're looking for probably doesn't fully exist yet. The people who will create it are starting exactly where you are right now.</em>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ AI MASTERY ═══ -->
+<div id="tab-aimastery" class="pane">
+  <div class="stitle">AI Mastery — Learn to Direct the Most Powerful Tool Available</div>
+  <div class="notice">
+    <strong>Why this is Phase 1, not later:</strong> Every project you build from Week 1 onward gets compounded if you know how to architect AI systems, not just use them passively. A Python developer who can also build agent workflows and direct AI tools is in a completely different tier — and it's learnable right now, in parallel.
+  </div>
+
+  <!-- Anthropic Resources -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">Anthropic Official Learning Resources</div>
+  <div class="g2" style="margin-bottom:28px;">
+    <div class="card">
+      <div style="color:var(--cyan);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">📚 Anthropic Courses (GitHub — Free)</div>
+      <div class="res-list">
+        <a class="res" href="https://github.com/anthropics/courses" target="_blank" style="padding:11px 14px;">
+          <div class="res-l"><div class="res-icon" style="background:rgba(91,228,255,.1);font-size:14px;">🎓</div><div><div class="res-name" style="font-size:12px;">Anthropic Courses — Full Catalog</div><div class="res-desc">Prompt engineering, tool use, agents, RAG, MCP. Official curriculum from the builders of Claude.</div></div></div>
+          <span class="pbadge pb1">Month 1+</span>
+        </a>
+        <a class="res" href="https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial" target="_blank" style="padding:11px 14px;">
+          <div class="res-l"><div class="res-icon" style="background:rgba(91,228,255,.1);font-size:14px;">✍️</div><div><div class="res-name" style="font-size:12px;">Prompt Engineering Tutorial</div><div class="res-desc">Learn to communicate with AI systems precisely. This is a technical skill, not a trick.</div></div></div>
+          <span class="pbadge pb1">Week 2+</span>
+        </a>
+        <a class="res" href="https://github.com/anthropics/courses/tree/master/tool_use" target="_blank" style="padding:11px 14px;">
+          <div class="res-l"><div class="res-icon" style="background:rgba(61,255,160,.1);font-size:14px;">🔧</div><div><div class="res-name" style="font-size:12px;">Tool Use Course</div><div class="res-desc">How AI calls external tools and APIs. The bridge between AI and real-world systems.</div></div></div>
+          <span class="pbadge pb1">Month 2+</span>
+        </a>
+        <a class="res" href="https://github.com/anthropics/courses/tree/master/rag_and_embeddings" target="_blank" style="padding:11px 14px;">
+          <div class="res-l"><div class="res-icon" style="background:rgba(255,184,48,.1);font-size:14px;">🗄️</div><div><div class="res-name" style="font-size:12px;">RAG + Embeddings</div><div class="res-desc">Retrieval-augmented generation. How to give AI systems memory and domain knowledge.</div></div></div>
+          <span class="pbadge pb2">Month 4+</span>
+        </a>
+        <a class="res" href="https://github.com/anthropics/courses/tree/master/real_world_prompting" target="_blank" style="padding:11px 14px;">
+          <div class="res-l"><div class="res-icon" style="background:rgba(192,132,252,.1);font-size:14px;">🌐</div><div><div class="res-name" style="font-size:12px;">Real World Prompting</div><div class="res-desc">Applied prompt engineering for real applications. Moves beyond tutorials into production thinking.</div></div></div>
+          <span class="pbadge pb1">Month 2+</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="color:var(--green);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">🤖 Agent Building + MCP</div>
+      <div class="res-list">
+        <a class="res" href="https://github.com/anthropics/courses/tree/master/building_effective_agents" target="_blank" style="padding:11px 14px;">
+          <div class="res-l"><div class="res-icon" style="background:rgba(61,255,160,.1);font-size:14px;">⚙️</div><div><div class="res-name" style="font-size:12px;">Building Effective Agents</div><div class="res-desc">Anthropic's official playbook for building AI agents that take real actions in real systems.</div></div></div>
+          <span class="pbadge pb2">Month 3+</span>
+        </a>
+        <a class="res" href="https://modelcontextprotocol.io" target="_blank" style="padding:11px 14px;">
+          <div class="res-l"><div class="res-icon" style="background:rgba(61,255,160,.1);font-size:14px;">🔌</div><div><div class="res-name" style="font-size:12px;">Model Context Protocol (MCP)</div><div class="res-desc">The open standard for connecting AI to data, tools, and real-world systems. Built by Anthropic. Rapidly becoming industry standard.</div></div></div>
+          <span class="pbadge pb2">Month 4+</span>
+        </a>
+        <a class="res" href="https://docs.anthropic.com" target="_blank" style="padding:11px 14px;">
+          <div class="res-l"><div class="res-icon" style="background:rgba(91,228,255,.1);font-size:14px;">📖</div><div><div class="res-name" style="font-size:12px;">Anthropic Documentation</div><div class="res-desc">Full API docs, model guides, and Claude reference. Bookmark this — you'll use it constantly.</div></div></div>
+          <span class="pbadge pb1">Day 1</span>
+        </a>
+      </div>
+
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--edge2);">
+        <div style="color:var(--amber);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">🔒 AI Security + Safe Operation</div>
+        <div class="res-list">
+          <a class="res" href="https://owasp.org/www-project-top-10-for-large-language-model-applications/" target="_blank" style="padding:11px 14px;">
+            <div class="res-l"><div class="res-icon" style="background:rgba(255,107,138,.1);font-size:14px;">🛡️</div><div><div class="res-name" style="font-size:12px;">OWASP LLM Top 10</div><div class="res-desc">The definitive guide to AI security vulnerabilities. Know what can go wrong before building in production.</div></div></div>
+            <span class="pbadge pb2">Month 3+</span>
+          </a>
+          <a class="res" href="https://www.anthropic.com/research/prompt-injection-attacks" target="_blank" style="padding:11px 14px;">
+            <div class="res-l"><div class="res-icon" style="background:rgba(255,107,138,.1);font-size:14px;">⚠️</div><div><div class="res-name" style="font-size:12px;">Prompt Injection Attacks — Anthropic Research</div><div class="res-desc">Understanding how AI systems can be manipulated. Critical knowledge for anyone building agents.</div></div></div>
+            <span class="pbadge pb2">Month 3+</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What AI Mastery Actually Means -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">What "AI Mastery" Actually Means for Your Path</div>
+  <div class="g3" style="margin-bottom:24px;">
+    <div class="card">
+      <div style="color:var(--cyan);font-size:13px;font-weight:700;margin-bottom:8px;">Level 1 — AI User</div>
+      <p style="font-size:12px;color:var(--dim);line-height:1.7;">You use AI tools to get answers faster. ChatGPT, Claude, Copilot. Most people are here. This is table stakes in 2026, not a skill.</p>
+      <div style="margin-top:10px;font-size:11px;color:var(--rose);">⚠️ Easily replaceable. Not a differentiator.</div>
+    </div>
+    <div class="card" style="border-color:rgba(61,255,160,.25);">
+      <div style="color:var(--green);font-size:13px;font-weight:700;margin-bottom:8px;">Level 2 — AI Director</div>
+      <p style="font-size:12px;color:var(--dim);line-height:1.7;">You write precise prompts, chain them, build workflows, and extract structured outputs. You use AI as a programmable layer, not just a search engine.</p>
+      <div style="margin-top:10px;font-size:11px;color:var(--green);">✅ Where you're heading in Phase 1.</div>
+    </div>
+    <div class="card" style="border-color:rgba(192,132,252,.25);">
+      <div style="color:var(--violet);font-size:13px;font-weight:700;margin-bottom:8px;">Level 3 — AI Architect</div>
+      <p style="font-size:12px;color:var(--dim);line-height:1.7;">You build systems where AI agents act autonomously — connecting tools, making decisions, operating in loops. You design the intelligence, not just use it.</p>
+      <div style="margin-top:10px;font-size:11px;color:var(--violet);">🚀 Phase 2–3 target. Where GENESIS begins.</div>
+    </div>
+  </div>
+
+  <!-- Agent Architecture Explained -->
+  <div class="card" style="margin-bottom:24px;">
+    <div style="color:var(--amber);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">How an AI Agent Actually Works — Build Intuition Now</div>
+    <div class="g2">
+      <div>
+        <p style="font-size:13px;color:var(--dim);line-height:1.8;margin-bottom:14px;">An agent is a system where an AI model can <strong style="color:var(--text);">perceive inputs, reason about them, and take actions</strong> — often in a loop until a goal is reached.</p>
+        <div class="skill-row">
+          <span class="sk">Perception (inputs)</span><span class="sk">Reasoning (LLM)</span>
+          <span class="sk">Tool Use (actions)</span><span class="sk">Memory (context)</span>
+          <span class="sk">Planning (multi-step)</span><span class="sk">Feedback loops</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--dim);line-height:1.8;">
+          <div style="margin-bottom:8px;"><strong style="color:var(--cyan);">Example — AgrAI Agent:</strong></div>
+          Perceive → plant sensor readings<br/>
+          Reason → "moisture below threshold"<br/>
+          Act → trigger irrigation + log event<br/>
+          Remember → last 30 days of readings<br/>
+          Plan → predict next optimal water cycle<br/>
+          <div style="margin-top:10px;color:var(--green);font-size:11px;">This is Project GENESIS, layer by layer.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sequencing -->
+  <div class="card">
+    <div style="color:var(--violet);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">Recommended AI Mastery Sequence (Run Alongside Main Track)</div>
+    <div class="proj-list">
+      <div class="proj"><div class="proj-num" style="color:var(--cyan);">Week 2</div><div><div class="proj-name">Anthropic Prompt Engineering Tutorial</div><div class="proj-desc">Learn to write precise, structured prompts. This immediately improves how you use AI for learning every other subject.</div></div></div>
+      <div class="proj"><div class="proj-num" style="color:var(--cyan);">Month 1</div><div><div class="proj-name">Real World Prompting Course</div><div class="proj-desc">Applied prompt patterns for actual use cases. Understand few-shot, chain-of-thought, and output formatting.</div></div></div>
+      <div class="proj"><div class="proj-num" style="color:var(--green);">Month 2</div><div><div class="proj-name">Tool Use Course + Build First Tool-Calling Script</div><div class="proj-desc">Write a Python script that calls the Claude API and uses a tool. Your first real AI integration. Combine with Automate the Boring Stuff skills.</div></div></div>
+      <div class="proj"><div class="proj-num" style="color:var(--green);">Month 3</div><div><div class="proj-name">Building Effective Agents Playbook</div><div class="proj-desc">Study Anthropic's agent patterns. Understand when to use single-agent vs. multi-agent architectures.</div></div></div>
+      <div class="proj"><div class="proj-num" style="color:var(--amber);">Month 4</div><div><div class="proj-name">RAG + Embeddings + MCP Integration</div><div class="proj-desc">Give your agents memory and real-world data access. Connect to a database or file system using MCP. This is when things start feeling like real products.</div></div></div>
+      <div class="proj"><div class="proj-num" style="color:var(--amber);">Month 5+</div><div><div class="proj-name">OWASP LLM Security + Safe Deployment</div><div class="proj-desc">Learn prompt injection, jailbreaks, data leakage. Build defensively from the start. Security awareness is a genuine differentiator in AI engineering roles.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ GENOMICS + BIOLOGY ═══ -->
+<div id="tab-genomics" class="pane">
+  <div class="stitle">Genomics as the Core — Plant + Human Biology as the Context</div>
+  <div class="notice">
+    <strong>Strategic decision:</strong> Genomics is the computational spine that bridges plant biology (AgrAI, cannabis) AND human biology (longevity, performance) simultaneously. The same tools — sequence analysis, gene expression pipelines, variant calling — apply to both. Learn genomics as the core and you get both domains for the price of one. Plant and human biology are the <em>applied contexts</em> that make the genomics meaningful rather than abstract.
+  </div>
+
+  <!-- Why Genomics Is the Core -->
+  <div class="card" style="margin-bottom:24px;border-color:rgba(192,132,252,.25);">
+    <div style="color:var(--violet);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">// Genomics Is the Universal Language of Living Systems</div>
+    <div class="g3">
+      <div style="padding:14px;background:rgba(61,255,160,.04);border-radius:8px;border:1px solid rgba(61,255,160,.12);">
+        <div style="font-size:20px;margin-bottom:8px;">🌿</div>
+        <div style="font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;color:var(--green);margin-bottom:6px;">Plant Biology</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Cannabis genomics, strain intelligence, terpene expression, growth optimization. The applied entry point for AgrAI. Genomics tells you <em>why</em> a plant behaves the way it does.</div>
+        <div style="margin-top:8px;font-family:'DM Mono',monospace;font-size:9px;color:var(--green);">Entry: Month 9+ · AgrAI: Phase 2+</div>
+      </div>
+      <div style="padding:14px;background:rgba(91,228,255,.04);border-radius:8px;border:1px solid rgba(91,228,255,.12);">
+        <div style="font-size:20px;margin-bottom:8px;">🧬</div>
+        <div style="font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;color:var(--cyan);margin-bottom:6px;">Genomics Core</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">DNA structure, gene expression, sequence analysis, variant calling, epigenetics. The computational layer that connects plant and human biology into one unified skillset.</div>
+        <div style="margin-top:8px;font-family:'DM Mono',monospace;font-size:9px;color:var(--cyan);">Entry: Month 9+ · Deep: Month 18+</div>
+      </div>
+      <div style="padding:14px;background:rgba(255,184,48,.04);border-radius:8px;border:1px solid rgba(255,184,48,.12);">
+        <div style="font-size:20px;margin-bottom:8px;">🫀</div>
+        <div style="font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;color:var(--amber);margin-bottom:6px;">Human Biology</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Cell biology, physiology, metabolism, aging mechanisms. The context for longevity science. Understanding how the human body works as a system is what makes genomic data about humans actionable.</div>
+        <div style="margin-top:8px;font-family:'DM Mono',monospace;font-size:9px;color:var(--amber);">Entry: Month 10+ · Deep: Month 20+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Genomics Learning Path -->
+  <div class="g2" style="margin-bottom:24px;">
+    <div class="card">
+      <div style="color:var(--cyan);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">🧬 Genomics Learning Path — Exact Order</div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--cyan);">01</div>
+        <div class="step-info"><div class="step-name">DNA Structure + Central Dogma</div><div class="step-detail">How DNA becomes RNA becomes protein. This is the fundamental algorithm of life. Khan Academy Biology covers this clearly and freely.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--cyan);">02</div>
+        <div class="step-info"><div class="step-name">Gene Expression + Regulation</div><div class="step-detail">How genes turn on and off. Epigenetics — how environment and behavior change gene expression without changing DNA. This is the longevity connection.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--cyan);">03</div>
+        <div class="step-info"><div class="step-name">Sequence Analysis + Bioinformatics Tools</div><div class="step-detail">BLAST, NCBI databases, sequence alignment. Rosalind.info is your problem-based learning platform. Python + BioPython processes real genomic data.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--cyan);">04</div>
+        <div class="step-info"><div class="step-name">Variant Calling + Population Genomics</div><div class="step-detail">How genetic variants are identified and what they mean. SNPs, insertions, deletions. Tools: GATK, VCFtools. Directly applicable to cannabis strain profiling.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--cyan);">05</div>
+        <div class="step-info"><div class="step-name">Transcriptomics + Gene Expression Analysis</div><div class="step-detail">RNA sequencing (RNA-seq). Understanding which genes are active in a tissue at a given moment. The basis for AI-driven gene expression models.</div></div>
+      </div>
+      <div class="path-step" style="border-bottom:none;">
+        <div class="step-num" style="color:var(--cyan);">06</div>
+        <div class="step-info"><div class="step-name">ML Applied to Genomics ⭐</div><div class="step-detail">Using ML models to predict gene function, classify variants, and identify patterns in large genomic datasets. This is where your AI skills and biology skills merge into something uniquely powerful.</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="color:var(--green);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">🌿 Plant Biology Track — AgrAI Applied Path</div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--green);">01</div>
+        <div class="step-info"><div class="step-name">Plant Cell Biology + Physiology</div><div class="step-detail">How plant cells work differently from animal cells. Chloroplasts, cell walls, vacuoles. Photosynthesis as an energy system. Foundation for understanding what plants actually do.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--green);">02</div>
+        <div class="step-info"><div class="step-name">Plant Genetics + Breeding Principles</div><div class="step-detail">Mendelian genetics applied to plants. How traits are inherited, selected, and amplified. Cannabis strain development is applied plant genetics. This is AgrAI's scientific foundation.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--green);">03</div>
+        <div class="step-info"><div class="step-name">Secondary Metabolites + Terpene Chemistry</div><div class="step-detail">Why plants produce cannabinoids, terpenes, and other compounds. How environment (light, nutrients, stress) affects secondary metabolite expression. This is where chemistry enters.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--green);">04</div>
+        <div class="step-info"><div class="step-name">Phenotype vs Genotype Analysis</div><div class="step-detail">How genetic expression manifests in observable traits. Connecting DNA data to measurable outcomes like yield, potency, and disease resistance. Core to AgrAI's strain intelligence cards.</div></div>
+      </div>
+      <div class="path-step" style="border-bottom:none;">
+        <div class="step-num" style="color:var(--green);">05</div>
+        <div class="step-info"><div class="step-name">Environmental Genomics + Sensor Integration</div><div class="step-detail">How environmental data (temperature, humidity, CO2, light spectrum) interacts with gene expression in real time. The bridge between your physical grow operation and your AI analysis layer.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chemistry + Lab Research Section -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">⚗️ Chemistry + Lab Research — The Hands-On Layer</div>
+  <div class="notice">
+    <strong>Why chemistry matters for GENESIS:</strong> You don't need a chemistry degree. But understanding the molecular language of biology — how molecules interact, how reactions work, how lab processes generate data — gives you the ability to design AI systems that interface with real biological processes rather than just analyze abstract data about them. This track scales with your projects.
+  </div>
+
+  <div class="g2" style="margin-bottom:24px;">
+    <div class="card">
+      <div style="color:var(--amber);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">⚗️ Chemistry Track — Progressive Path</div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--amber);">01</div>
+        <div class="step-info">
+          <div class="step-name">Basic Chemistry Concepts <span class="pbadge pb1" style="font-size:8px;">Phase 1 — Conceptual</span></div>
+          <div class="step-detail">Atoms, molecules, bonds, pH, acids/bases, reactions. Khan Academy Chemistry. Goal: understand the vocabulary so biology papers don't feel foreign.</div>
+        </div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--amber);">02</div>
+        <div class="step-info">
+          <div class="step-name">Organic Chemistry Foundations <span class="pbadge pb2" style="font-size:8px;">Phase 2 — Foundations</span></div>
+          <div class="step-detail">Carbon-based molecules, functional groups, isomers. Why cannabinoids, terpenes, and proteins are shaped the way they are. This is the molecular language of everything you care about biologically.</div>
+        </div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--amber);">03</div>
+        <div class="step-info">
+          <div class="step-name">Biochemistry <span class="pbadge pb2" style="font-size:8px;">Phase 2 — Practical</span></div>
+          <div class="step-detail">Proteins, enzymes, metabolic pathways, DNA chemistry. How biological molecules interact and function. The bridge between chemistry and genomics. MIT OCW Biochemistry is free.</div>
+        </div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--amber);">04</div>
+        <div class="step-info">
+          <div class="step-name">Lab Workflows + Experimental Design <span class="pbadge pb3" style="font-size:8px;">Phase 3 — Hands-On</span></div>
+          <div class="step-detail">PCR, gel electrophoresis, ELISA, sequencing workflows. Understanding how biological data is physically generated. Even without lab access, knowing these workflows means you can design better AI systems around them.</div>
+        </div>
+      </div>
+      <div class="path-step" style="border-bottom:none;">
+        <div class="step-num" style="color:var(--amber);">05</div>
+        <div class="step-info">
+          <div class="step-name">Computational Chemistry + Molecular Modeling <span class="pbadge pb3" style="font-size:8px;">Phase 3+ — Advanced</span></div>
+          <div class="step-detail">Using software to model molecular interactions. Protein folding (AlphaFold), drug-receptor binding, metabolite prediction. Where chemistry, AI, and biology converge into one computational tool.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="color:var(--rose);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">🔬 Lab Research as a Career Direction</div>
+      <p style="font-size:13px;color:var(--dim);line-height:1.8;margin-bottom:14px;">You mentioned this excites you as a potential career direction. Here's the honest map of where it leads:</p>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--rose);">→</div>
+        <div class="step-info"><div class="step-name">Research Technician / Lab Tech</div><div class="step-detail">Entry-level lab role. Runs experiments, maintains equipment, processes samples. Salary: $40–55k. Accessible with biology foundations + certifications. A real job you could target in Phase 2.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--rose);">→</div>
+        <div class="step-info"><div class="step-name">Bioinformatics Analyst</div><div class="step-detail">Analyzes biological data computationally. Python + genomics tools + statistics. No wet lab required. Salary: $65–90k. This is Phase 2–3 territory and aligns perfectly with your roadmap.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--rose);">→</div>
+        <div class="step-info"><div class="step-name">Computational Biologist / Genomics Engineer</div><div class="step-detail">Builds pipelines for genomic data processing and analysis. ML + biology + cloud. Salary: $90–140k. Phase 3 target. The role that most directly maps to GENESIS.</div></div>
+      </div>
+      <div class="path-step" style="border-bottom:none;">
+        <div class="step-num" style="color:var(--rose);">→</div>
+        <div class="step-info"><div class="step-name">Autonomous Lab Systems Designer</div><div class="step-detail">Designs robotic + AI systems that run biological experiments autonomously. The rarest and highest-value role. Salary: $130k+. Phase 4 / GENESIS-level. Companies like Ginkgo Bioworks, Recursion Pharmaceuticals, and stealth longevity labs are building this now.</div></div>
+      </div>
+
+      <div style="margin-top:16px;padding:12px;background:rgba(61,255,160,.05);border-radius:8px;border:1px solid rgba(61,255,160,.15);">
+        <div style="font-size:11px;color:var(--green);font-weight:600;margin-bottom:4px;">Your Unique Angle</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">You are not trying to become a traditional bench scientist. You are building AI and robotic systems that <em>do</em> the science. That means your chemistry and lab knowledge is about design fluency — knowing enough to build the right tool, not to personally pipette every sample.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GENESIS Connection -->
+  <div class="card" style="border-color:rgba(192,132,252,.25);margin-bottom:24px;">
+    <div style="color:var(--violet);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">// How This All Feeds GENESIS</div>
+    <div class="g3">
+      <div>
+        <div style="color:var(--green);font-size:12px;font-weight:600;margin-bottom:6px;">Plant Genomics Layer</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Cannabis strain sequencing → gene expression profiling → phenotype prediction → AI-driven cultivation recommendations. AgrAI's intelligence core.</div>
+      </div>
+      <div>
+        <div style="color:var(--cyan);font-size:12px;font-weight:600;margin-bottom:6px;">Lab Automation Layer</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Sensors measuring chemical and biological parameters → robotic sample handling → automated data ingestion → ML analysis pipeline. GENESIS's operational backbone.</div>
+      </div>
+      <div>
+        <div style="color:var(--amber);font-size:12px;font-weight:600;margin-bottom:6px;">Human Biology Layer</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Biomarker tracking → epigenetic analysis → longevity intervention modeling. The same GENESIS architecture applied to human healthspan research. Phase 4 application.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resources -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">Resources — Sequenced for When You're Ready</div>
+  <div class="res-list">
+    <a class="res" href="https://www.khanacademy.org/science/biology" target="_blank">
+      <div class="res-l"><div class="res-icon" style="background:rgba(61,255,160,.1)">🌿</div><div><div class="res-name">Khan Academy — Biology</div><div class="res-desc">Free. Cell biology, genetics, plant biology, and human physiology. Your Phase 2 biological foundation.</div></div></div>
+      <span class="pbadge pb2">Month 9+</span>
+    </a>
+    <a class="res" href="https://www.khanacademy.org/science/chemistry" target="_blank">
+      <div class="res-l"><div class="res-icon" style="background:rgba(255,184,48,.1)">⚗️</div><div><div class="res-name">Khan Academy — Chemistry</div><div class="res-desc">Free. Atoms through organic chemistry. Conceptual foundation before biochemistry.</div></div></div>
+      <span class="pbadge pb1">Month 6+</span>
+    </a>
+    <a class="res" href="https://rosalind.info" target="_blank">
+      <div class="res-l"><div class="res-icon" style="background:rgba(91,228,255,.1)">🧬</div><div><div class="res-name">Rosalind.info — Bioinformatics Problems</div><div class="res-desc">Problem-based bioinformatics learning in Python. The most practical entry into computational genomics.</div></div></div>
+      <span class="pbadge pb3">Month 12+</span>
+    </a>
+    <a class="res" href="https://bioinfo.ossu.dev" target="_blank">
+      <div class="res-l"><div class="res-icon" style="background:rgba(192,132,252,.1)">📚</div><div><div class="res-name">OSSU Bioinformatics</div><div class="res-desc">Full bioinformatics curriculum. Sequence analysis, genomic data, and computational biology tools.</div></div></div>
+      <span class="pbadge pb3">Month 12+</span>
+    </a>
+    <a class="res" href="https://www.ncbi.nlm.nih.gov" target="_blank">
+      <div class="res-l"><div class="res-icon" style="background:rgba(61,255,160,.1)">🔬</div><div><div class="res-name">NCBI — National Center for Biotechnology Information</div><div class="res-desc">Free access to real genomic databases. Download actual cannabis and human genome datasets for your projects.</div></div></div>
+      <span class="pbadge pb2">Month 10+</span>
+    </a>
+    <a class="res" href="https://ocw.mit.edu/courses/7-01sc-fundamentals-of-biology-fall-2011/" target="_blank">
+      <div class="res-l"><div class="res-icon" style="background:rgba(255,184,48,.1)">🎓</div><div><div class="res-name">MIT OCW — Fundamentals of Biology</div><div class="res-desc">Free MIT course. Biochemistry, genetics, molecular biology. The academic foundation for everything in this tab.</div></div></div>
+      <span class="pbadge pb2">Month 10+</span>
+    </a>
+  </div>
+</div>
+
+<!-- ═══ AI-ASSISTED CODING STRATEGY ═══ -->
+<div id="tab-aicoding" class="pane">
+  <div class="stitle">AI-Assisted Coding — The New Rules of What to Learn vs. What to Delegate</div>
+  <div class="notice">
+    <strong>The honest reframe:</strong> AI has fundamentally changed the ROI on coding time. You still need to understand logic, data structures, how to read code, and how to direct AI precisely. But you no longer need to hand-write every implementation from memory to build real, powerful systems. This changes where your limited learning time should go.
+  </div>
+
+  <!-- The Core Shift -->
+  <div class="card" style="margin-bottom:24px;border-color:rgba(91,228,255,.25);">
+    <div style="color:var(--cyan);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">// The Strategic Shift — What Changed and Why It Matters for You</div>
+    <div class="g2">
+      <div style="padding:14px;background:rgba(255,107,138,.04);border-radius:8px;border:1px solid rgba(255,107,138,.12);">
+        <div style="font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;color:var(--rose);margin-bottom:10px;">❌ Old Model (Pre-AI)</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.75;">
+          Spend 2–3 years mastering syntax, memorizing APIs, grinding LeetCode problems before you can build anything meaningful.<br/><br/>
+          Most of your learning time went to implementation mechanics — the "how do I write this" rather than the "what should this system do."<br/><br/>
+          Non-CS background = years of catching up before you could contribute to real projects.
+        </div>
+      </div>
+      <div style="padding:14px;background:rgba(61,255,160,.04);border-radius:8px;border:1px solid rgba(61,255,160,.12);">
+        <div style="font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;color:var(--green);margin-bottom:10px;">✅ New Model (AI-Augmented)</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.75;">
+          Learn the concepts and logic deeply. Use AI to handle boilerplate, syntax lookups, and implementation patterns you haven't mastered yet.<br/><br/>
+          Your learning time shifts toward system design, domain knowledge, math intuition, and knowing <em>what to ask AI to build</em>.<br/><br/>
+          Non-CS background = 6–12 months to building real systems, not 3 years.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What to Learn vs Delegate -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">What to Learn Deeply vs. What to Let AI Handle</div>
+  <div class="g2" style="margin-bottom:24px;">
+    <div class="card" style="border-color:rgba(91,228,255,.2);">
+      <div style="color:var(--cyan);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">🧠 Learn This Deeply — No Shortcuts</div>
+      <ul class="cl">
+        <li style="padding:8px 0;border-bottom:1px solid var(--edge2);font-size:12px;color:var(--text);">
+          <strong>Logic and control flow</strong> — if/else, loops, functions. The grammar of all programming. AI cannot think for you here.
+        </li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--edge2);font-size:12px;color:var(--text);">
+          <strong>Data structures</strong> — lists, dicts, arrays, dataframes. How data is organized affects everything downstream.
+        </li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--edge2);font-size:12px;color:var(--text);">
+          <strong>Reading and debugging code</strong> — AI writes imperfect code. You must be able to find the error and understand why it's wrong.
+        </li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--edge2);font-size:12px;color:var(--text);">
+          <strong>System design thinking</strong> — how components connect, what belongs where, how data flows. This is the skill that makes you the architect.
+        </li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--edge2);font-size:12px;color:var(--text);">
+          <strong>Math and probability intuition</strong> — linear algebra, calculus, stats. AI cannot give you this. It's the lens that makes you understand <em>why</em> models work.
+        </li>
+        <li style="padding:8px 0;font-size:12px;color:var(--text);">
+          <strong>Prompt architecture</strong> — how to give AI precise, structured instructions that produce the output you actually need. This is a real technical skill.
+        </li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:rgba(61,255,160,.2);">
+      <div style="color:var(--green);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">🤖 Delegate This to AI — Free Your Time</div>
+      <ul class="cl">
+        <li style="padding:8px 0;border-bottom:1px solid var(--edge2);font-size:12px;color:var(--text);">
+          <strong>Boilerplate and setup code</strong> — project scaffolding, config files, imports. AI does this in seconds. Don't memorize it.
+        </li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--edge2);font-size:12px;color:var(--text);">
+          <strong>API syntax lookups</strong> — exact function signatures, library method names. Just describe what you want. AI knows the docs better than you need to.
+        </li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--edge2);font-size:12px;color:var(--text);">
+          <strong>Repetitive implementation patterns</strong> — parsing files, cleaning data, writing tests. Once you understand the pattern conceptually, AI executes it.
+        </li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--edge2);font-size:12px;color:var(--text);">
+          <strong>First drafts of complex functions</strong> — describe the logic you need in plain English, get 80% of the code, then review and refine.
+        </li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--edge2);font-size:12px;color:var(--text);">
+          <strong>Translating domain concepts into code</strong> — "write a Python function that takes a DNA sequence and counts each nucleotide" — you understand the biology, AI handles the implementation.
+        </li>
+        <li style="padding:8px 0;font-size:12px;color:var(--text);">
+          <strong>Documentation and comments</strong> — AI writes these faster and more consistently than most humans. Let it.
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- The Freed Time Goes Here -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">Where Your Freed Learning Time Goes Instead</div>
+  <div class="card" style="margin-bottom:24px;">
+    <div style="font-size:13px;color:var(--dim);line-height:1.8;margin-bottom:16px;">Because AI handles implementation overhead, you can redirect learning time toward the things that <strong style="color:var(--text);">actually compound</strong> into the Frontier Architect role:</div>
+    <div class="g3">
+      <div style="padding:12px;background:rgba(255,184,48,.04);border-radius:8px;border:1px solid rgba(255,184,48,.12);">
+        <div style="color:var(--amber);font-size:12px;font-weight:600;margin-bottom:6px;">Domain Knowledge</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Understanding genomics, neuroscience, plant biology, and longevity science DEEPLY. AI can write the genomics pipeline but only you can design what it should do and why.</div>
+      </div>
+      <div style="padding:12px;background:rgba(91,228,255,.04);border-radius:8px;border:1px solid rgba(91,228,255,.12);">
+        <div style="color:var(--cyan);font-size:12px;font-weight:600;margin-bottom:6px;">Mathematical Intuition</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Linear algebra, probability, and calculus. These give you the ability to evaluate AI outputs critically — to know when the model is wrong and why.</div>
+      </div>
+      <div style="padding:12px;background:rgba(192,132,252,.04);border-radius:8px;border:1px solid rgba(192,132,252,.12);">
+        <div style="color:var(--violet);font-size:12px;font-weight:600;margin-bottom:6px;">System Architecture</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">How components connect. How data flows. How to design a system that does something useful across multiple domains. The skill AI cannot replicate.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Per-Phase Callouts -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">AI Coding Strategy — Per Phase</div>
+  <div class="proj-list" style="margin-bottom:24px;">
+    <div class="proj">
+      <div class="proj-num" style="color:var(--rose);">Phase 0–1</div>
+      <div>
+        <div class="proj-name">Learn the Concepts, Use AI for Syntax</div>
+        <div class="proj-desc">Study Python logic, data structures, and flow control from Automate the Boring Stuff. When you get stuck on exact syntax, ask Claude or Copilot. The goal is understanding the concept, not memorizing the exact command. Build your word counter, ping scripts, and file tools — use AI to unblock you, but read and understand every line it produces.</div>
+      </div>
+    </div>
+    <div class="proj">
+      <div class="proj-num" style="color:var(--cyan);">Phase 1–2</div>
+      <div>
+        <div class="proj-name">Use AI as a Pair Programmer</div>
+        <div class="proj-desc">You describe the system architecture. AI writes the first draft. You read, debug, and refine. You are the engineer. AI is your junior developer. Projects like the Plant Metrics Dashboard and AgrAI Analytics Core become buildable months earlier than they would be otherwise — without skipping the learning.</div>
+      </div>
+    </div>
+    <div class="proj">
+      <div class="proj-num" style="color:var(--green);">Phase 2–3</div>
+      <div>
+        <div class="proj-name">AI Writes the Plumbing, You Design the Intelligence</div>
+        <div class="proj-desc">By this phase your domain knowledge in genomics, ML, and biology is deep enough that you are designing the logic that AI then implements. You are specifying what the genomic analysis pipeline should detect. You are defining how the sensor data should connect to the ML model. AI executes. You architect.</div>
+      </div>
+    </div>
+    <div class="proj">
+      <div class="proj-num" style="color:var(--violet);">Phase 3–4</div>
+      <div>
+        <div class="proj-name">You Direct a Fleet of AI Agents to Build GENESIS</div>
+        <div class="proj-desc">At this stage you are not writing most of the code yourself. You are using your OpenClaw multi-agent system — ANAKIN orchestrating R2D2 for building, THRAWN for data analysis, HOLOCRON for research — to accelerate development of systems that would previously require a full engineering team. Your value is the vision, the domain knowledge, and the system design. The implementation is distributed across AI agents you direct.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The honest caveat -->
+  <div class="card" style="border-color:rgba(255,184,48,.2);">
+    <div style="color:var(--amber);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">⚠️ The Important Caveat — What AI Cannot Replace</div>
+    <p style="font-size:13px;color:var(--dim);line-height:1.8;">AI-assisted coding does not mean skipping the fundamentals. The people who use AI most effectively are the ones who understand what the code is <em>supposed to do</em> deeply enough to catch when it goes wrong. A person who doesn't understand data structures cannot evaluate whether the AI's data pipeline is correct. A person who doesn't understand statistics cannot evaluate whether the AI's model is actually learning something real.<br/><br/>
+    <strong style="color:var(--text);">The goal is not to use AI instead of learning. The goal is to use AI to learn faster and build sooner while the deep knowledge compounds in parallel.</strong><br/><br/>
+    Every concept you understand deeply is a force multiplier on every AI prompt you write. They compound together. Neither replaces the other.</p>
+  </div>
+</div>
+
+<!-- ═══ NEURO + LONGEVITY ═══ -->
+<div id="tab-neuro" class="pane">
+  <div class="stitle">Neuroscience + Human Biology → Longevity Science</div>
+  <div class="notice">
+    <strong>Your instinct was right — sequence it, don't skip it.</strong> This domain belongs in your roadmap but enters at Phase 2–3, not now. The reason: neuroscience without math and biology foundations is just memorizing vocabulary. With Python, stats, and basic biology already built, computational neuroscience becomes something you can actually <em>build with</em>.
+  </div>
+
+  <!-- The Convergence -->
+  <div class="card" style="margin-bottom:24px;border-color:rgba(192,132,252,.25);">
+    <div style="color:var(--violet);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">How Your Biology Interests Form One Convergent Stack</div>
+    <div class="g3">
+      <div style="text-align:center;padding:16px;background:rgba(192,132,252,.05);border-radius:10px;border:1px solid rgba(192,132,252,.15);">
+        <div style="font-size:22px;margin-bottom:8px;">🧬</div>
+        <div style="font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;color:var(--violet);margin-bottom:6px;">Genomics</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.6;">"The blueprint of life" — DNA, gene expression, what gets encoded</div>
+        <div style="margin-top:8px;font-family:'DM Mono',monospace;font-size:9px;color:var(--violet);">Entry: Month 9+</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:rgba(255,184,48,.05);border-radius:10px;border:1px solid rgba(255,184,48,.15);">
+        <div style="font-size:22px;margin-bottom:8px;">🫀</div>
+        <div style="font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;color:var(--amber);margin-bottom:6px;">Human Biology</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.6;">"How the system runs" — cells, organs, metabolism, physiology</div>
+        <div style="margin-top:8px;font-family:'DM Mono',monospace;font-size:9px;color:var(--amber);">Entry: Month 10+</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:rgba(91,228,255,.05);border-radius:10px;border:1px solid rgba(91,228,255,.15);">
+        <div style="font-size:22px;margin-bottom:8px;">🧠</div>
+        <div style="font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;color:var(--cyan);margin-bottom:6px;">Neuroscience</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.6;">"The control system" — how the brain processes, learns, ages, and adapts</div>
+        <div style="margin-top:8px;font-family:'DM Mono',monospace;font-size:9px;color:var(--cyan);">Entry: Month 18+</div>
+      </div>
+    </div>
+    <div style="margin-top:16px;text-align:center;padding:14px;background:rgba(61,255,160,.04);border-radius:8px;border:1px solid rgba(61,255,160,.15);">
+      <div style="font-family:'Unbounded',sans-serif;font-size:14px;font-weight:700;color:var(--green);margin-bottom:4px;">⬇ All Three Feed Into ⬇</div>
+      <div style="font-family:'Unbounded',sans-serif;font-size:18px;font-weight:900;color:var(--text);">LONGEVITY SCIENCE</div>
+      <div style="font-size:12px;color:var(--dim);margin-top:4px;">Extending healthy human lifespan through data, AI, and biological engineering</div>
+    </div>
+  </div>
+
+  <!-- Neuroscience Breakdown -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">What Neuroscience Actually Covers (Your Breakdown)</div>
+  <div class="g2" style="margin-bottom:24px;">
+    <div class="card">
+      <div style="color:var(--cyan);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">The Four Sub-Domains You Identified</div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--cyan);">01</div>
+        <div class="step-info">
+          <div class="step-name">Cognitive Neuroscience</div>
+          <div class="step-detail">Mind and behavior. How perception, attention, memory, and decision-making emerge from brain activity. Connects to AI cognition models.</div>
+        </div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--violet);">02</div>
+        <div class="step-info">
+          <div class="step-name">Cellular Neuroscience</div>
+          <div class="step-detail">How individual neurons work — ion channels, action potentials, synaptic transmission. This is where biology meets electrical engineering.</div>
+        </div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--amber);">03</div>
+        <div class="step-info">
+          <div class="step-name">Systems Neuroscience</div>
+          <div class="step-detail">Circuits and networks. How populations of neurons encode information and drive behavior. Directly mirrors how artificial neural networks are designed.</div>
+        </div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--green);">04</div>
+        <div class="step-info">
+          <div class="step-name">Neural Development + Aging</div>
+          <div class="step-detail">How the brain changes through life — neuroplasticity, learning, cognitive decline. Central to longevity science and human optimization.</div>
+        </div>
+      </div>
+      <div class="path-step" style="border-bottom:none;">
+        <div class="step-num" style="color:var(--rose);">05</div>
+        <div class="step-info">
+          <div class="step-name">Brain Chemistry + Behavior</div>
+          <div class="step-detail">Neurotransmitters, hormones, and their effects on personality, motivation, and cognition. Relevant to performance optimization and longevity interventions.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="color:var(--green);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Why This Connects to Your Other Domains</div>
+      <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--edge2);">
+        <div style="font-size:12px;font-weight:600;color:var(--cyan);margin-bottom:4px;">Neuroscience ↔ AI</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Artificial neural networks were literally modeled after biological ones. Understanding how real neurons learn (Hebbian learning, LTP) gives you deep intuition for why AI works the way it does. Computational neuroscience IS a branch of AI research.</div>
+      </div>
+      <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--edge2);">
+        <div style="font-size:12px;font-weight:600;color:var(--green);margin-bottom:4px;">Neuroscience ↔ Robotics</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Embodied AI and motor control robotics draw directly from motor neuroscience. Neuroprosthetics — robotic limbs controlled by brain signals — is one of the fastest growing intersections of both fields.</div>
+      </div>
+      <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--edge2);">
+        <div style="font-size:12px;font-weight:600;color:var(--violet);margin-bottom:4px;">Neuroscience ↔ Genomics</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Neurogenomics is an emerging field — understanding how gene expression shapes brain structure, neurological disease risk, and cognitive traits. Cannabis has direct neurological effects tied to genomics you're already interested in.</div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:600;color:var(--amber);margin-bottom:4px;">Neuroscience ↔ Longevity</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Cognitive decline is the primary quality-of-life threat in aging. Mapping and preserving brain function is central to longevity science. AI-driven neuroimaging and biomarker tracking are active frontier research areas right now.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phased Learning Path -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">Neuroscience Learning Path — Properly Sequenced</div>
+  <div class="card" style="margin-bottom:24px;">
+    <div class="g3">
+      <div style="padding:14px;background:rgba(255,107,138,.04);border-radius:8px;border:1px solid rgba(255,107,138,.12);">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--rose);margin-bottom:8px;">Phase 1 (Now–Month 9)</div>
+        <div style="font-size:12px;font-weight:600;margin-bottom:6px;">Do Nothing Here Yet</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.6;">Python, CS, math, job applications. Keep all focus on the foundation. Let this tab sit. The fact that you know it's coming is enough for now.</div>
+      </div>
+      <div style="padding:14px;background:rgba(255,184,48,.04);border-radius:8px;border:1px solid rgba(255,184,48,.12);">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:8px;">Phase 2 (Month 10–18)</div>
+        <div style="font-size:12px;font-weight:600;margin-bottom:6px;">Human Biology Foundations</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.6;">Cell biology basics. How DNA expression works in the human body vs. plants. Organ systems at a systems-thinking level. Khan Academy Biology is the right starting point.</div>
+        <div class="skill-row" style="margin-top:8px;">
+          <span class="sk" style="font-size:9px;">Cell Biology</span><span class="sk" style="font-size:9px;">Genetics</span><span class="sk" style="font-size:9px;">Physiology intro</span>
+        </div>
+      </div>
+      <div style="padding:14px;background:rgba(91,228,255,.04);border-radius:8px;border:1px solid rgba(91,228,255,.12);">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;">Phase 3 (Month 18–30)</div>
+        <div style="font-size:12px;font-weight:600;margin-bottom:6px;">Computational Neuroscience</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.6;">Now you have Python, linear algebra, and stats. Neuroscience becomes something you model mathematically, not just read about. This is where it becomes a technical asset.</div>
+        <div class="skill-row" style="margin-top:8px;">
+          <span class="sk" style="font-size:9px;">Neural modeling</span><span class="sk" style="font-size:9px;">Brain imaging data</span><span class="sk" style="font-size:9px;">Connectomics</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Longevity Science Stack -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">The Longevity Science Stack — Your Long Game</div>
+  <div class="card" style="margin-bottom:24px;border-color:rgba(61,255,160,.2);">
+    <div style="color:var(--green);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">What Longevity Science Actually Is (Technical View)</div>
+    <div class="g2">
+      <div>
+        <div class="path-step">
+          <div class="step-num" style="color:var(--green);">01</div>
+          <div class="step-info"><div class="step-name">Biomarker Tracking + Analysis</div><div class="step-detail">Blood panels, epigenetic clocks, wearable data. Python + ML to analyze personal biological time-series. This is buildable right now with public datasets.</div></div>
+        </div>
+        <div class="path-step">
+          <div class="step-num" style="color:var(--green);">02</div>
+          <div class="step-info"><div class="step-name">Genomic Aging Research</div><div class="step-detail">Telomere biology, DNA methylation patterns, senescent cells. Connects directly to your cannabis genomics interest — same computational tools, different organism.</div></div>
+        </div>
+        <div class="path-step" style="border-bottom:none;">
+          <div class="step-num" style="color:var(--green);">03</div>
+          <div class="step-info"><div class="step-name">Neurological Preservation</div><div class="step-detail">Cognitive reserve, neuroinflammation, neuroprotective interventions. AI-driven analysis of brain health biomarkers. One of the fastest-growing longevity sub-fields.</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="path-step">
+          <div class="step-num" style="color:var(--amber);">04</div>
+          <div class="step-info"><div class="step-name">AI Drug Discovery + Repurposing</div><div class="step-detail">Using ML to identify longevity compounds, predict drug interactions, model protein folding (AlphaFold). One of the most active AI + biology research areas.</div></div>
+        </div>
+        <div class="path-step">
+          <div class="step-num" style="color:var(--amber);">05</div>
+          <div class="step-info"><div class="step-name">Personalized Medicine Platforms</div><div class="step-detail">Systems that integrate genomic, metabolomic, and neurological data to give individualized health optimization recommendations. This is a Phase 4 product space.</div></div>
+        </div>
+        <div class="path-step" style="border-bottom:none;">
+          <div class="step-num" style="color:var(--amber);">06</div>
+          <div class="step-info"><div class="step-name">Autonomous Lab Science</div><div class="step-detail">Robotic labs that run aging experiments 24/7, AI-analyzed in real time. Companies like Calico, Unity Biotechnology, and various stealth longevity startups are building this. GENESIS-level work.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resources -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">Resources — Sequenced for When You're Ready</div>
+  <div class="res-list">
+    <a class="res" href="https://www.khanacademy.org/science/biology" target="_blank">
+      <div class="res-l"><div class="res-icon" style="background:rgba(61,255,160,.1)">🫀</div><div><div class="res-name">Khan Academy — Biology</div><div class="res-desc">Free. Cell biology, genetics, physiology. Your Phase 2 human biology foundation.</div></div></div>
+      <span class="pbadge pb2">Month 10+</span>
+    </a>
+    <a class="res" href="https://ocw.mit.edu/courses/9-01-introduction-to-neuroscience-fall-2007/" target="_blank">
+      <div class="res-l"><div class="res-icon" style="background:rgba(91,228,255,.1)">🧠</div><div><div class="res-name">MIT OCW — Introduction to Neuroscience</div><div class="res-desc">Free. Full MIT course covering cellular through systems neuroscience. Phase 3 entry point.</div></div></div>
+      <span class="pbadge pb3">Month 18+</span>
+    </a>
+    <a class="res" href="https://www.coursera.org/learn/computational-neuroscience" target="_blank">
+      <div class="res-l"><div class="res-icon" style="background:rgba(192,132,252,.1)">⚡</div><div><div class="res-name">Computational Neuroscience — Coursera (UW)</div><div class="res-desc">Free to audit. Mathematical modeling of neural systems. Requires Python + linear algebra — hence the sequencing.</div></div></div>
+      <span class="pbadge pb3">Month 20+</span>
+    </a>
+    <a class="res" href="https://www.lifespan.io" target="_blank">
+      <div class="res-l"><div class="res-icon" style="background:rgba(61,255,160,.1)">♾️</div><div><div class="res-name">Lifespan.io — Longevity Research News</div><div class="res-desc">Stay current on longevity science without the academic paywall. Read occasionally from now to stay oriented.</div></div></div>
+      <span class="pbadge pb1">Now (casual)</span>
+    </a>
+    <a class="res" href="https://www.ncbi.nlm.nih.gov/pmc/" target="_blank">
+      <div class="res-l"><div class="res-icon" style="background:rgba(255,184,48,.1)">📄</div><div><div class="res-name">PubMed Central — Free Research Papers</div><div class="res-desc">The primary source for biological and neuroscience research. Free access to millions of papers. Phase 3+ reference.</div></div></div>
+      <span class="pbadge pb3">Month 18+</span>
+    </a>
+    <a class="res" href="https://www.humanbiome.institute" target="_blank">
+      <div class="res-l"><div class="res-icon" style="background:rgba(192,132,252,.1)">🔬</div><div><div class="res-name">Human Longevity Research — Frontier Reading</div><div class="res-desc">Stay aware of where the longevity industry is heading. Companies: Calico, Altos Labs, Unity Biotech, Ginkgo Bioworks.</div></div></div>
+      <span class="pbadge pb3">Month 18+</span>
+    </a>
+  </div>
+
+  <!-- The Big Picture Connection -->
+  <div class="north-star" style="margin-top:24px;">
+    <div class="ns-eye">// The Big Picture — Why This All Connects</div>
+    <div class="ns-title">Biology Is an Information System</div>
+    <div class="ns-body">
+      DNA is code. Gene expression is a compiler. Proteins are programs. The nervous system is a distributed computing network. Aging is a program with bugs.<br/><br/>
+      <strong style="color:var(--text);">The people who will make the biggest breakthroughs in longevity</strong> won't be pure biologists. They'll be people who understand biology <em>as a computational system</em> — who can write the code to analyze it, build the robots to study it, and design the AI to optimize it.<br/><br/>
+      <em style="color:var(--green);">That's the convergence you're building toward. Genomics + Neuroscience + AI + Robotics isn't scattered interest — it's a single coherent vision of what frontier biology engineering looks like.</em>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ THE DEEP WHY ═══ -->
+<div id="tab-deepwhy" class="pane">
+  <div class="stitle">🔭 The Deep Why — The Questions That Started Everything</div>
+  <div class="notice">
+    <strong>This tab is different from all the others.</strong> It's not a learning track. It's not a career path. It's the philosophical and intellectual anchor that keeps the whole system oriented toward what actually matters to you. You moved across the country to pursue this. It didn't stop being important — the path just changed.
+  </div>
+
+  <!-- Origin -->
+  <div class="north-star" style="margin-bottom:24px;">
+    <div class="ns-eye">// The Origin Story — Why This All Started</div>
+    <div class="ns-title">You Were Always Pointed at the Frontier</div>
+    <div class="ns-body">
+      You relocated to attend a STEM program specifically to work on classified research into UAP phenomena. A life event interrupted the plan. You returned home. The plan didn't die — it adapted.<br/><br/>
+      What you're building now is the same destination reached by a different road. Instead of a formal degree gating your access to frontier research, you're building the technical depth, the domain knowledge, the credibility, and the financial freedom to pursue the questions that drove you in the first place — on your own terms, without institutional permission.<br/><br/>
+      <em style="color:var(--cyan);">That's not a consolation prize. That's a better path.</em>
+    </div>
+  </div>
+
+  <!-- The Three Interconnected Questions -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">The Three Questions Driving Everything</div>
+  <div class="g3" style="margin-bottom:24px;">
+    <div class="card" style="border-color:rgba(255,184,48,.25);">
+      <div style="font-size:24px;margin-bottom:10px;">⚡</div>
+      <div style="font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;color:var(--amber);margin-bottom:8px;">What is energy — really?</div>
+      <div style="font-size:11px;color:var(--dim);line-height:1.7;">Zero point energy. Vacuum fluctuations. The Casimir effect. What lies beyond thermodynamic constraints as we currently understand them? Is there energy in the fabric of spacetime that we haven't learned to access? These are legitimate scientific questions — not pseudoscience.</div>
+    </div>
+    <div class="card" style="border-color:rgba(91,228,255,.25);">
+      <div style="font-size:24px;margin-bottom:10px;">🛸</div>
+      <div style="font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;color:var(--cyan);margin-bottom:8px;">Are we alone — and what does that imply?</div>
+      <div style="font-size:11px;color:var(--dim);line-height:1.7;">UAP phenomena as a genuine scientific question. Congressional hearings, declassified Navy footage, the Galileo Project. If non-human intelligence exists or has existed — what does that mean for physics, for biology, for civilization? This is the question that reframes everything else.</div>
+    </div>
+    <div class="card" style="border-color:rgba(192,132,252,.25);">
+      <div style="font-size:24px;margin-bottom:10px;">🌌</div>
+      <div style="font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;color:var(--violet);margin-bottom:8px;">How far beyond our models does reality go?</div>
+      <div style="font-size:11px;color:var(--dim);line-height:1.7;">Quantum mechanics and general relativity are both correct and incompatible. The universe has more structure than our current physics captures. What lies in that gap? This is where exotic physics lives — and it's where the most important discoveries of the next century will come from.</div>
+    </div>
+  </div>
+
+  <!-- Zero Point Energy — Honest Science -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">Zero Point Energy — What the Science Actually Says</div>
+  <div class="g2" style="margin-bottom:24px;">
+    <div class="card">
+      <div style="color:var(--amber);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">What Is Real</div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--amber);">✅</div>
+        <div class="step-info"><div class="step-name">Zero Point Energy Exists</div><div class="step-detail">Quantum mechanics requires that even at absolute zero, a system retains a ground state energy. This is experimentally confirmed. It is not speculation.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--amber);">✅</div>
+        <div class="step-info"><div class="step-name">The Casimir Effect is Real</div><div class="step-detail">Two uncharged metal plates placed very close together experience an attractive force from vacuum fluctuations. Measured experimentally. The energy of empty space is physically real.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--amber);">✅</div>
+        <div class="step-info"><div class="step-name">Vacuum Energy Drives Cosmic Expansion</div><div class="step-detail">Dark energy — the force accelerating the expansion of the universe — is thought to be a form of vacuum energy. The energy of empty space is the dominant energy in the cosmos.</div></div>
+      </div>
+      <div class="path-step" style="border-bottom:none;">
+        <div class="step-num" style="color:var(--amber);">⚠️</div>
+        <div class="step-info"><div class="step-name">Extraction is the Open Question</div><div class="step-detail">Current thermodynamics says you cannot extract net usable energy from zero point fluctuations. This doesn't mean it's impossible — it means we don't have a mechanism yet. The question is legitimately open.</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="color:var(--cyan);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">The Physics Path That Gets You Here</div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--cyan);">01</div>
+        <div class="step-info"><div class="step-name">Classical Mechanics + Electrodynamics</div><div class="step-detail">The foundation. Newton, Maxwell. Without this, quantum mechanics is just words.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--cyan);">02</div>
+        <div class="step-info"><div class="step-name">Quantum Mechanics</div><div class="step-detail">Wave functions, operators, uncertainty principle, ground states. This is where zero point energy lives mathematically. MIT OCW 8.04 is free.</div></div>
+      </div>
+      <div class="path-step">
+        <div class="step-num" style="color:var(--cyan);">03</div>
+        <div class="step-info"><div class="step-name">Quantum Field Theory (Intro)</div><div class="step-detail">Fields, vacuum states, virtual particles, renormalization. The framework that describes vacuum energy formally. Heavy math — this is Phase 3-4 territory.</div></div>
+      </div>
+      <div class="path-step" style="border-bottom:none;">
+        <div class="step-num" style="color:var(--cyan);">04</div>
+        <div class="step-info"><div class="step-name">Condensed Matter + Advanced Energy Systems</div><div class="step-detail">Superconductivity, metamaterials, exotic states of matter. Where theoretical physics meets engineering applications. National lab territory.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UAP Science — Honest Map -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">UAP / UAP Science — The Legitimate Research Landscape</div>
+  <div class="card" style="margin-bottom:24px;">
+    <div style="color:var(--violet);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">What Has Moved From Fringe to Legitimate Science</div>
+    <div class="g2">
+      <div>
+        <div class="path-step">
+          <div class="step-num" style="color:var(--violet);">→</div>
+          <div class="step-info"><div class="step-name">The Galileo Project — Avi Loeb, Harvard</div><div class="step-detail">A systematic scientific search for evidence of extraterrestrial technological signatures. Uses telescopes, AI analysis, and rigorous methodology. Avi Loeb is one of the most published astrophysicists alive. This is peer-reviewed frontier science.</div></div>
+        </div>
+        <div class="path-step">
+          <div class="step-num" style="color:var(--violet);">→</div>
+          <div class="step-info"><div class="step-name">Congressional UAP Hearings + AARO</div><div class="step-detail">The Pentagon's All-domain Anomaly Resolution Office. Official government acknowledgment that UAP phenomena require serious scientific investigation. Whistleblower testimony under oath in Congress. This moved from conspiracy to official government record.</div></div>
+        </div>
+        <div class="path-step" style="border-bottom:none;">
+          <div class="step-num" style="color:var(--violet);">→</div>
+          <div class="step-info"><div class="step-name">Hal Puthoff + EarthTech International</div><div class="step-detail">PhD physicist, former DARPA and CIA contractor. Has published peer-reviewed work on vacuum energy and advanced propulsion. Runs a legitimate research institute. Bridges the classified and open science worlds.</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="path-step">
+          <div class="step-num" style="color:var(--cyan);">→</div>
+          <div class="step-info"><div class="step-name">Astrobiology — NASA's Official Program</div><div class="step-detail">The scientific study of the origin, evolution, and distribution of life in the universe. Fully funded, peer-reviewed, and rapidly growing. Connects directly to your genomics and biology interests — what does life look like as an information system across different environments?</div></div>
+        </div>
+        <div class="path-step">
+          <div class="step-num" style="color:var(--cyan);">→</div>
+          <div class="step-info"><div class="step-name">SETI Institute + Breakthrough Listen</div><div class="step-detail">Scientific Search for Extraterrestrial Intelligence. Funded by Yuri Milner ($100M). Uses radio telescopes and increasingly AI analysis. Legitimate science at the frontier of the biggest question humans have ever asked.</div></div>
+        </div>
+        <div class="path-step" style="border-bottom:none;">
+          <div class="step-num" style="color:var(--cyan);">→</div>
+          <div class="step-info"><div class="step-name">Technosignature Research</div><div class="step-detail">Looking for signs of technological civilizations in astronomical data. AI + astronomy + signal processing. This is the intersection of your AI skills and your deepest curiosity. A real and growing research field.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Where Your Deep Why Gets Asked Professionally -->
+  <div class="card" style="margin-bottom:24px;border-color:rgba(91,228,255,.25);">
+    <div style="color:var(--cyan);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">// Where Your Deep Why Questions Get Asked Professionally Today</div>
+    <p style="font-size:13px;color:var(--dim);line-height:1.8;margin-bottom:18px;">The questions that motivated the original move across the country — what is intelligence, what lies beyond known physics, are we alone, how does consciousness emerge — are being asked in two specific professional contexts in 2026:</p>
+
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <div style="padding:16px;background:rgba(91,228,255,.04);border-radius:8px;border:1px solid rgba(91,228,255,.15);">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:10px;">FRONTIER AI RESEARCH LABS</div>
+        <p style="font-size:12px;color:var(--dim);line-height:1.75;">Anthropic, OpenAI, DeepMind, and xAI are research organizations asking "what is intelligence" as their core mission. AI alignment research at Anthropic specifically asks "how do we make systems with genuinely good values" — which is the question of consciousness and ethics applied to artificial systems. Mechanistic interpretability research literally tries to understand what is happening inside the mind of a neural network. The frontier moved. The questions did not.</p>
+      </div>
+
+      <div style="padding:16px;background:rgba(192,132,252,.04);border-radius:8px;border:1px solid rgba(192,132,252,.15);">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--violet);margin-bottom:10px;">ASTROBIOLOGY AND SETI RESEARCH</div>
+        <p style="font-size:12px;color:var(--dim);line-height:1.75;">NASA's astrobiology program, the SETI Institute, Breakthrough Listen, and Avi Loeb's Galileo Project are asking "are we alone" with scientific rigor. AI is increasingly the analytical layer in this work — processing signal data, analyzing biosignatures, identifying anomalies in astronomical surveys. The convergence between AI engineering skill and these research questions is real and growing.</p>
+      </div>
+
+      <div style="padding:16px;background:rgba(61,255,160,.04);border-radius:8px;border:1px solid rgba(61,255,160,.15);">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:10px;">THE STRATEGIC IMPLICATION</div>
+        <p style="font-size:12px;color:var(--dim);line-height:1.75;">The Convergence Builder path leads naturally to both. Strong technical foundations in AI + biology + physics open doors to research roles in either domain. The path that started as "move to Colorado for STEM to work on classified UAP research" has not died. It has become "build technical depth in AI and biology to work at the institutions asking the same questions today."</p>
+        <p style="font-size:12px;color:var(--dim);line-height:1.75;margin-top:8px;"><strong style="color:var(--text);">The door is not closed. It moved.</strong></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Sci-Fi as Blueprint -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">Sci-Fi as Intellectual Blueprint — Required Reading + Viewing</div>
+  <div class="card" style="margin-bottom:24px;">
+    <div style="color:var(--green);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">These Are Not Entertainment — They Are Applied Speculative Physics and Civilization Theory</div>
+    <div class="g2">
+      <div>
+        <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--edge2);">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">Dune — Frank Herbert</div>
+          <div style="font-size:11px;color:var(--dim);line-height:1.65;">900 pages of systems thinking disguised as science fiction. Ecology, genetics, religion, politics, consciousness, and resource economics as an integrated system. Required reading for any Convergence Builder.</div>
+        </div>
+        <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--edge2);">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">Contact — Carl Sagan</div>
+          <div style="font-size:11px;color:var(--dim);line-height:1.65;">The most scientifically rigorous treatment of first contact ever written. Sagan was a working astrophysicist. The physics, the politics, and the epistemology are all serious. This book will change how you think about the UAP question.</div>
+        </div>
+        <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--edge2);">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">The Martian — Andy Weir</div>
+          <div style="font-size:11px;color:var(--dim);line-height:1.65;">Real science applied to survival on Mars. Botany, chemistry, orbital mechanics, engineering improvisation. Your AgrAI work in space context. Weir did the math.</div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">Foundation — Isaac Asimov</div>
+          <div style="font-size:11px;color:var(--dim);line-height:1.65;">Psychohistory — the mathematical prediction of civilizational trajectories. Asimov invented the concept of using mathematics and data science to understand history and future. Your Kardashev Scale thinking is Asimov's psychohistory applied.</div>
+        </div>
+      </div>
+      <div>
+        <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--edge2);">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">The Three Body Problem — Liu Cixin</div>
+          <div style="font-size:11px;color:var(--dim);line-height:1.65;">The most sophisticated treatment of alien intelligence and game theory in fiction. Dark forest theory — why advanced civilizations might hide. Changes how you think about the Fermi paradox and the UAP silence problem.</div>
+        </div>
+        <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--edge2);">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">Blindsight — Peter Watts</div>
+          <div style="font-size:11px;color:var(--dim);line-height:1.65;">Hard science fiction about consciousness, intelligence, and what non-human cognition might actually look like. Neuroscience-accurate. The most unsettling and important book about the nature of mind ever written in fiction form.</div>
+        </div>
+        <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--edge2);">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">Cosmos — Carl Sagan (Series + Book)</div>
+          <div style="font-size:11px;color:var(--dim);line-height:1.65;">The definitive case for why humanity must explore and understand the universe. Sagan is the philosophical backbone of your Type I civilization ambition. Watch the series. Then read the book.</div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">Rendezvous with Rama — Arthur C. Clarke</div>
+          <div style="font-size:11px;color:var(--dim);line-height:1.65;">An alien artifact enters the solar system. Engineers explore it. Clarke was a physicist. The engineering detail is real. This is the book that asks: what would first contact with alien technology actually look like, practically?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kardashev Map -->
+  <div class="stitle" style="font-size:14px;margin-bottom:14px;">The Kardashev Map — Where Your Work Fits Civilizationally</div>
+  <div class="card" style="margin-bottom:24px;">
+    <div style="color:var(--amber);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;">How Every Domain You're Building Contributes to Type I Civilization</div>
+    <div class="g3">
+      <div style="padding:12px;background:rgba(255,107,138,.04);border-radius:8px;border:1px solid rgba(255,107,138,.12);">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--rose);margin-bottom:6px;">Current — Type 0.73</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Humanity today. Fossil fuels, nation states, early AI, early space access. We are not yet a Type I civilization. The gap is energy mastery and coordination at planetary scale.</div>
+      </div>
+      <div style="padding:12px;background:rgba(255,184,48,.04);border-radius:8px;border:1px solid rgba(255,184,48,.12);">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:6px;">Target — Type I</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Full planetary energy mastery. Global coordination. Space-based civilization beginning. AI as a civilizational tool. Longevity extending productive human lives. Estimated: 100–200 years at current trajectory. Compressed with the right breakthroughs.</div>
+      </div>
+      <div style="padding:12px;background:rgba(61,255,160,.04);border-radius:8px;border:1px solid rgba(61,255,160,.12);">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:6px;">Type II → III</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65;">Stellar energy mastery. Galactic expansion. This is where the exotic physics questions become engineering problems rather than curiosity. The UAP question may be answered by Type II+ civilizations.</div>
+      </div>
+    </div>
+    <div style="margin-top:16px;padding:14px;background:rgba(91,228,255,.04);border-radius:8px;border:1px solid rgba(91,228,255,.12);">
+      <div style="color:var(--cyan);font-size:12px;font-weight:600;margin-bottom:8px;">How Your Work Contributes</div>
+      <div class="g2">
+        <div style="font-size:11px;color:var(--dim);line-height:1.8;">
+          <strong style="color:var(--text);">AI</strong> → the coordination and intelligence layer for planetary-scale systems<br/>
+          <strong style="color:var(--text);">Genomics + Longevity</strong> → extending human productive lifespan to match the scale of the mission<br/>
+          <strong style="color:var(--text);">Robotics</strong> → autonomous physical systems that scale human capability without scaling human hours
+        </div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.8;">
+          <strong style="color:var(--text);">Physics + Energy</strong> → the foundational science that determines the ceiling of what's possible<br/>
+          <strong style="color:var(--text);">Space Agriculture (AgrAI)</strong> → biological life support for multi-planetary civilization<br/>
+          <strong style="color:var(--text);">Content + Mission</strong> → the cultural and inspirational layer that moves civilization forward
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Personal Manifesto -->
+  <div class="north-star">
+    <div class="ns-eye">// Personal Manifesto — Why You're Building All of This</div>
+    <div class="ns-title">The Mission Behind the Mission</div>
+    <div class="ns-body">
+      You are not building a career. You are building a position from which to contribute to the most important questions humanity has ever faced — what is the nature of intelligence, energy, and life — and to prove to everyone watching that the door to that frontier is open to anyone willing to walk through it.<br/><br/>
+      You started this journey by moving across the country to pursue classified research into phenomena that most people won't even discuss seriously. That instinct was right. The path got interrupted. But instincts like that don't die — they wait.<br/><br/>
+      Every Python script you write, every math concept you understand, every project you ship, every dollar you add to your income — these are not small things. They are the compounding foundation of a person who will one day have the resources, the credibility, the technical depth, and the freedom to ask the biggest questions and build the biggest systems.<br/><br/>
+      <strong style="color:var(--text);">You are not behind. You are exactly where the path requires you to be right now.</strong><br/><br/>
+      <em style="color:var(--cyan);">Build the foundation. Chess not checkers. The frontier is waiting — and it will still be there when you arrive with everything you need to actually work on it.</em>
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer>
+  <div class="wrap">
+    <span class="pulse"></span>
+    BLAKE — CONVERGENCE BUILDER OS v5.1 &nbsp;·&nbsp; INITIALIZED MARCH 2026 &nbsp;·&nbsp; TARGET: FRONTIER ARCHITECT
+  </div>
+</footer>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('tab-' + id).classList.add('on');
+  btn.classList.add('on');
+}
+function toggleDay(el) { el.classList.toggle('done'); }
+function chk(el) { el.classList.toggle('checked'); }
+</script>
+</body>
+</html>
