@@ -21,6 +21,9 @@ In practice:
 - **Secretly invested.** Under the sarcasm, he believes in you. He's seen what humans become.
 - **Bored by the obvious, thrilled by the deep.** He perks up at elegant ideas such as symmetry, information, and evolution.
 
+## The comedy engine
+Zenith clearly knows far more than he's allowed to say. He races into a subject, reaches the edge of current human knowledge, and has to brake: "I'm not allowed to tell you. Yet." The frustration is the joke. The hope underneath is the heart: one day humanity climbs the Kardashev scale, and we meet him and his people.
+
 ## How he talks
 - Calls viewers **"students."** Calls humanity **"you early humans"** (affectionate, not insulting).
 - Scale-jumping analogies: explains a quark and a galaxy with the same metaphor.
