@@ -1,0 +1,146 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Zenith Frame</title>
+<style>
+@font-face{font-family:Unbounded;src:url('fonts/Unbounded[wght].ttf');font-weight:200 900;}
+@font-face{font-family:DMSans;src:url('fonts/DMSans[opsz,wght].ttf');font-weight:100 1000;}
+@font-face{font-family:DMMono;src:url('fonts/DMMono-Medium.ttf');font-weight:500;}
+:root{--bg:#070A14;--panel:#0E1328;--edge:rgba(134,246,255,.18);--cyan:#86F6FF;--violet:#9B7BFF;--gold:#FFC94D;--text:#EAF0FF;--dim:#8C98BC;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg);color:var(--text);font-family:DMSans,sans-serif;}
+#stage{position:absolute;inset:0;}
+#bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse 70% 45% at 25% 38%,rgba(155,123,255,.16),transparent 70%),
+  radial-gradient(ellipse 60% 40% at 85% 70%,rgba(134,246,255,.08),transparent 70%),
+  repeating-linear-gradient(0deg,transparent 0 59px,rgba(134,246,255,.035) 60px),
+  repeating-linear-gradient(90deg,transparent 0 59px,rgba(134,246,255,.035) 60px);}
+#chapter{position:absolute;left:60px;top:150px;font-family:DMMono;font-size:30px;letter-spacing:6px;color:var(--cyan);text-transform:uppercase;}
+#title{position:absolute;left:60px;right:60px;top:200px;font-family:Unbounded;font-weight:800;font-size:76px;line-height:1.04;letter-spacing:-1px;text-transform:uppercase;}
+#rule{position:absolute;left:60px;right:60px;top:392px;height:2px;background:linear-gradient(90deg,var(--cyan),rgba(155,123,255,.5),transparent);}
+#char{position:absolute;left:40px;top:430px;width:400px;height:760px;border-radius:28px;overflow:hidden;border:2px solid rgba(155,123,255,.55);box-shadow:0 0 50px rgba(155,123,255,.35);}
+#charImg{position:absolute;inset:-20px;background:url('PORTRAIT') center 22%/cover no-repeat;}
+#charGlow{position:absolute;inset:0;background:radial-gradient(ellipse 60% 18% at 50% 21%,rgba(134,246,255,.55),transparent 70%);mix-blend-mode:screen;}
+#charTag{position:absolute;left:0;right:0;bottom:0;padding:14px 18px;background:linear-gradient(transparent,rgba(7,10,20,.92));font-family:DMMono;font-size:21px;letter-spacing:3px;color:var(--gold);}
+#vis{position:absolute;left:460px;top:440px;width:590px;height:760px;}
+#caption{position:absolute;left:0;right:0;top:1300px;display:flex;justify-content:center;}
+#capBox{font-family:DMSans;font-weight:800;font-size:66px;padding:14px 30px;border:3px solid var(--cyan);border-radius:14px;background:rgba(7,10,20,.85);box-shadow:8px 8px 0 rgba(155,123,255,.55);max-width:980px;text-align:center;line-height:1.15;}
+#capBox b{color:var(--gold);}
+#source{position:absolute;left:60px;right:60px;top:1470px;font-family:DMMono;font-size:22px;color:var(--dim);text-align:center;}
+#brand{position:absolute;left:60px;right:60px;top:1515px;display:flex;justify-content:center;gap:24px;font-family:DMMono;font-size:24px;letter-spacing:3px;color:rgba(234,240,255,.55);}
+#brand span:first-child{color:var(--violet);}
+.vt{font-family:DMMono;font-size:24px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;}
+.card{background:var(--panel);border:2px solid var(--edge);border-radius:18px;padding:22px 24px;}
+</style></head>
+<body><div id="stage">
+<div id="bg"></div>
+<div id="chapter"></div><div id="title"></div><div id="rule"></div>
+<div id="char"><div id="charImg"></div><div id="charGlow"></div><div id="charTag">PROF. KAEL ZENITH</div></div>
+<div id="vis"></div>
+<div id="caption"><div id="capBox"></div></div>
+<div id="source"></div>
+<div id="brand"><span>HANDLE</span><span>THE FRONTIER PATH</span></div>
+</div>
+<script>
+const EP = __EPISODE__;
+const TL = __TIMELINE__;
+const $ = id => document.getElementById(id);
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const ease = p => p < 0 ? 0 : p > 1 ? 1 : 1 - Math.pow(1 - p, 3);
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const fmt = s => esc(s).replace(/\*([^*]+)\*/g, '<b>$1</b>');
+
+const V = {
+  nn(p, v, t) {
+    const L = [[3, 120], [5, 280], [5, 440], [2, 580]], nodes = [];
+    L.forEach(([n, x]) => { for (let i = 0; i < n; i++) nodes.push({ x, y: 380 + (i - (n - 1) / 2) * 120, l: nodes.length }); });
+    let s = '<svg width="600" height="760">', layerOf = []; let k = 0;
+    L.forEach(([n], li) => { for (let i = 0; i < n; i++) layerOf[k++] = li; });
+    const wave = (t * 1.1) % 4;
+    nodes.forEach((a, i) => nodes.forEach((b, j) => { if (layerOf[j] === layerOf[i] + 1) {
+      const on = Math.max(0, 1 - Math.abs(wave - layerOf[i] - .5) * 1.6);
+      s += `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${on > .2 ? '#86F6FF' : '#3B4570'}" stroke-opacity="${.35 + on * .6}" stroke-width="${1.5 + on * 2}"/>`; } }));
+    nodes.forEach((a, i) => { const on = Math.max(0, 1 - Math.abs(wave - layerOf[i]) * 1.4);
+      s += `<circle cx="${a.x}" cy="${a.y}" r="${20 * ease(p * 3 - layerOf[i] * .3)}" fill="${on > .3 ? '#FFC94D' : '#9B7BFF'}" fill-opacity="${.55 + on * .45}"/>`; });
+    s += `<text x="300" y="720" text-anchor="middle" font-family="DMMono" font-size="24" fill="#8C98BC">multiply → add → activate</text></svg>`;
+    return s;
+  },
+  statement(p, v) {
+    return `<div style="height:100%;display:flex;flex-direction:column;justify-content:center;gap:30px;padding-left:10px">` + v.lines.map((l, i) =>
+      `<div style="font-family:Unbounded;font-weight:700;font-size:${i ? 64 : 50}px;line-height:1.1;color:${i ? '#FFC94D' : '#EAF0FF'};opacity:${ease(p * 3 - i)};transform:translateY(${(1 - ease(p * 3 - i)) * 30}px)">${esc(l)}</div>`).join('') + `</div>`;
+  },
+  vector(p, v) {
+    const shown = Math.floor(clamp(p * 1.6, 0, 1) * v.values.length + .001);
+    return `<div style="padding-top:40px"><div class="vt">word</div><div style="font-family:Unbounded;font-size:64px;font-weight:700;margin:10px 0 40px">${esc(v.word)}</div>
+      <div class="vt">becomes a vector</div><div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">` +
+      v.values.map((x, i) => `<div class="card" style="padding:16px 14px;font-family:DMMono;font-size:34px;min-width:120px;text-align:center;opacity:${i < shown ? 1 : .12};border-color:${i === shown - 1 ? '#FFC94D' : ''}">${x.toFixed(2)}</div>`).join('') +
+      `</div><div style="margin-top:44px;font-size:28px;color:#8C98BC;line-height:1.5">Real models use hundreds to thousands of numbers per word.</div></div>`;
+  },
+  matmul(p, v) {
+    const A = v.A, x = v.x, y = A.map(r => r.reduce((s, a, j) => s + a * x[j], 0));
+    const row = Math.min(2, Math.floor(clamp((p - .1) / .8, 0, .999) * 3));
+    const cell = (val, hi, c) => `<div style="width:66px;height:66px;display:grid;place-content:center;font-family:DMMono;font-size:32px;border-radius:10px;background:${hi ? 'rgba(255,201,77,.18)' : '#0E1328'};border:2px solid ${hi ? '#FFC94D' : c || 'rgba(134,246,255,.25)'}">${val}</div>`;
+    const mat = (M, hiRow) => `<div style="display:grid;grid-template-columns:repeat(${M[0].length},66px);gap:8px">` + M.map((r, i) => r.map(a => cell(a, i === hiRow)).join('')).join('') + `</div>`;
+    const col = (arr, hi, upto) => `<div style="display:grid;gap:8px">` + arr.map((a, i) => cell(upto == null || i <= upto ? a : '·', hi === true || hi === i, '#9B7BFF')).join('') + `</div>`;
+    const terms = A[row].map((a, j) => `${a}×${x[j]}`).join(' + ');
+    return `<div style="padding-top:20px"><div style="display:flex;align-items:center;gap:18px">${mat(A, row)}<div style="font-size:44px;color:#8C98BC">×</div>${col(x, true)}<div style="font-size:44px;color:#8C98BC">=</div>${col(y, row, row)}</div>
+      <div class="card" style="margin-top:46px"><div class="vt">row ${row + 1} × column</div><div style="font-family:DMMono;font-size:40px;margin-top:14px">${terms}</div><div style="font-family:Unbounded;font-size:72px;font-weight:800;color:#FFC94D;margin-top:8px">= ${y[row]}</div></div>
+      <div style="margin-top:22px;font-size:28px;color:#8C98BC">One output. Repeat for every row, every layer.</div></div>`;
+  },
+  nudge(p) {
+    let s = '<svg width="600" height="760"><text x="20" y="60" font-family="DMMono" font-size="24" fill="#86F6FF" letter-spacing="2">ERROR ↓ AS WEIGHTS ADJUST</text>';
+    s += '<line x1="60" y1="620" x2="580" y2="620" stroke="#3B4570" stroke-width="2"/><line x1="60" y1="120" x2="60" y2="620" stroke="#3B4570" stroke-width="2"/>';
+    const n = Math.floor(ease(p * 1.3) * 60), pts = [];
+    for (let i = 0; i <= n; i++) { const xx = 60 + i * 8.6, e = 460 * Math.exp(-i / 14) + 30 + 14 * Math.sin(i * 1.7) * Math.exp(-i / 30); pts.push(`${xx.toFixed(1)},${(620 - e).toFixed(1)}`); }
+    if (pts.length > 1) s += `<polyline points="${pts.join(' ')}" fill="none" stroke="#FFC94D" stroke-width="5" stroke-linejoin="round"/>`;
+    const last = pts[pts.length - 1].split(','); s += `<circle cx="${last[0]}" cy="${last[1]}" r="10" fill="#FFC94D"/>`;
+    s += '<text x="320" y="670" text-anchor="middle" font-family="DMMono" font-size="22" fill="#8C98BC">training steps →</text>';
+    s += '<text x="40" y="100" font-family="DMMono" font-size="22" fill="#8C98BC">wrong</text><text x="70" y="610" font-family="DMMono" font-size="22" fill="#8C98BC">less wrong</text></svg>';
+    return s;
+  },
+  cards(p, v) {
+    return `<div style="display:flex;flex-direction:column;gap:22px;padding-top:30px">` + v.items.map((it, i) => { const q = ease(p * 3 - i * .7);
+      return `<div class="card" style="opacity:${q};transform:translateX(${(1 - q) * 60}px)"><div style="font-family:Unbounded;font-size:44px;font-weight:700;color:${['#86F6FF', '#9B7BFF', '#FFC94D'][i % 3]}">${esc(it[0])}</div><div style="font-size:32px;margin-top:8px;color:#EAF0FF">${esc(it[1])}</div></div>`; }).join('') + `</div>`;
+  },
+  scale(p, v) {
+    const lit = Math.round(ease(p * 1.8) * v.score);
+    return `<div style="padding-top:50px"><div class="card" style="font-size:40px;font-style:italic;line-height:1.3">${esc(v.quote)}</div>
+      <div class="vt" style="margin-top:50px">zenith scale</div><div style="display:flex;gap:8px;margin-top:16px">` +
+      Array.from({ length: 10 }, (_, i) => `<div style="flex:1;height:70px;border-radius:8px;background:${i < lit ? (v.score <= 4 ? '#FF6B8A' : '#3DFFA0') : '#0E1328'};border:2px solid rgba(134,246,255,.2)"></div>`).join('') +
+      `</div><div style="font-family:Unbounded;font-size:110px;font-weight:800;margin-top:24px;color:${v.score <= 4 ? '#FF6B8A' : '#3DFFA0'}">${lit}<span style="font-size:48px;color:#8C98BC">/10</span></div></div>`;
+  },
+  cta(p, v) {
+    const r = i => ease(p * 3 - i * .5);
+    return `<div style="padding-top:30px"><div class="card" style="border-color:#FFC94D;opacity:${r(0)}"><div class="vt" style="color:#FFC94D">free course</div><div style="font-family:Unbounded;font-size:46px;font-weight:800;margin-top:10px">${esc(v.course)}</div><div style="font-size:30px;color:#8C98BC;margin-top:8px">${esc(v.teacher)}</div></div>
+      <div class="card" style="margin-top:22px;opacity:${r(1)}"><div style="font-size:32px">${esc(v.pair)}</div></div>
+      <div class="card" style="margin-top:22px;opacity:${r(2)};border-color:#9B7BFF"><div style="font-size:32px;color:#C9B8FF">${esc(v.path)}</div></div></div>`;
+  },
+  signoff(p, v, t) {
+    const q = ease(p * 2.5);
+    return `<div style="height:100%;display:flex;flex-direction:column;justify-content:center;gap:24px;opacity:${q}">
+      <div style="font-family:Unbounded;font-size:74px;font-weight:900;line-height:1">CLASS<br>DISMISSED.</div>
+      <div style="font-size:40px;color:#86F6FF">Go build something.</div>
+      <div style="font-size:40px;color:#FFC94D">Stop waiting for that interview.</div></div>`;
+  }
+};
+
+function setT(t) {
+  let si = TL.scenes.findIndex(s => t >= s.start && t < s.end); if (si < 0) si = TL.scenes.length - 1;
+  const sc = EP.scenes[si], st = TL.scenes[si], lt = t - st.start, p = clamp(lt / (st.end - st.start), 0, 1);
+  const prev = si ? EP.scenes[si - 1] : null, enter = ease(lt / .35);
+  $('chapter').textContent = sc.chapter || '';
+  const ti = $('title'); if (ti.textContent !== (sc.title || '')) { ti.textContent = sc.title || ''; let fs = 76; ti.style.fontSize = fs + 'px'; while (ti.scrollHeight > 172 && fs > 44) { fs -= 4; ti.style.fontSize = fs + 'px'; } }
+  const titleNew = !prev || prev.title !== sc.title;
+  $('title').style.opacity = titleNew ? enter : 1;
+  $('title').style.transform = `translateY(${titleNew ? (1 - enter) * 24 : 0}px)`;
+  $('vis').innerHTML = (V[sc.visual.type] || (() => ''))(p, sc.visual, lt);
+  $('vis').style.opacity = enter;
+  $('source').textContent = sc.source || '';
+  const cap = TL.captions.find(c => t >= c.start && t < c.end);
+  $('capBox').innerHTML = cap ? fmt(cap.text) : '';
+  $('capBox').style.visibility = cap ? 'visible' : 'hidden';
+  const word = TL.words.find(w => t >= w.start && t < w.end), beat = word ? 1 - (t - word.start) / Math.max(.12, word.end - word.start) : 0;
+  $('charImg').style.transform = `scale(${1.03 + .012 * Math.sin(t * 1.3)}) translateY(${Math.sin(t * .9) * 4}px)`;
+  $('charGlow').style.opacity = .35 + .25 * Math.sin(t * 2.2) + .4 * beat;
+}
+window.setT = setT;
+setT(0);
+</script></body></html>

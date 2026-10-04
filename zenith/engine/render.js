@@ -1,0 +1,73 @@
+// Usage: node render.js ../scripts/ep001-linear-algebra.json [--audio voice.mp3] [--fps 30] [--preview]
+// Writes ../out/<id>.mp4, <id>.srt, <id>-narration.txt (paste into the voice tool).
+const fs = require('fs'), path = require('path'), { spawn } = require('child_process');
+const { chromium } = require('playwright');
+
+const args = process.argv.slice(2), opt = n => { const i = args.indexOf('--' + n); return i > -1 ? args[i + 1] : null; };
+const epPath = path.resolve(args[0]), EP = JSON.parse(fs.readFileSync(epPath, 'utf8'));
+const FPS = +(opt('fps') || 30), PREVIEW = args.includes('--preview'), AUDIO = opt('audio');
+const FFMPEG = process.env.FFMPEG || 'ffmpeg';
+const OUT = path.resolve(__dirname, '../out'); fs.mkdirSync(OUT, { recursive: true });
+
+// ── timeline: estimated speech timing (replace with real word timestamps once the voice exists) ──
+const SENT_PAUSE = 0.24, LEAD = 0.2, TAIL = 0.4;
+const tl = { scenes: [], captions: [], words: [] };
+let t = 0;
+EP.scenes.forEach(sc => {
+  const start = t; t += LEAD;
+  const toks = sc.say.replace(/\{([^|}]+)\|[^}]+\}/g, (m, w) => w.replace(/\s+/g, '\u00a0')).split(/\s+/).filter(Boolean);
+  let chunk = [], cStart = t;
+  toks.forEach((tok, i) => {
+    const clean = tok.replace(/\*/g, ''), dur = Math.max(0.17, clean.length / 17 + 0.07);
+    tl.words.push({ start: t, end: t + dur, w: clean });
+    t += dur; chunk.push(tok);
+    const endSent = /[.?!]$/.test(clean), soft = /[,:;]$/.test(clean);
+    if (endSent) t += SENT_PAUSE;
+    const next = toks[i + 1] ? toks[i + 1].replace(/\*/g, '') : '', weak = /^(a|an|the|of|to|for|and|or|that|it|in|with|is|are|you'll|your)$/i.test(clean);
+    const nextEnds = /[.?!]$/.test(next) && chunk.length < 4;
+    if ((chunk.length >= 3 && !weak && !nextEnds) || chunk.length >= 5 || endSent || soft || i === toks.length - 1) {
+      let text = chunk.join(' ');
+      const opens = (text.match(/\*/g) || []).length; if (opens % 2) text = text.replace(/\*/g, '');
+      tl.captions.push({ start: cStart, end: t, text }); chunk = []; cStart = t;
+    }
+  });
+  t += TAIL; tl.scenes.push({ start, end: t });
+});
+const DURATION = t;
+
+// ── outputs for the voice + captions workflow ──
+const srtTime = s => { const ms = Math.round(s * 1000), h = Math.floor(ms / 3600000), m = Math.floor(ms / 60000) % 60, sec = Math.floor(ms / 1000) % 60;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')},${String(ms % 1000).padStart(3, '0')}`; };
+fs.writeFileSync(path.join(OUT, EP.id + '.srt'), tl.captions.map((c, i) => `${i + 1}\n${srtTime(c.start)} --> ${srtTime(c.end)}\n${c.text.replace(/\*/g, '')}\n`).join('\n'));
+fs.writeFileSync(path.join(OUT, EP.id + '-narration.txt'), EP.scenes.map(s => s.say.replace(/\{[^|}]+\|([^}]+)\}/g, '$1').replace(/\*/g, '')).join('\n\n') + '\n');
+
+// ── build the frame page ──
+let html = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8')
+  .replace('__EPISODE__', JSON.stringify(EP)).replace('__TIMELINE__', JSON.stringify(tl))
+  .replace('PORTRAIT', '../assets/zenith-portrait.jpg').replace('HANDLE', EP.handle || '@prof.zenith');
+const framePage = path.join(__dirname, '_frame.html'); fs.writeFileSync(framePage, html);
+
+(async () => {
+  const browser = await chromium.launch();
+  const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
+  await page.goto('file://' + framePage); await page.evaluate(() => document.fonts.ready);
+  if (PREVIEW) {
+    const marks = tl.scenes.map(s => s.start + (s.end - s.start) * 0.7);
+    for (let i = 0; i < marks.length; i++) { await page.evaluate(x => setT(x), marks[i]); await page.screenshot({ path: path.join(OUT, `${EP.id}-preview-${String(i + 1).padStart(2, '0')}.jpg`), type: 'jpeg', quality: 85 }); }
+    console.log(`preview: ${marks.length} stills, est. duration ${DURATION.toFixed(1)}s`); await browser.close(); return;
+  }
+  const outFile = path.join(OUT, EP.id + '.mp4');
+  const ffArgs = ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS), '-i', '-'];
+  if (AUDIO) ffArgs.push('-i', AUDIO); else ffArgs.push('-f', 'lavfi', '-i', 'anullsrc=channel_layout=stereo:sample_rate=44100');
+  ffArgs.push('-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '160k', '-shortest', '-movflags', '+faststart', outFile);
+  const ff = spawn(FFMPEG, ffArgs, { stdio: ['pipe', 'inherit', 'inherit'] });
+  const N = Math.ceil(DURATION * FPS);
+  for (let f = 0; f < N; f++) {
+    await page.evaluate(x => setT(x), f / FPS);
+    const buf = await page.screenshot({ type: 'jpeg', quality: 92 });
+    if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once('drain', r));
+    if (f % (FPS * 5) === 0) process.stdout.write(`\r${Math.round(100 * f / N)}% `);
+  }
+  ff.stdin.end(); await new Promise(r => ff.on('close', r)); await browser.close();
+  console.log(`\nwrote ${outFile} (${DURATION.toFixed(1)}s, ${N} frames)`);
+})();
