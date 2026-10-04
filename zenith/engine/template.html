@@ -24,19 +24,34 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg);color:
 #caption{position:absolute;left:0;right:0;top:1300px;display:flex;justify-content:center;}
 #capBox{font-family:DMSans;font-weight:800;font-size:66px;padding:14px 30px;border:3px solid var(--cyan);border-radius:14px;background:rgba(7,10,20,.85);box-shadow:8px 8px 0 rgba(155,123,255,.55);max-width:980px;text-align:center;line-height:1.15;}
 #capBox b{color:var(--gold);}
-#source{position:absolute;left:60px;right:60px;top:1470px;font-family:DMMono;font-size:22px;color:var(--dim);text-align:center;}
-#brand{position:absolute;left:60px;right:60px;top:1515px;display:flex;justify-content:center;gap:24px;font-family:DMMono;font-size:24px;letter-spacing:3px;color:rgba(234,240,255,.55);}
+#source{position:absolute;left:60px;right:60px;top:1470px;font-family:DMMono;font-size:22px;color:#B7C2E0;text-align:center;text-shadow:0 0 8px #000,0 0 3px #000;}
+#brand{text-shadow:0 0 8px #000;position:absolute;left:60px;right:60px;top:1515px;display:flex;justify-content:center;gap:24px;font-family:DMMono;font-size:24px;letter-spacing:3px;color:rgba(234,240,255,.55);}
 #brand span:first-child{color:var(--violet);}
+.layer{position:absolute;inset:0;}
+#dest{opacity:0;}
+#lab{opacity:0;overflow:hidden;}
+#labImg{position:absolute;height:1650px;bottom:0;left:-152px;}
+#labShade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,10,20,.85) 0%,rgba(7,10,20,0) 22%,rgba(7,10,20,0) 60%,rgba(7,10,20,.8) 100%);}
+#fx{pointer-events:none;}
+body.mode-lab #char{opacity:0;}
+body.mode-lab #vis{left:600px;top:470px;width:450px;}
+body.holo #vis{background:rgba(8,14,32,.62);border:2px solid rgba(134,246,255,.45);border-radius:24px;padding:22px;box-shadow:0 0 40px rgba(134,246,255,.25),inset 0 0 30px rgba(134,246,255,.08);backdrop-filter:blur(6px);}
+body.holo #vis::after{content:'';position:absolute;inset:0;border-radius:24px;background:repeating-linear-gradient(0deg,rgba(134,246,255,.05) 0 2px,transparent 2px 6px);pointer-events:none;}
+.stat{display:flex;flex-direction:column;gap:2px;padding:16px 0;border-bottom:1px solid rgba(134,246,255,.15);}
+.stat b{font-family:Unbounded;font-size:58px;font-weight:800;color:#FFC94D;white-space:nowrap;}
 .vt{font-family:DMMono;font-size:24px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;}
 .card{background:var(--panel);border:2px solid var(--edge);border-radius:18px;padding:22px 24px;}
 </style></head>
 <body><div id="stage">
 <div id="bg"></div>
+<canvas id="dest" class="layer" width="1080" height="1920"></canvas>
+<div id="lab" class="layer"><img id="labImg" alt=""><div id="labShade"></div></div>
 <div id="chapter"></div><div id="title"></div><div id="rule"></div>
 <div id="char"><div id="charImg"></div><div id="charGlow"></div><div id="charTag">PROF. KAEL ZENITH</div></div>
 <div id="vis"></div>
 <div id="caption"><div id="capBox"></div></div>
 <div id="source"></div>
+<canvas id="fx" class="layer" width="1080" height="1920"></canvas>
 <div id="brand"><span>HANDLE</span><span>THE FRONTIER PATH</span></div>
 </div>
 <script>
@@ -113,25 +128,98 @@ const V = {
       <div class="card" style="margin-top:22px;opacity:${r(1)}"><div style="font-size:32px">${esc(v.pair)}</div></div>
       <div class="card" style="margin-top:22px;opacity:${r(2)};border-color:#9B7BFF"><div style="font-size:32px;color:#C9B8FF">${esc(v.path)}</div></div></div>`;
   },
+  none() { return ''; },
+  stats(p, v) {
+    return `<div style="padding-top:20px">` + v.items.map((it, i) => { const q = ease(p * 3 - i * .6);
+      return `<div class="stat" style="opacity:${q};transform:translateX(${(1 - q) * 40}px)"><b>${esc(it[0])}</b><span style="font-size:32px;color:#C9D4F5">${esc(it[1])}</span></div>`; }).join('') + `</div>`;
+  },
+  cannon(p, v) {
+    const E = [295, 470], R = 175, top = [295, E[1] - R - 34], GM = 4.2e6, rr = E[1] - top[1], vc = Math.sqrt(GM / rr);
+    if (!V._traj) V._traj = [0.72, 0.9, 1].map(f => { let x = top[0], y = top[1], vx = f * vc, vy = 0, pts = [[x, y]], ang = 0, dt = .0025;
+      for (let k = 0; k < 4000; k++) { const dx = x - E[0], dy = y - E[1], d = Math.hypot(dx, dy), a = GM / (d * d); vx -= a * dx / d * dt; vy -= a * dy / d * dt; x += vx * dt; y += vy * dt;
+        if (k % 6 === 0) pts.push([x, y]); if (d < R) break; ang = Math.atan2(dy, dx); if (k > 200 && Math.abs(x - top[0]) < 3 && y < E[1]) break; } return pts; });
+    const cols = ['#FF6B8A', '#FFC94D', '#86F6FF'], labels = ['too slow', 'faster', 'fast enough: orbit'];
+    let s = `<svg width="590" height="740"><circle cx="${E[0]}" cy="${E[1]}" r="${R}" fill="#1E4B8F"/><circle cx="${E[0]}" cy="${E[1]}" r="${R}" fill="none" stroke="#86F6FF" stroke-opacity=".4" stroke-width="6"/>`;
+    s += `<path d="M${E[0] - 24} ${E[1] - R + 4} L${E[0]} ${top[1]} L${E[0] + 24} ${E[1] - R + 4}Z" fill="#5A4A3A"/>`;
+    V._traj.forEach((pts, i) => { const q = clamp(p * 3.2 - i * .95, 0, 1), n = Math.max(2, Math.floor(pts.length * q));
+      if (q > 0) { s += `<polyline points="${pts.slice(0, n).map(a => a.map(z => z.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="${cols[i]}" stroke-width="5" stroke-linecap="round"/>`;
+        const e = pts[n - 1]; s += `<circle cx="${e[0].toFixed(1)}" cy="${e[1].toFixed(1)}" r="9" fill="${cols[i]}"/>`;
+        s += `<text x="20" y="${646 + i * 34}" font-family="DMMono" font-size="24" fill="${cols[i]}">● ${labels[i]}</text>`; } });
+    return s + '</svg>';
+  },
   signoff(p, v, t) {
     const q = ease(p * 2.5);
     return `<div style="height:100%;display:flex;flex-direction:column;justify-content:center;gap:24px;opacity:${q}">
-      <div style="font-family:Unbounded;font-size:74px;font-weight:900;line-height:1">CLASS<br>DISMISSED.</div>
+      <div style="font-family:Unbounded;font-size:min(74px,10.5vw);font-size:${document.body.classList.contains('mode-lab') ? 54 : 74}px;font-weight:900;line-height:1">CLASS<br>DISMISSED.</div>
       <div style="font-size:40px;color:#86F6FF">Go build something.</div>
       <div style="font-size:40px;color:#FFC94D">Stop waiting for that interview.</div></div>`;
   }
 };
+
+const DEST = { _stars: null };
+function stars(ctx, t) {
+  if (!DEST._stars) { let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647; DEST._stars = Array.from({ length: 420 }, () => [rnd() * 1080, rnd() * 1920, rnd() * 1.8 + .3, rnd() * 6]); }
+  ctx.fillStyle = '#03050C'; ctx.fillRect(0, 0, 1080, 1920);
+  DEST._stars.forEach(([x, y, r, ph]) => { ctx.globalAlpha = .45 + .45 * Math.sin(t * 1.5 + ph); ctx.fillStyle = '#E8F0FF'; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); });
+  ctx.globalAlpha = 1;
+}
+DEST.orbit = (ctx, t) => {
+  stars(ctx, t);
+  const cx = 540, cy = 2950, R = 1500;
+  const g = ctx.createRadialGradient(cx, cy, R - 40, cx, cy, R + 120); g.addColorStop(0, 'rgba(110,190,255,.55)'); g.addColorStop(1, 'rgba(110,190,255,0)');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R + 120, 0, 7); ctx.fill();
+  const e = ctx.createLinearGradient(0, cy - R, 0, cy - R + 600); e.addColorStop(0, '#3D86D9'); e.addColorStop(.4, '#1D4E9A'); e.addColorStop(1, '#0B2552');
+  ctx.fillStyle = e; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
+  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.clip(); ctx.fillStyle = 'rgba(255,255,255,.13)'; ctx.filter = 'blur(6px)';
+  for (let i = 0; i < 14; i++) { const a = -Math.PI / 2 + (i - 7) * .07 + t * .012; ctx.beginPath(); ctx.ellipse(cx + Math.cos(a) * (R - 60 - (i % 3) * 70), cy + Math.sin(a) * (R - 60 - (i % 3) * 70), 140, 26, a + Math.PI / 2, 0, 7); ctx.fill(); }
+  ctx.filter = 'none'; ctx.restore();
+  const oa = -Math.PI / 2 - .32 + ((t * .045) % .64), orr = R + 260; ctx.strokeStyle = 'rgba(134,246,255,.35)'; ctx.setLineDash([8, 14]); ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.arc(cx, cy, orr, -Math.PI / 2 - .36, -Math.PI / 2 + .36); ctx.stroke(); ctx.setLineDash([]);
+  const sx = cx + Math.cos(oa) * orr, sy = cy + Math.sin(oa) * orr; ctx.fillStyle = '#FFFFFF'; ctx.shadowColor = '#86F6FF'; ctx.shadowBlur = 24; ctx.fillRect(sx - 22, sy - 3, 44, 6); ctx.fillRect(sx - 4, sy - 9, 8, 18); ctx.shadowBlur = 0;
+};
+DEST.space = (ctx, t) => stars(ctx, t);
+const IMGCACHE = {};
+function drawDest(name, t) {
+  const c = $('dest'), ctx = c.getContext('2d');
+  if (DEST[name]) DEST[name](ctx, t);
+  else if (name) { let im = IMGCACHE[name]; if (!im) { im = IMGCACHE[name] = new Image(); im.src = name; }
+    if (im.complete && im.naturalWidth) { const k = Math.max(1080 / im.naturalWidth, 1920 / im.naturalHeight) * (1.06 + .02 * Math.sin(t * .2)); const w = im.naturalWidth * k, h = im.naturalHeight * k; ctx.drawImage(im, (1080 - w) / 2, (1920 - h) / 2, w, h); } }
+}
+function portal(lt) {
+  const c = $('fx'), ctx = c.getContext('2d'); ctx.clearRect(0, 0, 1080, 1920);
+  if (lt > 1.3) return;
+  const k = lt / 1.3, cx = 540, cy = 760;
+  for (let i = 0; i < 90; i++) { const a = i * 2.39996, len = 200 + 1400 * k, r0 = 40 + ((i * 53) % 300) * (1 - k);
+    ctx.strokeStyle = i % 2 ? `rgba(134,246,255,${.7 * (1 - k)})` : `rgba(155,123,255,${.7 * (1 - k)})`; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0); ctx.lineTo(cx + Math.cos(a) * (r0 + len * .4), cy + Math.sin(a) * (r0 + len * .4)); ctx.stroke(); }
+  const flash = Math.max(0, 1 - Math.abs(k - .45) * 3.2); ctx.fillStyle = `rgba(235,245,255,${flash})`; ctx.fillRect(0, 0, 1080, 1920);
+}
+function labFrame(t) {
+  const m = EP.media || {}, img = $('labImg');
+  let src = m.lab || '../assets/zenith-fullbody.jpg';
+  if (m.labFrames) { const n = m.labFrames.count, i = Math.floor(t * m.labFrames.fps) % n; src = m.labFrames.dir + '/' + String(i + 1).padStart(5, '0') + '.jpg'; }
+  if (img.getAttribute('src') !== src) { img.setAttribute('src', src); return img.decode().catch(() => {}); }
+  return null;
+}
 
 function setT(t) {
   let si = TL.scenes.findIndex(s => t >= s.start && t < s.end); if (si < 0) si = TL.scenes.length - 1;
   const sc = EP.scenes[si], st = TL.scenes[si], lt = t - st.start, p = clamp(lt / (st.end - st.start), 0, 1);
   const prev = si ? EP.scenes[si - 1] : null, enter = ease(lt / .35);
   $('chapter').textContent = sc.chapter || '';
-  const ti = $('title'); if (ti.textContent !== (sc.title || '')) { ti.textContent = sc.title || ''; let fs = 76; ti.style.fontSize = fs + 'px'; while (ti.scrollHeight > 172 && fs > 44) { fs -= 4; ti.style.fontSize = fs + 'px'; } }
+  const ti = $('title'); { ti.textContent = sc.title || ''; let fs = 76; ti.style.fontSize = fs + 'px'; while (ti.scrollHeight > 172 && fs > 44) { fs -= 4; ti.style.fontSize = fs + 'px'; } }
   const titleNew = !prev || prev.title !== sc.title;
   $('title').style.opacity = titleNew ? enter : 1;
   $('title').style.transform = `translateY(${titleNew ? (1 - enter) * 24 : 0}px)`;
+  const mode = sc.mode || 'explain';
+  document.body.className = 'mode-' + mode + ((sc.dest && mode !== 'lab') || (mode === 'lab' && sc.visual.type !== 'none') ? ' holo' : '');
   $('vis').innerHTML = (V[sc.visual.type] || (() => ''))(p, sc.visual, lt);
+  $('vis').style.display = sc.visual.type === 'none' ? 'none' : 'block';
+  $('lab').style.opacity = mode === 'lab' ? 1 : 0;
+  $('dest').style.opacity = sc.dest && mode !== 'lab' ? 1 : 0;
+  if (sc.dest && mode !== 'lab') drawDest(sc.dest, t);
+  const travelStart = sc.travel ? lt : 99; portal(travelStart);
+  $('labImg').style.transform = `scale(${1 + .015 * Math.sin(t * .5)})`;
   $('vis').style.opacity = enter;
   $('source').textContent = sc.source || '';
   const cap = TL.captions.find(c => t >= c.start && t < c.end);
@@ -140,6 +228,7 @@ function setT(t) {
   const word = TL.words.find(w => t >= w.start && t < w.end), beat = word ? 1 - (t - word.start) / Math.max(.12, word.end - word.start) : 0;
   $('charImg').style.transform = `scale(${1.03 + .012 * Math.sin(t * 1.3)}) translateY(${Math.sin(t * .9) * 4}px)`;
   $('charGlow').style.opacity = .35 + .25 * Math.sin(t * 2.2) + .4 * beat;
+  return mode === 'lab' ? labFrame(t) : null;
 }
 window.setT = setT;
 setT(0);

@@ -41,6 +41,17 @@ const srtTime = s => { const ms = Math.round(s * 1000), h = Math.floor(ms / 3600
 fs.writeFileSync(path.join(OUT, EP.id + '.srt'), tl.captions.map((c, i) => `${i + 1}\n${srtTime(c.start)} --> ${srtTime(c.end)}\n${c.text.replace(/\*/g, '')}\n`).join('\n'));
 fs.writeFileSync(path.join(OUT, EP.id + '-narration.txt'), EP.scenes.map(s => s.say.replace(/\{[^|}]+\|([^}]+)\}/g, '$1').replace(/\*/g, '')).join('\n\n') + '\n');
 
+// ── motion / lip-sync clips → cached frame sequences ──
+const { execFileSync } = require('child_process');
+if (EP.media && EP.media.labClip) {
+  const clip = path.resolve(path.dirname(epPath), EP.media.labClip), name = path.basename(clip).replace(/\W+/g, '_');
+  const dir = path.join(__dirname, '_cache', name);
+  if (!fs.existsSync(dir)) { fs.mkdirSync(dir, { recursive: true }); execFileSync(FFMPEG, ['-v', 'error', '-i', clip, '-vf', `fps=${FPS}`, '-q:v', '3', path.join(dir, '%05d.jpg')]); }
+  EP.media.labFrames = { dir: '_cache/' + name, count: fs.readdirSync(dir).length, fps: FPS };
+}
+if (EP.media && EP.media.lab) EP.media.lab = path.relative(__dirname, path.resolve(path.dirname(epPath), EP.media.lab));
+EP.scenes.forEach(sc => { if (sc.dest && /\.(jpe?g|png|webp)$/i.test(sc.dest)) sc.dest = path.relative(__dirname, path.resolve(path.dirname(epPath), sc.dest)); });
+
 // ── build the frame page ──
 let html = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8')
   .replace('__EPISODE__', JSON.stringify(EP)).replace('__TIMELINE__', JSON.stringify(tl))
