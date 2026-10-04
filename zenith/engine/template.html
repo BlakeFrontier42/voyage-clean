@@ -25,7 +25,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg);color:
 #capBox{font-family:DMSans;font-weight:800;font-size:66px;padding:14px 30px;border:3px solid var(--cyan);border-radius:14px;background:rgba(7,10,20,.85);box-shadow:8px 8px 0 rgba(155,123,255,.55);max-width:980px;text-align:center;line-height:1.15;}
 #capBox b{color:var(--gold);}
 #source{position:absolute;left:60px;right:60px;top:1470px;font-family:DMMono;font-size:22px;color:#B7C2E0;text-align:center;text-shadow:0 0 8px #000,0 0 3px #000;}
-#brand{text-shadow:0 0 8px #000;position:absolute;left:60px;right:60px;top:1515px;display:flex;justify-content:center;gap:24px;font-family:DMMono;font-size:24px;letter-spacing:3px;color:rgba(234,240,255,.55);}
+#brand{text-shadow:0 0 8px #000;position:absolute;left:60px;right:60px;top:1545px;display:flex;justify-content:center;gap:24px;font-family:DMMono;font-size:24px;letter-spacing:3px;color:rgba(234,240,255,.55);}
 #brand span:first-child{color:var(--violet);}
 .layer{position:absolute;inset:0;}
 #dest{opacity:0;}
@@ -33,6 +33,11 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg);color:
 #labImg{position:absolute;height:1650px;bottom:0;left:-152px;}
 #labShade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,10,20,.85) 0%,rgba(7,10,20,0) 22%,rgba(7,10,20,0) 60%,rgba(7,10,20,.8) 100%);}
 #fx{pointer-events:none;}
+#world{position:absolute;inset:0;transform-origin:540px 700px;will-change:transform,filter;}
+#holo{position:absolute;inset:0;opacity:0;}
+body.mode-lumen #char,body.mode-lumen #vis{opacity:0;}
+body.mode-lumen #lab{opacity:1 !important;}
+body.mode-lumen #labImg{filter:brightness(.42) saturate(.8);}
 body.mode-lab #char{opacity:0;}
 body.mode-lab #vis{left:600px;top:470px;width:450px;}
 body.holo #vis{background:rgba(8,14,32,.62);border:2px solid rgba(134,246,255,.45);border-radius:24px;padding:22px;box-shadow:0 0 40px rgba(134,246,255,.25),inset 0 0 30px rgba(134,246,255,.08);backdrop-filter:blur(6px);}
@@ -49,6 +54,7 @@ body.holo #vis::after{content:'';position:absolute;inset:0;border-radius:24px;ba
 <div id="chapter"></div><div id="title"></div><div id="rule"></div>
 <div id="char"><div id="charImg"></div><div id="charGlow"></div><div id="charTag">PROF. KAEL ZENITH</div></div>
 <div id="vis"></div>
+<div id="holo"></div>
 <div id="caption"><div id="capBox"></div></div>
 <div id="source"></div>
 <canvas id="fx" class="layer" width="1080" height="1920"></canvas>
@@ -129,6 +135,23 @@ const V = {
       <div class="card" style="margin-top:22px;opacity:${r(2)};border-color:#9B7BFF"><div style="font-size:32px;color:#C9B8FF">${esc(v.path)}</div></div></div>`;
   },
   none() { return ''; },
+  doubleslit(p, v) {
+    const N = Math.floor((v.count || 400) * ease(p * 1.15)), which = v.which;
+    if (!V._ds || V._ds.which !== which) { let seed = 5; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+      const I = y => { const u = y * 1.0; if (which) return Math.exp(-Math.pow((u - 1.1), 2) * 2.2) + Math.exp(-Math.pow((u + 1.1), 2) * 2.2); const s = Math.abs(u) < 1e-6 ? 1 : Math.sin(u * .55) / (u * .55); return Math.pow(Math.cos(u * 2.1), 2) * s * s; };
+      const pts = []; while (pts.length < 3000) { const y = (rnd() * 2 - 1) * 3, z = rnd() * (which ? 1.05 : 1); if (z < I(y)) pts.push([rnd(), y]); } V._ds = { which, pts }; }
+    let s = `<svg width="590" height="720"><text x="10" y="34" font-family="DMMono" font-size="22" fill="#86F6FF" letter-spacing="2">${which ? 'DETECTOR AT THE SLITS' : 'ONE ELECTRON AT A TIME'}</text>`;
+    s += `<circle cx="40" cy="360" r="14" fill="#FFC94D"/><text x="18" y="410" font-family="DMMono" font-size="18" fill="#8C98BC">source</text>`;
+    s += `<rect x="190" y="90" width="14" height="230" fill="#8C98BC"/><rect x="190" y="340" width="14" height="40" fill="#8C98BC"/><rect x="190" y="400" width="14" height="230" fill="#8C98BC"/>`;
+    if (which) s += `<circle cx="197" cy="330" r="9" fill="#FF6B8A"/><circle cx="197" cy="390" r="9" fill="#FF6B8A"/>`;
+    s += `<rect x="400" y="80" width="10" height="560" fill="#2A3360"/>`;
+    const fly = (p * 40) % 1, fy = 360 + (V._ds.pts[N % 3000] || [0, 0])[1] * 90 * fly;
+    if (p < .97) s += `<circle cx="${40 + 360 * fly}" cy="${fly < .4 ? 360 : fy}" r="7" fill="#86F6FF" opacity=".9"/>`;
+    const bins = new Array(40).fill(0);
+    V._ds.pts.slice(0, N).forEach(([rx, y]) => { const yy = 360 + y * 90; if (yy > 82 && yy < 638) { s += `<circle cx="${413 + rx * 26}" cy="${yy.toFixed(1)}" r="2.6" fill="#86F6FF" opacity=".85"/>`; bins[Math.min(39, Math.floor((yy - 80) / 14))]++; } });
+    const mx = Math.max(1, ...bins); bins.forEach((b, i) => { s += `<rect x="446" y="${82 + i * 14}" width="${(b / mx) * 130}" height="12" fill="${which ? '#FF6B8A' : '#FFC94D'}" opacity=".85"/>`; });
+    return s + `<text x="440" y="670" font-family="DMMono" font-size="18" fill="#8C98BC">hits: ${N}</text></svg>`;
+  },
   stats(p, v) {
     return `<div style="padding-top:20px">` + v.items.map((it, i) => { const q = ease(p * 3 - i * .6);
       return `<div class="stat" style="opacity:${q};transform:translateX(${(1 - q) * 40}px)"><b>${esc(it[0])}</b><span style="font-size:32px;color:#C9D4F5">${esc(it[1])}</span></div>`; }).join('') + `</div>`;
@@ -156,6 +179,49 @@ const V = {
   }
 };
 
+const WORLD = document.createElement('div'); WORLD.id = 'world';
+['bg', 'dest', 'lab', 'chapter', 'title', 'rule', 'char', 'vis', 'holo'].forEach(id => WORLD.appendChild($(id)));
+$('stage').insertBefore(WORLD, $('stage').firstChild);
+const PLACES = [
+  ['Helix Institute', '1 m', 'HOME · THE LAB'], ['Earth Orbit', '10\u2077 m', 'LEO · 400 KM'], ['Inside a Cell', '10\u207b\u2075 m', 'EUKARYOTIC CELL'],
+  ['Quantum Realm', '10\u207b\u00b9\u2070 m', 'ATOMIC SCALE'], ['Black Hole', '10\u2074 m', 'STELLAR MASS'], ['Fusion Core', '1 m', 'PLASMA · 150M \u00b0C'],
+  ['The Human Brain', '10\u207b\u00b9 m', '86 BILLION NEURONS'], ['Mars Greenhouse', '1 m', 'MARS SURFACE'], ['Global Markets', '\u221e', 'PRICE · TIME · RISK']];
+const easeIO = x => x < 0 ? 0 : x > 1 ? 1 : x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+function wheelPos(p, from, to) { const q = clamp((p - .12) / .55, 0, 1), base = from + (to - from) * easeIO(q); const settle = q >= 1 ? Math.sin((p - .67) * 30) * Math.exp(-(p - .67) * 18) * .18 : 0; return base + settle; }
+window.wheelPos = wheelPos;
+function lumenHolo(p, sc, t) {
+  const to = PLACES.findIndex(x => x[0] === sc.target), from = sc.from != null ? sc.from : (to + 5) % PLACES.length;
+  const pos = wheelPos(p, from + PLACES.length * 2, to + PLACES.length * 3), locked = p > .7;
+  const up = ease(p * 6), cx = 540, cy = 720;
+  let rows = '';
+  for (let k = -3; k <= 3; k++) { const idx = Math.round(pos) + k, off = idx - pos, item = PLACES[((idx % PLACES.length) + PLACES.length) % PLACES.length];
+    const y = cy + off * 92, a = Math.max(0, 1 - Math.abs(off) / 3.2), sel = Math.abs(off) < .5;
+    rows += `<text x="${cx}" y="${y + 14}" text-anchor="middle" font-family="Unbounded" font-weight="700" font-size="${sel ? 46 : 34}" fill="${sel ? (locked ? '#FFC94D' : '#EAF0FF') : '#86F6FF'}" fill-opacity="${a * (sel ? 1 : .55)}" transform="translate(0 0)">${item[0]}</text>`; }
+  const cur = PLACES[((Math.round(pos) % PLACES.length) + PLACES.length) % PLACES.length];
+  const ring = (rx, sp, col) => `<ellipse cx="0" cy="0" rx="${rx}" ry="${rx * .32}" fill="none" stroke="${col}" stroke-width="3" transform="rotate(${t * sp})"/>`;
+  const blink = locked ? .6 + .4 * Math.sin(t * 12) : 1;
+  return `<svg width="1080" height="1920" style="position:absolute;inset:0">
+    <defs><linearGradient id="cone" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#86F6FF" stop-opacity=".55"/><stop offset="1" stop-color="#9B7BFF" stop-opacity="0"/></linearGradient>
+    <linearGradient id="pen" x1="0" x2="1"><stop offset="0" stop-color="#7A5A1E"/><stop offset=".5" stop-color="#F2D27A"/><stop offset="1" stop-color="#8A6A28"/></linearGradient>
+    <filter id="hg"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+    <path d="M520 1080 L${cx - 330 * up} ${cy + 260} L${cx + 330 * up} ${cy + 260} L560 1080Z" fill="url(#cone)" opacity="${up * .8}"/>
+    <g opacity="${up}" filter="url(#hg)">
+      <rect x="${cx - 360}" y="${cy - 300}" width="720" height="560" rx="28" fill="rgba(8,16,40,.55)" stroke="#86F6FF" stroke-opacity=".6" stroke-width="2"/>
+      <text x="${cx - 330}" y="${cy - 254}" font-family="DMMono" font-size="24" letter-spacing="4" fill="#86F6FF">LUMEN · DESTINATION</text>
+      <text x="${cx + 330}" y="${cy - 254}" text-anchor="end" font-family="DMMono" font-size="24" letter-spacing="3" fill="${locked ? '#FFC94D' : '#86F6FF'}" opacity="${blink}">${locked ? '\u25cf LOCKED' : 'SCANNING\u2026'}</text>
+      <line x1="${cx - 330}" y1="${cy - 232}" x2="${cx + 330}" y2="${cy - 232}" stroke="#86F6FF" stroke-opacity=".3"/>
+      <path d="M${cx - 320} ${cy - 30} h-16 v60 h16 M${cx + 320} ${cy - 30} h16 v60 h-16" stroke="${locked ? '#FFC94D' : '#86F6FF'}" stroke-width="4" fill="none"/>
+      <clipPath id="wc"><rect x="${cx - 350}" y="${cy - 220}" width="700" height="370"/></clipPath><g clip-path="url(#wc)">${rows}</g>
+      <line x1="${cx - 330}" y1="${cy + 166}" x2="${cx + 330}" y2="${cy + 166}" stroke="#86F6FF" stroke-opacity=".3"/>
+      <text x="${cx - 330}" y="${cy + 210}" font-family="DMMono" font-size="24" fill="#8C98BC">SCALE <tspan fill="#EAF0FF">${cur[1]}</tspan></text>
+      <text x="${cx + 330}" y="${cy + 210}" text-anchor="end" font-family="DMMono" font-size="24" fill="#8C98BC">${cur[2]}</text>
+    </g>
+    <g transform="translate(540 1090)">
+      <g opacity="${up}">${ring(46, 90, '#86F6FF')}${ring(34, -140, '#9B7BFF')}${ring(24, 200, '#FFC94D')}</g>
+      <circle r="10" fill="#FFFFFF" filter="url(#hg)"/>
+      <rect x="-9" y="8" width="18" height="150" rx="9" fill="url(#pen)"/><rect x="-11" y="58" width="22" height="10" rx="3" fill="#2A2F45"/><rect x="-11" y="118" width="22" height="10" rx="3" fill="#2A2F45"/>
+    </g></svg>`;
+}
 const DEST = { _stars: null };
 function stars(ctx, t) {
   if (!DEST._stars) { let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647; DEST._stars = Array.from({ length: 420 }, () => [rnd() * 1080, rnd() * 1920, rnd() * 1.8 + .3, rnd() * 6]); }
@@ -178,6 +244,17 @@ DEST.orbit = (ctx, t) => {
   const sx = cx + Math.cos(oa) * orr, sy = cy + Math.sin(oa) * orr; ctx.fillStyle = '#FFFFFF'; ctx.shadowColor = '#86F6FF'; ctx.shadowBlur = 24; ctx.fillRect(sx - 22, sy - 3, 44, 6); ctx.fillRect(sx - 4, sy - 9, 8, 18); ctx.shadowBlur = 0;
 };
 DEST.space = (ctx, t) => stars(ctx, t);
+DEST.quantum = (ctx, t) => {
+  const g = ctx.createRadialGradient(540, 800, 60, 540, 800, 1300); g.addColorStop(0, '#2A1460'); g.addColorStop(.5, '#110830'); g.addColorStop(1, '#04020C');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 1080, 1920);
+  ctx.lineWidth = 2;
+  for (let k = 0; k < 14; k++) { const r = ((t * 70 + k * 95) % 1330); ctx.strokeStyle = `rgba(134,246,255,${.18 * (1 - r / 1330)})`; ctx.beginPath(); ctx.arc(300, 820, r, 0, 7); ctx.stroke();
+    ctx.strokeStyle = `rgba(155,123,255,${.18 * (1 - r / 1330)})`; ctx.beginPath(); ctx.arc(780, 820, r, 0, 7); ctx.stroke(); }
+  if (!DEST._q) { let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647; DEST._q = Array.from({ length: 160 }, () => [rnd() * 1080, rnd() * 1920, rnd() * 2 + 1, rnd() * 6, rnd() * .6 + .2]); }
+  DEST._q.forEach(([x, y, r, ph, sp]) => { const yy = (y - t * 30 * sp + 1920) % 1920, xx = x + Math.sin(t * sp + ph) * 30;
+    ctx.globalAlpha = .4 + .4 * Math.sin(t * 2 + ph); ctx.fillStyle = ph > 3 ? '#86F6FF' : '#C9B8FF'; ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 12; ctx.beginPath(); ctx.arc(xx, yy, r, 0, 7); ctx.fill(); });
+  ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+};
 const IMGCACHE = {};
 function drawDest(name, t) {
   const c = $('dest'), ctx = c.getContext('2d');
@@ -193,6 +270,11 @@ function portal(lt) {
     ctx.strokeStyle = i % 2 ? `rgba(134,246,255,${.7 * (1 - k)})` : `rgba(155,123,255,${.7 * (1 - k)})`; ctx.lineWidth = 3;
     ctx.beginPath(); ctx.moveTo(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0); ctx.lineTo(cx + Math.cos(a) * (r0 + len * .4), cy + Math.sin(a) * (r0 + len * .4)); ctx.stroke(); }
   const flash = Math.max(0, 1 - Math.abs(k - .45) * 3.2); ctx.fillStyle = `rgba(235,245,255,${flash})`; ctx.fillRect(0, 0, 1080, 1920);
+}
+function arrivalFlash(lt, toEnd) {
+  const c = $('fx'), ctx = c.getContext('2d'); ctx.clearRect(0, 0, 1080, 1920);
+  let a = 0; if (lt < .5) a = (1 - lt / .5) * .85; if (toEnd < .3) a = Math.max(a, (1 - toEnd / .3) * .9);
+  if (a > 0) { const g = ctx.createRadialGradient(540, 740, 0, 540, 740, 1100); g.addColorStop(0, `rgba(240,248,255,${a})`); g.addColorStop(.5, `rgba(155,123,255,${a * .6})`); g.addColorStop(1, 'rgba(7,10,20,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, 1080, 1920); }
 }
 function labFrame(t) {
   const m = EP.media || {}, img = $('labImg');
@@ -212,13 +294,21 @@ function setT(t) {
   $('title').style.opacity = titleNew ? enter : 1;
   $('title').style.transform = `translateY(${titleNew ? (1 - enter) * 24 : 0}px)`;
   const mode = sc.mode || 'explain';
+  $('holo').style.opacity = mode === 'lumen' ? 1 : 0;
+  $('holo').innerHTML = mode === 'lumen' ? lumenHolo(p, sc, t) : '';
+  const dur = st.end - st.start, tl2 = dur - lt;
+  let zs = 1, zb = 0, zl = 1;
+  if (mode === 'lumen' && tl2 < .95) { const k = ease((.95 - tl2) / .95); zs = 1 + Math.pow(k, 2) * 6; zb = k * 14; zl = 1 + k * 1.4; WORLD.style.transformOrigin = '540px 720px'; }
+  if (sc.travel && lt < .9) { const k = 1 - ease(lt / .9); zs = 1 + k * .6; zb = k * 12; zl = 1 + k * 1.2; WORLD.style.transformOrigin = '540px 760px'; }
+  WORLD.style.transform = `scale(${zs})`; WORLD.style.filter = zb > .05 ? `blur(${zb.toFixed(1)}px) brightness(${zl.toFixed(2)})` : 'none';
   document.body.className = 'mode-' + mode + ((sc.dest && mode !== 'lab') || (mode === 'lab' && sc.visual.type !== 'none') ? ' holo' : '');
   $('vis').innerHTML = (V[sc.visual.type] || (() => ''))(p, sc.visual, lt);
   $('vis').style.display = sc.visual.type === 'none' ? 'none' : 'block';
-  $('lab').style.opacity = mode === 'lab' ? 1 : 0;
+  $('lab').style.opacity = mode === 'lab' || mode === 'lumen' ? 1 : 0;
+  $('labImg').style.filter = mode === 'lumen' ? 'brightness(.42) saturate(.8)' : 'none';
   $('dest').style.opacity = sc.dest && mode !== 'lab' ? 1 : 0;
   if (sc.dest && mode !== 'lab') drawDest(sc.dest, t);
-  const travelStart = sc.travel ? lt : 99; portal(travelStart);
+  arrivalFlash(sc.travel ? lt : 99, mode === 'lumen' ? tl2 : 99);
   $('labImg').style.transform = `scale(${1 + .015 * Math.sin(t * .5)})`;
   $('vis').style.opacity = enter;
   $('source').textContent = sc.source || '';
@@ -228,7 +318,7 @@ function setT(t) {
   const word = TL.words.find(w => t >= w.start && t < w.end), beat = word ? 1 - (t - word.start) / Math.max(.12, word.end - word.start) : 0;
   $('charImg').style.transform = `scale(${1.03 + .012 * Math.sin(t * 1.3)}) translateY(${Math.sin(t * .9) * 4}px)`;
   $('charGlow').style.opacity = .35 + .25 * Math.sin(t * 2.2) + .4 * beat;
-  return mode === 'lab' ? labFrame(t) : null;
+  return mode === 'lab' || mode === 'lumen' ? labFrame(t) : null;
 }
 window.setT = setT;
 setT(0);

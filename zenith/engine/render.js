@@ -52,6 +52,32 @@ if (EP.media && EP.media.labClip) {
 if (EP.media && EP.media.lab) EP.media.lab = path.relative(__dirname, path.resolve(path.dirname(epPath), EP.media.lab));
 EP.scenes.forEach(sc => { if (sc.dest && /\.(jpe?g|png|webp)$/i.test(sc.dest)) sc.dest = path.relative(__dirname, path.resolve(path.dirname(epPath), sc.dest)); });
 
+// ── sound design: synthesized SFX track, timed to the same math the frames use ──
+const PLACES = ['Helix Institute', 'Earth Orbit', 'Inside a Cell', 'Quantum Realm', 'Black Hole', 'Fusion Core', 'The Human Brain', 'Mars Greenhouse', 'Global Markets'];
+const easeIO = x => x < 0 ? 0 : x > 1 ? 1 : x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const wheelPos = (p, from, to) => { const q = Math.max(0, Math.min(1, (p - .12) / .55)), base = from + (to - from) * easeIO(q); return base + (q >= 1 ? Math.sin((p - .67) * 30) * Math.exp(-(p - .67) * 18) * .18 : 0); };
+const SR = 44100, sfx = new Float32Array(Math.ceil((DURATION + 1) * SR));
+const add = (t0, len, fn) => { const s0 = Math.floor(t0 * SR); for (let i = 0; i < len * SR && s0 + i < sfx.length; i++) sfx[s0 + i] += fn(i / SR); };
+let seed = 3; const noise = () => (seed = (seed * 16807) % 2147483647) / 1073741823.5 - 1;
+EP.scenes.forEach((sc, si) => {
+  const st = tl.scenes[si], dur = st.end - st.start;
+  if (sc.mode === 'lumen') {
+    add(st.start, dur, x => (Math.sin(2 * Math.PI * 82 * x) + .5 * Math.sin(2 * Math.PI * 164 * x)) * .045 * (1 + .3 * Math.sin(x * 6)) * Math.min(1, x * 3, (dur - x) * 3));
+    const to = PLACES.indexOf(sc.target), from = sc.from != null ? sc.from : (to + 5) % PLACES.length;
+    let last = null;
+    for (let f = 0; f <= dur * FPS; f++) { const p = f / FPS / dur, r = Math.round(wheelPos(p, from + PLACES.length * 2, to + PLACES.length * 3));
+      if (last !== null && r !== last) add(st.start + f / FPS, .05, x => Math.sin(2 * Math.PI * 2300 * x) * Math.exp(-x * 120) * .22); last = r; }
+    add(st.start + dur * .7, 1.2, x => (Math.sin(2 * Math.PI * 880 * x) + Math.sin(2 * Math.PI * 1320 * x) * (x > .09 ? 1 : 0)) * Math.exp(-x * 4) * .16);
+    let lp = 0; add(st.end - .95, 1.1, x => { const k = Math.min(1, x / .95), a = .02 + k * k * .5; lp += a * (noise() - lp); return lp * Math.pow(k, 1.5) * (x > .95 ? Math.exp(-(x - .95) * 30) : 1) * 0.9; });
+  }
+  if (sc.travel) { let lp2 = 0; add(st.start, 1, x => { lp2 += .08 * (noise() - lp2); return (Math.sin(2 * Math.PI * (120 - 60 * x) * x) * .25 + lp2 * 1.2) * Math.exp(-x * 3.2); }); }
+});
+for (let i = 0; i < sfx.length; i++) sfx[i] = Math.tanh(sfx[i] * 1.2) * .7;
+const sfxPath = path.join(OUT, EP.id + '-sfx.wav');
+{ const buf = Buffer.alloc(44 + sfx.length * 2); buf.write('RIFF', 0); buf.writeUInt32LE(36 + sfx.length * 2, 4); buf.write('WAVEfmt ', 8); buf.writeUInt32LE(16, 16); buf.writeUInt16LE(1, 20); buf.writeUInt16LE(1, 22);
+  buf.writeUInt32LE(SR, 24); buf.writeUInt32LE(SR * 2, 28); buf.writeUInt16LE(2, 32); buf.writeUInt16LE(16, 34); buf.write('data', 36); buf.writeUInt32LE(sfx.length * 2, 40);
+  for (let i = 0; i < sfx.length; i++) buf.writeInt16LE(Math.max(-32767, Math.min(32767, Math.round(sfx[i] * 32767))), 44 + i * 2); fs.writeFileSync(sfxPath, buf); }
+
 // ── build the frame page ──
 let html = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8')
   .replace('__EPISODE__', JSON.stringify(EP)).replace('__TIMELINE__', JSON.stringify(tl))
@@ -69,7 +95,9 @@ const framePage = path.join(__dirname, '_frame.html'); fs.writeFileSync(framePag
   }
   const outFile = path.join(OUT, EP.id + '.mp4');
   const ffArgs = ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS), '-i', '-'];
-  if (AUDIO) ffArgs.push('-i', AUDIO); else ffArgs.push('-f', 'lavfi', '-i', 'anullsrc=channel_layout=stereo:sample_rate=44100');
+  ffArgs.push('-i', sfxPath);
+  if (AUDIO) ffArgs.push('-i', AUDIO, '-filter_complex', '[1:a]volume=0.7[s];[2:a][s]amix=inputs=2:duration=longest:normalize=0[a]', '-map', '0:v', '-map', '[a]');
+  else ffArgs.push('-map', '0:v', '-map', '1:a');
   ffArgs.push('-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '160k', '-shortest', '-movflags', '+faststart', outFile);
   const ff = spawn(FFMPEG, ffArgs, { stdio: ['pipe', 'inherit', 'inherit'] });
   const N = Math.ceil(DURATION * FPS);

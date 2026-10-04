@@ -56,3 +56,20 @@ All 9:16 vertical, cinematic, stylized-realistic, no text:
 8. **Fusion core:** inside a tokamak-style chamber with a glowing magnetically confined plasma ring.
 9. **Mars greenhouse:** a pressurized greenhouse dome on Mars with crops under grow lights and a red landscape outside.
 10. **Market floor of the future:** an abstract data space of flowing price charts as light streams, without numbers or text.
+
+---
+
+## 6. Performance clips for the Lumen sequence (the episode's spine)
+These match the engine's scene order: lab hook → Lumen out → travel → lesson → Lumen home → sign-off. Generate each as a still first (Identity Block + Plate A setting, character in the **left third** of a 9:16 frame so holograms fit on the right), then animate 6–8 s with a **static camera**.
+
+| Clip | Engine scene | Action prompt for the video tool |
+|---|---|---|
+| P1 Walk & talk | lab hook | Walks slowly from left to center across the lab platform while talking, open-hand gestures, glances at the camera. |
+| P2 Draw the Lumen | `lumen` (first 2 s) | Reaches inside his robe-coat and draws out the slim golden Lumen, holding it up at chest height and looking at it. |
+| P3 Tune the Lumen | `lumen` (middle) | Rotates the Lumen's rings with thumb and fingers, eyes tracking a hologram floating above it, small focused frown. |
+| P4 "Here we go" | `lumen` (end) | Smiles, raises the Lumen, and makes a pinch-out gesture with his free hand toward the camera as light floods the frame. |
+| P5 Lesson gestures | `explain` close-up | Chest-up, explaining with both hands (counting on fingers, shaping a curve in the air), animated face. |
+| P6 Return | lab arrival | Steps out of a fading swirl of violet light onto the lab platform, straightens his coat, slight smirk. |
+| P7 Sign-off | `signoff` | Looks at the camera, points the Lumen like a teacher's pointer, small nod, turns to walk away. |
+
+**Workflow:** the engine plays P2→P3→P4 in order across the `lumen` scene and draws the destination wheel over the hologram area. Lip-sync is applied to P1, P5, and P7 (the talking shots), which keeps lip-sync minutes low.
