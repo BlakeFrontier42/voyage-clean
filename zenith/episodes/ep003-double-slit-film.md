@@ -1,5 +1,5 @@
 # Episode 003 (Pilot Film) — "The universe hates being watched"
-**Runtime:** about 3:00 · **Shots:** 30 (5–7 s each) · **Teaching arc:** particles → waves → light → electrons → the paradox → the rules → why it matters → try it yourself.
+**Runtime:** about 3:10 · **Shots:** 30 + 5 act transitions (T1–T5) · **Teaching arc:** particles → waves → light → electrons → the paradox → the rules → why it matters → try it yourself.
 
 **Two layers in every scene:**
 - **Kid layer:** a physical thing you can picture (paintballs, ripples in a pool, dice).
@@ -28,6 +28,9 @@ Engine HUD (faint): scrolls and settles on `EARTH · BACKYARD · 1 m`.
 Key frame: a vertical line of violet light in the lab unfolds into a tall doorway; inside, a sunny backyard. Motion: the gate opens; he glances back.
 > "Ahh. Here we go."
 
+**T1 · Through the Gate (Act 1 → 2) · Helix Gate**
+Key frame: over-the-shoulder behind Zenith stepping into the doorway of light. Motion: the camera follows him through; violet light washes out and resolves into warm backyard sunlight; a bird lands on the fence. No dialogue. SFX: gate whoosh fading into birdsong.
+
 ## ACT 2 — Particles vs. waves, for any age (0:22–1:10)
 **S5 · Paintballs** 🎙
 Key frame: a sunny backyard. A wooden fence panel with two tall vertical slots, a white wall behind it. Zenith holds a paintball marker awkwardly, like a man who has never touched one. Motion: he fires; paint flies through the slots.
@@ -54,6 +57,11 @@ Key frame: the far shore, where the waves arrive as alternating strong and calm 
 Key frame: Zenith on the harbor wall wearing modern over-ear headphones, eyes closed, blissful. Motion: static; seagulls cry, then go silent.
 > "Your noise-canceling headphones do this on purpose: they play the opposite of the noise, so it cancels. Clever species."
 
+**T2 · Water becomes light (Act 2 → 3) · Time-Step + Match Cut**
+Key frame: Zenith crouches at the harbor's edge and touches the water. Motion: the ripples freeze mid-crest; color drains; pages of time riffle past like a flipbook; the frozen ripples become flickering candlelight ripples on the wall of a London study; color returns.
+> "Waves of water… or waves of *light*? Let's ask the first human who checked."
+Engine HUD (faint): `TIME · LONDON · EARLY 1800s`. SFX: water stops dead, paper riffle, a candle crackles.
+
 ## ACT 3 — What is light? (1:10–1:35)
 **S11 · Thomas Young**
 Key frame: a candlelit London study in the early 1800s. A gentleman in period clothes lets a beam of sunlight pass through a card with two thin slits; faint stripes appear on a screen. Motion: slow push past Zenith, who watches from the shadows.
@@ -73,6 +81,11 @@ Key frame: back in the study; Zenith raises the Lumen; the faint HUD flickers. M
 Engine HUD: settles on `QUANTUM REALM · 10⁻¹⁰ m · HITACHI · 1989`.
 
 ## ACT 4 — The electron experiment (1:35–2:10)
+**T3 · A century forward, a billion times smaller (Act 3 → 4) · Time-Step + Scale Walk**
+Key frame: the 1905 desk lamp; Zenith flicks the corner of the air like turning a page. Motion: the room freezes and riffles forward through the decades, then the camera shrinks toward a tiny glowing point that becomes the top of an electron-microscope column.
+> "Eighty-four years later. And a *lot* smaller."
+Engine HUD: year counter rolling `1905 → 1989`, then scale `1 m → 10⁻¹⁰ m`.
+
 **S15 · Into the machine**
 Key frame: a Helix Gate opening into the glowing column of an electron microscope; a single bright point of light (an electron) travels down. Motion: the camera dives along with it.
 > "Electrons. Tiny bits of *matter*. They should act like paintballs."
@@ -105,6 +118,11 @@ Key frame: the CRT now shows two plain bands; Zenith, arms crossed, deadpan at c
 > "…and the stripes *vanish*. Two plain bands, like paintballs. The universe hates being watched. Relatable."
 Engine: simulation in which-path mode.
 
+**T4 · Every dot is a dice roll (Act 4 → 5) · Match Cut**
+Key frame: extreme close-up of one white dot on the CRT. Motion: the dot lifts off the screen and becomes a glowing die tumbling toward camera; the 1989 lab dissolves into darkness full of floating dice.
+> "Every dot on that screen? A roll of the dice."
+SFX: CRT hum cuts to a soft dice clatter.
+
 ## ACT 5 — The rules, the scale, the payoff (2:10–2:45)
 **S22 · Dice with strict rules** 🎙
 Key frame: Zenith tosses a handful of glowing dice that freeze in mid-air. Motion: orbit around the frozen dice.
@@ -128,6 +146,11 @@ Key frame: a three-part montage: an electron-microscope view of a virus, a glowi
 Key frame: Zenith glancing at the faint HUD, then up at camera with a sly smile. Motion: slow push-in.
 > "What's *really* going on? Your scientists still argue: Copenhagen, many worlds, pilot waves… I know which one is right. Not allowed to tell you. Yet."
 Engine HUD: flickers `PRIME RULE · CLASSIFIED UNTIL DISCOVERED`.
+
+**T5 · Enough theory (Act 5 → 6) · Helix Gate**
+Key frame: Zenith at the end of the quantum-computer montage, Lumen raised. Motion: the gate unfolds onto a warm, ordinary kitchen at night; he steps through and sets the Lumen on the table next to a laser pointer.
+> "Enough theory. Your turn."
+SFX: gate hum, then a fridge humming and a clock ticking.
 
 ## ACT 6 — Your turn (2:45–3:05)
 **S27 · Try it at home** 🎙
@@ -159,4 +182,5 @@ Key frame: Zenith at the glass wall; the nebula outside brightens. Motion: slow 
 - Baseball de Broglie wavelength: λ = h/(mv) with m = 0.145 kg, v = 40 m/s gives about 1.1×10⁻³⁴ m; an atom is about 10⁻¹⁰ m, a ratio of about 10²⁴ (a trillion trillion).
 - Noise-canceling headphones use destructive interference of sound.
 - Transistors, lasers, MRI, and electron microscopes all depend on quantum mechanics.
+- GPS satellite clocks run about 38 microseconds per day fast relative to ground clocks (relativity), which the system corrects for.
 - Home experiment: works with a cheap laser pointer and two razor-thin cuts very close together. Include the eye-safety line every time.

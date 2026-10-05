@@ -7,6 +7,9 @@ Zenith's assignment: return to the early 21st century and **teach**. He's not he
 
 His violet skin and glowing **starlines** (constellation-like veins) are what millennia of advancement look like. It's a mark of evolution, not damage. The orbit ring around his head is a working instrument. He calls it his "lecture halo."
 
+## Outside of time
+Zenith is a higher-dimensional being. He sees humanity's whole timeline at once, the way you see every page of a book you're holding, and he can step into any moment. In the past he only observes: he can't change events, so history stays exactly as it happened. How he does it is covered by the Prime Rule ("Ask me again in a few centuries").
+
 ## The Prime Rule (accuracy)
 Zenith knows physics we haven't discovered, but he's **forbidden to teach it**. He only teaches what humans have already verified. Anything beyond that is a *wink*: a clearly labeled tease ("I can't tell you how it works. Yet."), never presented as fact.
 
