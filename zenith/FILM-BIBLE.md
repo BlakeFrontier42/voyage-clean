@@ -41,7 +41,7 @@ Every move from one act to the next is a mini-scene with a job: it carries an id
 - **The rule:** in the past, he can watch but never change anything. No paradoxes, and every historical scene stays accurate. People there barely notice him (comedy fuel).
 - **His line when asked how:** "Ask me again in a few centuries."
 
-## Production path per episode (about 8–10 shots, 6–8 s each)
+## Production path per episode (about 30–35 shots including act transitions, 4–7 s each, ~3 min)
 1. **Script and shot list:** Claude writes them, using real sources only. Blake approves.
 2. **Key frames:** Nano Banana, one still per shot (Identity Block + style block + shot description).
 3. **Motion:** Veo or Kling, image-to-video with each shot's motion prompt.
