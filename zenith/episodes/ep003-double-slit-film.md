@@ -1,186 +1,198 @@
 # Episode 003 (Pilot Film) — "The universe hates being watched"
-**Runtime:** about 3:10 · **Shots:** 30 + 5 act transitions (T1–T5) · **Teaching arc:** particles → waves → light → electrons → the paradox → the rules → why it matters → try it yourself.
+**Runtime:** about 3:10 · **Shots:** 30 + 6 act transitions · **Subject:** the double-slit experiment, understood all the way down.
 
-**Two layers in every scene:**
-- **Kid layer:** a physical thing you can picture (paintballs, ripples in a pool, dice).
-- **Adult layer:** the real history, the real experiments, the real numbers.
+**Depth rule:** one subject, fully understood. Each act answers the question the last act raised:
+1. What's the difference between a particle and a wave?
+2. *Why* do the stripes land exactly where they do?
+3. Is light a wave or a particle?
+4. Do electrons (matter!) do it too?
+5. What is actually waving?
+6. Why does watching destroy the pattern?
+7. How can I see it myself?
 
-For every shot: build the key frame in Nano Banana with **[Identity Block]** (from `RENDER-BRIEF.md`) + the **style block** (from `FILM-BIBLE.md`) + the shot description, then animate it with the motion prompt. 🎙 = lip-sync shot. Reused locations (lab, backyard, harbor, 1989 lab) keep generation costs down.
+**Two layers in every scene:** a kid layer (something you can picture: paintballs, tape measures, arrows) and an adult layer (the real history, math, and experiments).
+
+For every shot: key frame in Nano Banana with **[Identity Block]** + **style block** + shot description, then animate with the motion prompt. 🎙 = lip-sync shot. Transitions (T#) are scenes; see `FILM-BIBLE.md`.
 
 ---
 
-## ACT 1 — The hook (0:00–0:22)
+## ACT 1 — The promise (0:00–0:15)
 **S1 · Tea at the glass wall** 🎙
-Key frame: Zenith at the Helix Institute's glass wall, violet nebula outside, holding a delicate glass teacup. Motion: slow dolly-in; he turns to camera with a skeptical smirk.
-> "You early humans found an experiment so strange that Richard Feynman said it holds *the heart of quantum mechanics.* All it needs is a wall with two slits."
+Key frame: Zenith at the Helix Institute's glass wall, violet nebula outside, glass teacup in hand. Motion: slow dolly-in; he turns to camera with a skeptical smirk.
+> "Today: one experiment. Feynman said it holds *the heart of quantum mechanics.* By the end, you'll understand it better than most adults on your planet."
 
-**S2 · It's in your pocket** 🎙
-Key frame: Zenith beside a floating, life-size exploded hologram of a smartphone, a laser beam, and an MRI scanner. Motion: slow orbit as the three objects rotate.
-> "And that strangeness runs the phone in your pocket. Every chip. Every laser. Every hospital MRI."
-Overlay labels: `transistors` · `lasers` · `MRI`.
-
-**S3 · The Lumen**
+**S2 · The Lumen**
 Key frame: close on his hands drawing the golden Lumen from his robe; rings spin up. Motion: push-in; faint cyan light on his face.
-> "So let's see it ourselves. Lumen… somewhere simple."
-Engine HUD (faint): scrolls and settles on `EARTH · BACKYARD · 1 m`.
+> "Lumen… somewhere simple."
+Engine HUD (faint): settles on `EARTH · BACKYARD · 1 m`.
 
-**S4 · The Helix Gate** 🎙
-Key frame: a vertical line of violet light in the lab unfolds into a tall doorway; inside, a sunny backyard. Motion: the gate opens; he glances back.
+**S3 · The Helix Gate** 🎙
+Key frame: a line of violet light in the lab unfolds into a tall doorway onto a sunny backyard. Motion: the gate opens; he glances back.
 > "Ahh. Here we go."
 
-**T1 · Through the Gate (Act 1 → 2) · Helix Gate**
-Key frame: over-the-shoulder behind Zenith stepping into the doorway of light. Motion: the camera follows him through; violet light washes out and resolves into warm backyard sunlight; a bird lands on the fence. No dialogue. SFX: gate whoosh fading into birdsong.
+**T1 · Through the Gate · Helix Gate**
+Motion: the camera follows him through; violet light resolves into warm backyard sunlight; a bird lands on the fence. SFX: gate whoosh into birdsong.
 
-## ACT 2 — Particles vs. waves, for any age (0:22–1:10)
-**S5 · Paintballs** 🎙
-Key frame: a sunny backyard. A wooden fence panel with two tall vertical slots, a white wall behind it. Zenith holds a paintball marker awkwardly, like a man who has never touched one. Motion: he fires; paint flies through the slots.
-> "Rule one. Shoot paintballs through two slots…"
+## ACT 2 — Two kinds of things (0:15–0:45)
+**S4 · Paintballs** 🎙
+Key frame: a wooden fence panel with two tall vertical slots, a white wall behind. Zenith holds a paintball marker like a man who has never touched one. Motion: he fires; paint flies through the slots.
+> "Rule one. Paintballs through two slots…"
 
-**S6 · Two stripes**
-Key frame: the white wall with two neat vertical stripes of paint splats behind the slots. Motion: slow push-in on the wall.
-> "…and you get two stripes. Obviously. That's a *particle*: a little lump, one path."
+**S5 · Two stripes**
+Key frame: the white wall with two neat stripes of splats. Motion: push-in.
+> "…two stripes. Each ball takes *one* path. That's a particle."
 
-**S7 · Waves**
-Key frame: aerial shot of a calm harbor; a seawall with two gaps; a straight wave rolling toward it. Motion: slow crane down as the waves pass through both gaps.
-> "Now waves. Send ripples of water through two gaps…"
+**S6 · Waves**
+Key frame: aerial view of a calm harbor; a seawall with two gaps; a straight wave rolling in. Motion: slow crane down as the wave passes through both gaps.
+> "Now water waves through two gaps."
 
-**S8 · Crest meets crest**
-Key frame: overhead close-up of two sets of circular ripples overlapping, with bright sunlight on the crests. Motion: slow drift.
-> "Where two crests meet, the water jumps *higher*. Where a crest meets a dip, they cancel out. Flat water."
-Overlay labels: `crest + crest = bigger` · `crest + dip = flat`.
+**S7 · Crest meets crest**
+Key frame: overhead close-up of two sets of circular ripples overlapping. Motion: slow drift.
+> "Crest meets crest: the water jumps higher. Crest meets dip: they cancel. Flat."
+Overlay: `crest + crest = bigger` · `crest + dip = flat`.
 
-**S9 · Many stripes** 🎙
-Key frame: the far shore, where the waves arrive as alternating strong and calm bands. Zenith stands ankle-deep, trousers rolled up. Motion: lateral track along the bands.
-> "So waves don't make two stripes. They make *many*. Your scientists call it interference."
+**S8 · Many stripes** 🎙
+Key frame: the far shore, where the waves arrive as alternating strong and calm bands; Zenith stands ankle-deep, trousers rolled. Motion: lateral track along the bands.
+> "So waves make *many* stripes, not two. That's interference. Your noise-canceling headphones use the cancel part on purpose."
 
-**S10 · Headphones** 🎙
-Key frame: Zenith on the harbor wall wearing modern over-ear headphones, eyes closed, blissful. Motion: static; seagulls cry, then go silent.
-> "Your noise-canceling headphones do this on purpose: they play the opposite of the noise, so it cancels. Clever species."
+**T2 · Freeze and measure · Match Cut**
+Key frame: Zenith touches the water. Motion: the waves freeze mid-crest; two glowing tape measures shoot out from the two gaps to a single spot on the shore.
+> "But *why* exactly there? Let's measure."
+SFX: water stops dead; tape measures zip out.
 
-**T2 · Water becomes light (Act 2 → 3) · Time-Step + Match Cut**
-Key frame: Zenith crouches at the harbor's edge and touches the water. Motion: the ripples freeze mid-crest; color drains; pages of time riffle past like a flipbook; the frozen ripples become flickering candlelight ripples on the wall of a London study; color returns.
-> "Waves of water… or waves of *light*? Let's ask the first human who checked."
-Engine HUD (faint): `TIME · LONDON · EARLY 1800s`. SFX: water stops dead, paper riffle, a candle crackles.
+## ACT 3 — Why the stripes land where they do (0:45–1:20)
+**S9 · Pick a spot** 🎙
+Key frame: the frozen harbor; two glowing tape measures run from each gap to one point on the shore; Zenith crouches beside the point. Motion: slow orbit.
+> "Pick any spot on the shore. Measure the distance from each gap."
 
-## ACT 3 — What is light? (1:10–1:35)
-**S11 · Thomas Young**
-Key frame: a candlelit London study in the early 1800s. A gentleman in period clothes lets a beam of sunlight pass through a card with two thin slits; faint stripes appear on a screen. Motion: slow push past Zenith, who watches from the shadows.
-> "In the early 1800s, Thomas Young shined light through two slits and saw many stripes. Verdict: light is a wave. Case closed…"
+**S10 · Same distance: bright**
+Key frame: the point dead center between the gaps; the two tapes show equal lengths; two crests arrive together. Motion: push-in on the arriving crests.
+> "Same distance? The waves arrive in step, crest with crest. Bright."
 
-**S12 · …for a century** 🎙
-Key frame: Zenith leaning into frame beside the candle, deadpan. Motion: static, then a tiny eyebrow raise.
-> "…for about a hundred years."
+**S11 · Half a wave off: dark**
+Key frame: a point slightly to the side; one tape is half a wavelength longer (the extra length glows); crest meets dip. Motion: slide to the new point.
+> "One path half a wave longer? Crest arrives with dip. Dark."
 
-**S13 · 1905**
-Key frame: an early-1900s desk at night: papers covered in handwritten equations (unreadable), a hand writing, a lamp. Motion: slow push-in.
-> "In 1905, Einstein showed light *also* comes in tiny packets: photons. Particles."
+**S12 · A whole wave off: bright again**
+Key frame: a point farther out; one tape is exactly one wavelength longer. Motion: slide farther.
+> "A whole wave longer? In step again. Bright. That's why the stripes repeat."
+Overlay: `bright: difference = 0, 1, 2… waves` · `dark: ½, 1½, 2½… waves`.
 
-**S14 · Wave or particle?** 🎙
-Key frame: back in the study; Zenith raises the Lumen; the faint HUD flickers. Motion: push-in on his face.
-> "So which is it? Wave or particle? Let's make it harder. Lumen: atomic scale."
-Engine HUD: settles on `QUANTUM REALM · 10⁻¹⁰ m · HITACHI · 1989`.
+**S13 · The rule** 🎙
+Key frame: Zenith standing, holding two tape measures like a tailor. Motion: static, then a small flourish.
+> "And the rule: longer waves make wider stripes. Slits closer together? Wider stripes too."
+Overlay: `stripe spacing ≈ wavelength × distance to screen ÷ slit separation`.
 
-## ACT 4 — The electron experiment (1:35–2:10)
-**T3 · A century forward, a billion times smaller (Act 3 → 4) · Time-Step + Scale Walk**
-Key frame: the 1905 desk lamp; Zenith flicks the corner of the air like turning a page. Motion: the room freezes and riffles forward through the decades, then the camera shrinks toward a tiny glowing point that becomes the top of an electron-microscope column.
-> "Eighty-four years later. And a *lot* smaller."
-Engine HUD: year counter rolling `1905 → 1989`, then scale `1 m → 10⁻¹⁰ m`.
+**T3 · To London · Time-Step**
+Key frame: the frozen harbor. Motion: color drains; pages of time riffle past like a flipbook; the frozen ripples become candlelight ripples on the wall of a London study; color returns.
+> "Now, light. Let's visit the first human who checked."
+Engine HUD: `TIME · LONDON · EARLY 1800s`. SFX: paper riffle, candle crackle.
 
-**S15 · Into the machine**
-Key frame: a Helix Gate opening into the glowing column of an electron microscope; a single bright point of light (an electron) travels down. Motion: the camera dives along with it.
-> "Electrons. Tiny bits of *matter*. They should act like paintballs."
+## ACT 4 — Light's double life (1:20–1:40)
+**S14 · Thomas Young**
+Key frame: a candlelit study in the early 1800s; a gentleman in period clothes passes sunlight through a card with two thin slits; faint stripes on a screen. Motion: slow push past Zenith in the shadows.
+> "Thomas Young sent light through two slits. Stripes. Light is a wave."
 
-**S16 · The real lab, 1989** 🎙
-Key frame: a dim 1980s electron-microscope laboratory, tall instrument column, cables, a CRT monitor with a black screen. No logos. Zenith beside the monitor. Motion: slow orbit.
-> "In 1989, Akira Tonomura's team at Hitachi fired electrons so slowly that only *one* was ever inside the machine at a time."
+**S15 · 1905**
+Key frame: an early-1900s desk at night, papers of unreadable handwritten equations, a lamp. Motion: a quick riffle of time, then a slow push-in.
+> "Then Einstein, 1905: light also arrives in tiny packets. Photons. Particles."
+
+**S16 · It got worse** 🎙
+Key frame: Zenith leaning beside the lamp, deadpan. Motion: static, tiny eyebrow raise.
+> "Wave *and* particle. Your species spent decades fighting about it. Then it got *worse*."
+
+**T4 · Forward and down · Time-Step + Scale Walk**
+Key frame: the 1905 desk; Zenith flicks the air like turning a page. Motion: the room freezes and riffles forward through the decades; the camera shrinks toward a glowing point that becomes the top of an electron-microscope column.
+> "Lumen: 1989, atomic scale."
+Engine HUD: `1905 → 1989`, then `1 m → 10⁻¹⁰ m`.
+
+## ACT 5 — Matter does it too (1:40–2:05)
+**S17 · Everything has a wavelength**
+Key frame: inside the glowing microscope column; a single bright electron travels down; a faint wave trails it. Motion: the camera rides alongside.
+> "In 1924, Louis de Broglie proposed that *everything* moving has a wavelength. Heavier or faster means shorter."
+Overlay: `λ = h ÷ (mass × speed)`.
+
+**S18 · The real lab, 1989** 🎙
+Key frame: a dim 1980s electron-microscope laboratory, CRT monitor, no logos; Zenith beside the monitor. Motion: slow orbit.
+> "In 1989, Akira Tonomura's team at Hitachi fired electrons one at a time. Only one in the machine."
 Overlay: `Tonomura et al., Am. J. Phys. 57, 117 (1989)` · `electron biprism: the electron version of two slits`.
 
-**S17 · One dot**
-Key frame: close on the CRT; scattered single white dots. Motion: slow push.
-> "Each electron lands as one tiny dot. A particle. So far, so paintball."
-Engine: our real simulation composited on the screen (sparse dots).
+**S19 · One dot**
+Key frame: close on the CRT with scattered single dots. Motion: slow push.
+> "Each one lands as a single dot. A particle."
+Engine: real simulation composited on the screen (sparse).
 
-**S18 · Stripes**
-Key frame: same CRT, many more dots. Motion: continued push.
-> "But keep going for thousands of electrons… and the dots line up into stripes. Interference. The fingerprint of *waves*."
-Engine: the simulation accumulates into clear bands.
+**S20 · Stripes**
+Key frame: the same CRT, many more dots. Motion: continued push.
+> "Thousands later: stripes. Spaced just as the wave math predicts."
+Engine: simulation accumulates into bands.
 
-**S19 · Think about it** 🎙
-Key frame: Zenith close to camera, lit by the CRT glow, intense. Motion: very slow push-in.
-> "One electron at a time. Nothing else to bump into. So each electron's wave went through *both* paths… and interfered with *itself*."
+## ACT 6 — What is waving? (2:05–2:30)
+**T5 · Dot to die · Match Cut**
+Key frame: extreme close-up of one dot on the CRT. Motion: the dot lifts off the screen and becomes a glowing die tumbling toward camera; the lab dissolves into darkness.
+> "So what's waving? Not the electron itself."
 
-**S20 · The detector**
-Key frame: two tiny glowing sensors placed at the two openings of the apparatus. Motion: macro slide past them.
-> "Now add a detector to see which path each electron takes…"
+**S21 · A wave of possibilities** 🎙
+Key frame: Zenith in the dark beside a glowing translucent wave hovering over a screen; where the wave is tall, the screen glows bright. Motion: orbit.
+> "It's a wave of *possibilities*. Where the wave is strong, the electron is likely to land. Where it cancels, never. Max Born, 1926."
 
-**S21 · The universe hates being watched** 🎙
-Key frame: the CRT now shows two plain bands; Zenith, arms crossed, deadpan at camera. Motion: static.
-> "…and the stripes *vanish*. Two plain bands, like paintballs. The universe hates being watched. Relatable."
+**S22 · Feynman's arrows**
+Key frame: two glowing clock-hand arrows, one riding each path from the slits to a point on the screen, then joining tip to tail. Motion: the arrows spin as they travel; they line up (long arrow, bright) at one point and point opposite (zero, dark) at another.
+> "Feynman's trick: give each path a spinning arrow. Add the two arrows. Same direction: bright. Opposite: they cancel to zero."
+Overlay: `chance ∝ (length of the added arrow)²`.
+
+## ACT 7 — Why watching ruins it (2:30–2:55)
+**S23 · Record the path**
+Key frame: two tiny glowing sensors placed at the two openings. Motion: macro slide past them.
+> "Now record which slit each electron used…"
+
+**S24 · The stripes vanish**
+Key frame: the CRT showing two plain bands; one lonely arrow on screen. Motion: push-in.
+> "…and the stripes vanish. Two bands. With a record, there's only one arrow. Nothing to cancel."
 Engine: simulation in which-path mode.
 
-**T4 · Every dot is a dice roll (Act 4 → 5) · Match Cut**
-Key frame: extreme close-up of one white dot on the CRT. Motion: the dot lifts off the screen and becomes a glowing die tumbling toward camera; the 1989 lab dissolves into darkness full of floating dice.
-> "Every dot on that screen? A roll of the dice."
-SFX: CRT hum cuts to a soft dice clatter.
+**S25 · Not about eyes** 🎙
+Key frame: Zenith, arms crossed, deadpan at camera. Motion: static.
+> "Not because someone *looked*. Any record does it, even a stray bump of air. The universe hates being watched. Relatable."
 
-## ACT 5 — The rules, the scale, the payoff (2:10–2:45)
-**S22 · Dice with strict rules** 🎙
-Key frame: Zenith tosses a handful of glowing dice that freeze in mid-air. Motion: orbit around the frozen dice.
-> "You can't predict where *one* electron lands. But you can predict the pattern of thousands, perfectly. Nature rolls dice, with very strict rules."
+**S26 · Why not baseballs** 🎙
+Key frame: Zenith on a baseball diamond under stadium lights, holding a baseball like a specimen. Motion: slow crane up.
+> "That's why baseballs never do this: a wavelength a trillion trillion times smaller than an atom, and air bumping it constantly."
+Overlay: `λ ≈ 6.6×10⁻³⁴ ÷ (0.145 kg × 40 m/s) ≈ 10⁻³⁴ m`.
 
-**S23 · Bigger and bigger**
-Key frame: a giant glowing soccer-ball-shaped molecule (C60, a buckyball) drifting through a two-slit gate in a dark lab. Motion: track alongside.
-> "Not just electrons. In 1999, a team in Vienna did it with buckyballs: sixty carbon atoms. In 2019: molecules of about two thousand atoms."
-Overlay: `Arndt et al., Nature 401, 680 (1999)` · `Fein et al., Nature Physics 15, 1242 (2019)`.
-
-**S24 · Why not a baseball?** 🎙
-Key frame: Zenith on a baseball diamond under stadium lights, holding a baseball up like a specimen. Motion: slow crane up.
-> "Why doesn't a baseball do this? Its wave is about ten to the minus thirty-four meters. A *trillion trillion* times smaller than an atom. Far too small to notice."
-Overlay: `λ = h / (m·v) ≈ 6.6×10⁻³⁴ / (0.145 kg × 40 m/s) ≈ 10⁻³⁴ m`.
-
-**S25 · What you built with it**
-Key frame: a three-part montage: an electron-microscope view of a virus, a glowing phone chip, the gold "chandelier" of a quantum computer. Motion: smooth slides between them.
-> "Using these waves on purpose gave you electron microscopes that see viruses, chips with billions of switches, and your first quantum computers."
-
-**S26 · The wink** 🎙
+## ACT 8 — Your turn (2:55–3:10)
+**S27 · The wink** 🎙
 Key frame: Zenith glancing at the faint HUD, then up at camera with a sly smile. Motion: slow push-in.
-> "What's *really* going on? Your scientists still argue: Copenhagen, many worlds, pilot waves… I know which one is right. Not allowed to tell you. Yet."
+> "What does it *mean*? Your physicists still argue. I know. Not allowed to tell you. Yet."
 Engine HUD: flickers `PRIME RULE · CLASSIFIED UNTIL DISCOVERED`.
 
-**T5 · Enough theory (Act 5 → 6) · Helix Gate**
-Key frame: Zenith at the end of the quantum-computer montage, Lumen raised. Motion: the gate unfolds onto a warm, ordinary kitchen at night; he steps through and sets the Lumen on the table next to a laser pointer.
-> "Enough theory. Your turn."
-SFX: gate hum, then a fridge humming and a clock ticking.
+**T6 · To the kitchen · Helix Gate**
+Motion: the gate unfolds onto a warm kitchen at night; he steps through and sets the Lumen beside a laser pointer.
+> "Your turn."
 
-## ACT 6 — Your turn (2:45–3:05)
-**S27 · Try it at home** 🎙
-Key frame: a kitchen table at night: a laser pointer, a square of aluminum foil with two very thin cuts side by side, and a row of bright stripes on the far wall. Zenith peers at the wall. Motion: push from the foil to the stripes.
-> "Try it tonight: a laser pointer, foil, two very thin cuts side by side. Shine it at a wall. Count the stripes. Never point a laser at anyone's eyes."
-
-**S28 · Home**
-Key frame: the Helix Gate opening from the kitchen back to the Helix Institute. Motion: he steps through; the gate closes into a line.
-> "Lumen, home."
+**S28 · Try it tonight** 🎙
+Key frame: a kitchen table: a laser pointer, foil with two thin cuts side by side, stripes on the far wall. Motion: push from the foil to the stripes.
+> "Laser pointer, foil, two thin cuts side by side. Count the stripes. Then try a green laser: shorter wave, closer stripes. Never aim at eyes."
 
 **S29 · The path** 🎙
-Key frame: Zenith on the lab platform, Lumen raised like a pointer. Motion: slow push-in.
-> "Learn it free: MIT eight oh four, and the Feynman Lectures, Volume Three. Both free online."
+Key frame: back on the lab platform via the gate, Lumen raised like a pointer. Motion: slow push-in.
+> "Learn it free: MIT eight oh four, and the Feynman Lectures, Volume Three."
 Overlay: `MIT 8.04 · Quantum Physics I · OpenCourseWare` · `The Feynman Lectures on Physics, Vol. III · free online`.
 
 **S30 · Come find us** 🎙
-Key frame: Zenith at the glass wall; the nebula outside brightens. Motion: slow pull-back.
-> "Keep climbing, students. When your species is ready, come find us. Class dismissed. Go build something. Stop waiting for that interview."
+Key frame: Zenith at the glass wall as the nebula brightens. Motion: slow pull-back.
+> "Keep climbing, students. When you're ready, come find us. Class dismissed. Go build something. Stop waiting for that interview."
 
 ---
 
 ## Sources and accuracy notes
-- Feynman: the two-slit phenomenon "has in it the heart of quantum mechanics" (*The Feynman Lectures on Physics*, Vol. III, Ch. 1).
-- Thomas Young's two-slit interference experiments with light: early 1800s.
-- Einstein's light-quantum (photon) paper on the photoelectric effect: 1905.
-- Tonomura, Endo, Matsuda, Kawasaki, Ezawa, *American Journal of Physics* 57, 117 (1989): single-electron buildup filmed at Hitachi with an electron biprism, with at most one electron in the apparatus at a time.
-- Which-path detection destroys the interference pattern: standard quantum mechanics, confirmed in many experiments.
-- Arndt et al., *Nature* 401, 680 (1999): C60 interference. Fein et al., *Nature Physics* 15, 1242 (2019): molecules of up to about 2,000 atoms.
-- Baseball de Broglie wavelength: λ = h/(mv) with m = 0.145 kg, v = 40 m/s gives about 1.1×10⁻³⁴ m; an atom is about 10⁻¹⁰ m, a ratio of about 10²⁴ (a trillion trillion).
+- Feynman: the two-slit phenomenon "has in it the heart of quantum mechanics" (*The Feynman Lectures on Physics*, Vol. III, Ch. 1). Spinning-arrow method: Feynman, *QED: The Strange Theory of Light and Matter* (1985).
+- Bright fringes where the path difference is a whole number of wavelengths, dark at half-integers; fringe spacing ≈ λL/d (standard two-slit optics).
+- Thomas Young's two-slit experiments with light: early 1800s. Einstein's light-quantum paper: 1905.
+- de Broglie's matter-wave hypothesis: 1924 thesis, λ = h/(mv).
+- Tonomura, Endo, Matsuda, Kawasaki, Ezawa, *American Journal of Physics* 57, 117 (1989): single-electron buildup filmed at Hitachi with an electron biprism, at most one electron in the apparatus at a time.
+- Born's probability interpretation of the wavefunction: 1926.
+- Which-path information destroys interference whether or not a person reads it; interactions with the environment (decoherence) do this constantly for large objects.
+- Baseball: m = 0.145 kg, v = 40 m/s gives λ ≈ 1.1×10⁻³⁴ m; an atom is about 10⁻¹⁰ m, a ratio of about 10²⁴.
+- Green laser pointers (about 532 nm) have a shorter wavelength than red (about 650 nm), so their fringes are closer together.
 - Noise-canceling headphones use destructive interference of sound.
-- Transistors, lasers, MRI, and electron microscopes all depend on quantum mechanics.
-- GPS satellite clocks run about 38 microseconds per day fast relative to ground clocks (relativity), which the system corrects for.
-- Home experiment: works with a cheap laser pointer and two razor-thin cuts very close together. Include the eye-safety line every time.
