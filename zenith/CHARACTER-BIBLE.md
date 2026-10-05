@@ -1,6 +1,8 @@
 # Professor Kael Zenith — Character Bible (v0.2)
 
 ## Who he is
+A professor of the **Concordance**, the far-future civilization described in `WORLD-BIBLE.md` (secretly: humanity's own future).
+
 Kael Zenith is a post-human from humanity's far future. Our species kept going: it spread across the universes, understood new physics, and learned to cross time, dimension, and distance instantly. Those humans solved the questions of creation. Now they seed life and help it grow, watching over all of creation at every scale, from quantum to cosmic, in every time and place.
 
 Zenith's assignment: return to the early 21st century and **teach**. He's not here to save anyone. He's here to make sure enough people learn fast enough to build the future he came from.

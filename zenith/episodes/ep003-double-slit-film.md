@@ -19,7 +19,8 @@ For every shot: key frame in Nano Banana with **[Identity Block]** + **style blo
 ## ACT 1 — The promise (0:00–0:15)
 **S1 · Tea at the glass wall** 🎙
 Key frame: Zenith at the Helix Institute's glass wall, violet nebula outside, glass teacup in hand. Motion: slow dolly-in; he turns to camera with a skeptical smirk.
-> "Today: one experiment. Feynman said it holds *the heart of quantum mechanics.* By the end, you'll understand it better than most adults on your planet."
+> "Tea. A habit we never managed to quit. Today: one experiment. Feynman said it holds *the heart of quantum mechanics.* By the end, you'll understand it better than most adults on your planet."
+Reveal hint (World Bible): *"we"* — never explained.
 
 **S2 · The Lumen**
 Key frame: close on his hands drawing the golden Lumen from his robe; rings spin up. Motion: push-in; faint cyan light on his face.

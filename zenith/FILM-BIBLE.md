@@ -1,7 +1,7 @@
 # Zenith Film Bible — every episode is a short film
 
 ## The rule of the show
-**Everything is real except the Professor.** The science, data, history, experiments, numbers, and comparisons are real and sourced. Zenith, the Helix Institute, the Lumen, and the Helix Gate are the only fiction.
+**Everything is real except the Professor.** The science, data, history, experiments, numbers, and comparisons are real and sourced. Zenith, the Concordance (`WORLD-BIBLE.md`), the Helix Institute, the Lumen, and the Helix Gate are the only fiction.
 
 ## Depth over breadth
 One subject per episode, understood all the way down. Each act answers the question the previous act raised, so the episode reads as one chain of "but *why*?" Bring in another topic only when it directly explains, strengthens, or contradicts the subject (headphones explain cancellation; a phone montage doesn't explain anything). A viewer should finish able to explain the idea to someone else, including the math in its simplest honest form.
