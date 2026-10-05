@@ -6,6 +6,9 @@
 ## Depth over breadth
 One subject per episode, understood all the way down. Each act answers the question the previous act raised, so the episode reads as one chain of "but *why*?" Bring in another topic only when it directly explains, strengthens, or contradicts the subject (headphones explain cancellation; a phone montage doesn't explain anything). A viewer should finish able to explain the idea to someone else, including the math in its simplest honest form.
 
+## Three horizons
+Every episode closes its lesson with: **Achieved** (proven, sourced) → **Reaching** (current research, with the labs or projects named) → **Unlocks** (what it could enable). Projections always use "could" or "if" and name who's working on them. Zenith's twist: he knows how the story ends, and he can't tell us.
+
 ## Tone
 Blunt, brilliant, and funny. Zenith dives into a subject with obvious delight, then hits the wall of what humanity currently knows and has to stop ("I'm not allowed to tell you. Yet."). That limit is the running joke and the hook. Under it sits a quiet hope: one day humanity advances up the Kardashev scale, and we meet him and his people. Use that line sparingly, about one episode in ten, so it stays special:
 > "Keep climbing, students. When your species is ready, come find us."

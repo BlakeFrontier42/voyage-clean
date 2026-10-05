@@ -1,5 +1,5 @@
 # Episode 003 (Pilot Film) — "The universe hates being watched"
-**Runtime:** about 3:10 · **Shots:** 30 + 6 act transitions · **Subject:** the double-slit experiment, understood all the way down.
+**Runtime:** about 3:15 · **Shots:** 32 + 6 act transitions · **Subject:** the double-slit experiment, understood all the way down.
 
 **Depth rule:** one subject, fully understood. Each act answers the question the last act raised:
 1. What's the difference between a particle and a wave?
@@ -10,7 +10,7 @@
 6. Why does watching destroy the pattern?
 7. How can I see it myself?
 
-**Two layers in every scene:** a kid layer (something you can picture: paintballs, tape measures, arrows) and an adult layer (the real history, math, and experiments).
+**Direction: sci-fi but real.** Every analogy is a real machine or phenomenon (a particle range, a bioluminescent harbor, laser interferometry, the hydrogen electron cloud), filmed like science fiction. Every scene keeps one plain sentence a kid can follow; the adult layer is the real history, math, and experiments.
 
 For every shot: key frame in Nano Banana with **[Identity Block]** + **style block** + shot description, then animate with the motion prompt. 🎙 = lip-sync shot. Transitions (T#) are scenes; see `FILM-BIBLE.md`.
 
@@ -23,65 +23,70 @@ Key frame: Zenith at the Helix Institute's glass wall, violet nebula outside, gl
 
 **S2 · The Lumen**
 Key frame: close on his hands drawing the golden Lumen from his robe; rings spin up. Motion: push-in; faint cyan light on his face.
-> "Lumen… somewhere simple."
-Engine HUD (faint): settles on `EARTH · BACKYARD · 1 m`.
+> "Lumen… the particle range."
+Engine HUD (faint): settles on `HELIX INSTITUTE · PARTICLE RANGE · 1 m`.
 
 **S3 · The Helix Gate** 🎙
-Key frame: a line of violet light in the lab unfolds into a tall doorway onto a sunny backyard. Motion: the gate opens; he glances back.
+Key frame: a line of violet light in the lab unfolds into a tall doorway onto a dark, cavernous test range lit by blue floor lines. Motion: the gate opens; he glances back.
 > "Ahh. Here we go."
 
 **T1 · Through the Gate · Helix Gate**
-Motion: the camera follows him through; violet light resolves into warm backyard sunlight; a bird lands on the fence. SFX: gate whoosh into birdsong.
+Motion: the camera follows him through; violet light resolves into the range as rows of floor lights switch on one by one. SFX: gate whoosh into a deep power-up hum.
 
 ## ACT 2 — Two kinds of things (0:15–0:45)
 **S4 · Paintballs** 🎙
-Key frame: a wooden fence panel with two tall vertical slots, a white wall behind. Zenith holds a paintball marker like a man who has never touched one. Motion: he fires; paint flies through the slots.
-> "Rule one. Paintballs through two slots…"
+Key frame: a turret fires polished steel bearings in slow motion through two slits cut in a shimmering containment-field wall; a dark target plate behind it. Zenith watches with his hands behind his back. Motion: slow-motion tracking alongside a bearing as it passes a slit.
+> "Rule one. Fire steel bearings through two slits…"
 
 **S5 · Two stripes**
-Key frame: the white wall with two neat stripes of splats. Motion: push-in.
-> "…two stripes. Each ball takes *one* path. That's a particle."
+Key frame: the target plate with two glowing stripes of impact sparks behind the slits. Motion: push-in.
+> "…two stripes of impacts. Each bearing takes *one* path. That's a particle."
 
 **S6 · Waves**
-Key frame: aerial view of a calm harbor; a seawall with two gaps; a straight wave rolling in. Motion: slow crane down as the wave passes through both gaps.
+Key frame: aerial view of a harbor at night glowing with bioluminescent plankton; a seawall with two gaps; a glowing wave rolling in. Motion: slow crane down as the light-wave passes through both gaps.
 > "Now water waves through two gaps."
 
 **S7 · Crest meets crest**
-Key frame: overhead close-up of two sets of circular ripples overlapping. Motion: slow drift.
+Key frame: overhead close-up of two sets of glowing blue circular ripples overlapping on black water. Motion: slow drift.
 > "Crest meets crest: the water jumps higher. Crest meets dip: they cancel. Flat."
 Overlay: `crest + crest = bigger` · `crest + dip = flat`.
 
 **S8 · Many stripes** 🎙
-Key frame: the far shore, where the waves arrive as alternating strong and calm bands; Zenith stands ankle-deep, trousers rolled. Motion: lateral track along the bands.
+Key frame: the far shore, where the water arrives as alternating bands of glowing and dark; Zenith stands ankle-deep, robe hem lifted, faintly lit blue. Motion: lateral track along the bands.
 > "So waves make *many* stripes, not two. That's interference. Your noise-canceling headphones use the cancel part on purpose."
 
 **T2 · Freeze and measure · Match Cut**
-Key frame: Zenith touches the water. Motion: the waves freeze mid-crest; two glowing tape measures shoot out from the two gaps to a single spot on the shore.
+Key frame: Zenith touches the glowing water. Motion: the waves freeze mid-crest; two thin laser beams fire from the two gaps to a single spot on the shore, each with a floating distance readout.
 > "But *why* exactly there? Let's measure."
-SFX: water stops dead; tape measures zip out.
+SFX: water stops dead; two laser pings.
 
 ## ACT 3 — Why the stripes land where they do (0:45–1:20)
 **S9 · Pick a spot** 🎙
-Key frame: the frozen harbor; two glowing tape measures run from each gap to one point on the shore; Zenith crouches beside the point. Motion: slow orbit.
+Key frame: the frozen glowing harbor; two laser beams run from each gap to one point on the shore, distances floating beside them; Zenith crouches beside the point. Motion: slow orbit.
 > "Pick any spot on the shore. Measure the distance from each gap."
 
 **S10 · Same distance: bright**
-Key frame: the point dead center between the gaps; the two tapes show equal lengths; two crests arrive together. Motion: push-in on the arriving crests.
+Key frame: the point dead center between the gaps; the two beams show equal distances; two crests arrive together. Motion: push-in on the arriving crests.
 > "Same distance? The waves arrive in step, crest with crest. Bright."
 
 **S11 · Half a wave off: dark**
-Key frame: a point slightly to the side; one tape is half a wavelength longer (the extra length glows); crest meets dip. Motion: slide to the new point.
+Key frame: a point slightly to the side; one beam is half a wavelength longer (the extra length glows gold); crest meets dip. Motion: slide to the new point.
 > "One path half a wave longer? Crest arrives with dip. Dark."
 
 **S12 · A whole wave off: bright again**
-Key frame: a point farther out; one tape is exactly one wavelength longer. Motion: slide farther.
+Key frame: a point farther out; one beam is exactly one wavelength longer. Motion: slide farther.
 > "A whole wave longer? In step again. Bright. That's why the stripes repeat."
 Overlay: `bright: difference = 0, 1, 2… waves` · `dark: ½, 1½, 2½… waves`.
 
 **S13 · The rule** 🎙
-Key frame: Zenith standing, holding two tape measures like a tailor. Motion: static, then a small flourish.
+Key frame: Zenith standing among the frozen beams, adjusting them with two fingers like strings. Motion: static, then a small flourish.
 > "And the rule: longer waves make wider stripes. Slits closer together? Wider stripes too."
 Overlay: `stripe spacing ≈ wavelength × distance to screen ÷ slit separation`.
+
+**S13b · The real machine**
+Key frame: aerial view at dusk of a LIGO observatory: two 4-km arms meeting at a right angle across flat desert. Motion: slow drone push along one arm.
+> "Your LIGO detectors use this exact trick: two laser paths, compared, to sense space stretching by a ten-thousandth of a proton's width."
+Overlay: `LIGO · first gravitational-wave detection, 2015`.
 
 **T3 · To London · Time-Step**
 Key frame: the frozen harbor. Motion: color drains; pages of time riffle past like a flipbook; the frozen ripples become candlelight ripples on the wall of a London study; color returns.
@@ -129,16 +134,16 @@ Engine: simulation accumulates into bands.
 
 ## ACT 6 — What is waving? (2:05–2:30)
 **T5 · Dot to die · Match Cut**
-Key frame: extreme close-up of one dot on the CRT. Motion: the dot lifts off the screen and becomes a glowing die tumbling toward camera; the lab dissolves into darkness.
+Key frame: extreme close-up of one dot on the CRT. Motion: the dot lifts off the screen and blooms into a glowing, shimmering probability cloud; the lab dissolves into darkness.
 > "So what's waving? Not the electron itself."
 
 **S21 · A wave of possibilities** 🎙
-Key frame: Zenith in the dark beside a glowing translucent wave hovering over a screen; where the wave is tall, the screen glows bright. Motion: orbit.
+Key frame: Zenith in the dark beside a hologram of the real hydrogen electron cloud (accurate orbital shapes), then the same kind of glowing wave stretched over the two slits and screen. Motion: orbit.
 > "It's a wave of *possibilities*. Where the wave is strong, the electron is likely to land. Where it cancels, never. Max Born, 1926."
 
 **S22 · Feynman's arrows**
-Key frame: two glowing clock-hand arrows, one riding each path from the slits to a point on the screen, then joining tip to tail. Motion: the arrows spin as they travel; they line up (long arrow, bright) at one point and point opposite (zero, dark) at another.
-> "Feynman's trick: give each path a spinning arrow. Add the two arrows. Same direction: bright. Opposite: they cancel to zero."
+Key frame: two rotating holographic phasors (glowing vectors on circles, labeled e^iφ) riding each path from the slits to the screen, then joining tip to tail. Motion: they spin as they travel; they line up (long, bright) at one point and point opposite (zero, dark) at another.
+> "Feynman's trick: each path carries a spinning arrow, a phase. Add them. Same direction: bright. Opposite: they cancel to zero."
 Overlay: `chance ∝ (length of the added arrow)²`.
 
 ## ACT 7 — Why watching ruins it (2:30–2:55)
@@ -155,10 +160,15 @@ Engine: simulation in which-path mode.
 Key frame: Zenith, arms crossed, deadpan at camera. Motion: static.
 > "Not because someone *looked*. Any record does it, even a stray bump of air. The universe hates being watched. Relatable."
 
-**S26 · Why not baseballs** 🎙
-Key frame: Zenith on a baseball diamond under stadium lights, holding a baseball like a specimen. Motion: slow crane up.
-> "That's why baseballs never do this: a wavelength a trillion trillion times smaller than an atom, and air bumping it constantly."
-Overlay: `λ ≈ 6.6×10⁻³⁴ ÷ (0.145 kg × 40 m/s) ≈ 10⁻³⁴ m`.
+**S26 · Why not a space station** 🎙
+Key frame: Zenith floating in orbit beside the ISS, Earth glowing below. Motion: slow orbit around him and the station.
+> "That's why your space station never does this. Its wavelength is about ten to the minus forty-three meters, and sunlight touches it every second. Records everywhere."
+Overlay: `λ ≈ 6.6×10⁻³⁴ ÷ (4.2×10⁵ kg × 7,660 m/s) ≈ 2×10⁻⁴³ m`.
+
+**S26b · Three horizons** 🎙
+Key frame: Zenith walking along a holographic timeline corridor; on his left, glowing archives of finished experiments; on his right, half-built machines; ahead, faint silhouettes of devices not yet invented. Motion: tracking shot walking with him.
+> "Achieved: matter waves power your electron microscopes. Reaching: labs push ever bigger objects through slits to find where quantum rules stop. Unlocks: quantum sensors and computers that run on interference itself could follow."
+Overlay: `ACHIEVED` · `REACHING` · `COULD UNLOCK`.
 
 ## ACT 8 — Your turn (2:55–3:10)
 **S27 · The wink** 🎙
@@ -193,6 +203,9 @@ Key frame: Zenith at the glass wall as the nebula brightens. Motion: slow pull-b
 - Tonomura, Endo, Matsuda, Kawasaki, Ezawa, *American Journal of Physics* 57, 117 (1989): single-electron buildup filmed at Hitachi with an electron biprism, at most one electron in the apparatus at a time.
 - Born's probability interpretation of the wavefunction: 1926.
 - Which-path information destroys interference whether or not a person reads it; interactions with the environment (decoherence) do this constantly for large objects.
-- Baseball: m = 0.145 kg, v = 40 m/s gives λ ≈ 1.1×10⁻³⁴ m; an atom is about 10⁻¹⁰ m, a ratio of about 10²⁴.
+- ISS: m ≈ 4.2×10⁵ kg, v ≈ 7,660 m/s gives λ ≈ 2×10⁻⁴³ m.
+- LIGO compares two 4-km laser paths and detects length changes of about 1/10,000 of a proton's diameter; first detection September 14, 2015.
+- Electron microscopes rely on the wave nature of electrons; experiments with ever more massive objects test the limits of quantum superposition; atom interferometers and quantum computers exploit interference.
+- Bioluminescent plankton (e.g., dinoflagellates) light up when water moves, which makes wave patterns visible at night.
 - Green laser pointers (about 532 nm) have a shorter wavelength than red (about 650 nm), so their fringes are closer together.
 - Noise-canceling headphones use destructive interference of sound.
